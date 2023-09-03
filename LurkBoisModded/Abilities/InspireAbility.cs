@@ -16,9 +16,13 @@ namespace LurkBoisModded.Abilities
         public override void OnTrigger()
         {
             base.OnTrigger();
+            if (!CooldownReady)
+            {
+                return;
+            }
             List<ReferenceHub> sameTeamHubs = ReferenceHub.AllHubs.Where(x => x.GetTeam() == CurrentHub.GetTeam()).ToList();
             List<ReferenceHub> affectedHubs = sameTeamHubs.Where(x => Vector3.Distance(x.transform.position, CurrentHub.transform.position) <= Plugin.GetConfig().AbilityConfig.InspireAbilityConfig.Range).ToList();
-            if(affectedHubs.Count == 0)
+            if(affectedHubs.Count <= 1)
             {
                 Stopwatch.Stop();
                 CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.InspireAbilityConfig.NoTargetsMessage);

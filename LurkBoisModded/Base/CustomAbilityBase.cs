@@ -5,7 +5,7 @@ namespace LurkBoisModded.Base
     public abstract class CustomAbilityBase : MonoBehaviour
     {
         public ReferenceHub CurrentHub;
-        public bool Ready = false;
+        public bool Ready { get; set; } = false;
 
         public abstract AbilityType AbilityType { get; }
 

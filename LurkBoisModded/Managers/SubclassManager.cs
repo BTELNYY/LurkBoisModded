@@ -8,6 +8,7 @@ using YamlDotNet.Serialization;
 using PluginAPI.Core;
 using System.IO;
 using LurkBoisModded.Base;
+using LurkBoisModded.Subclasses;
 
 namespace LurkBoisModded.Managers
 {
@@ -29,6 +30,11 @@ namespace LurkBoisModded.Managers
                 Log.Warning("Subclass folder does not exist. Generating.");
                 Directory.CreateDirectory(Plugin.instance.SubclassPath);
             }
+            SetSubclass(new MtfCommander());
+
+
+
+            //Loading
             int files = Directory.EnumerateFiles(Plugin.instance.SubclassPath).Count();
             int counter = 0;
             foreach(string fileName in Directory.EnumerateFiles(Plugin.instance.SubclassPath))

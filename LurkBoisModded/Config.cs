@@ -302,12 +302,12 @@ namespace LurkBoisModded
 
         public string Inspired { get; set; } = "You were inspired by {playername}";
 
-        public string YouInspired { get; set; } = "You inspired {count} people!";
+        public string YouInspired { get; set; } = "You inspired {count} person(s)!";
 
         public float Cooldown { get; set; } = 60f;
 
         public float Range { get; set; } = 15f;
 
-        public float AhpGranted { get; set; } = 20f;
+        public float AhpGranted { get; set; } = 25f;
     }
 }

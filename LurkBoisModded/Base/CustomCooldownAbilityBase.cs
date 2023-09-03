@@ -10,6 +10,8 @@ namespace LurkBoisModded.Base
 
         public Stopwatch Stopwatch { get; set; }
 
+        public bool CooldownReady { get; set; } = true;
+
         public float RemainingTime 
         {
             get
@@ -31,9 +33,12 @@ namespace LurkBoisModded.Base
         public override void OnTrigger()
         {
             base.OnTrigger();
-            if (!CheckCooldown())
+            CooldownReady = CheckCooldown();
+            if (!CooldownReady)
             {
-                CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.CooldownMessage.Replace("{time}", RemainingTime.ToString()));
+
+                CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.CooldownMessage.Replace("{time}", ((int)RemainingTime).ToString()));
+                return;
             }
             else
             {

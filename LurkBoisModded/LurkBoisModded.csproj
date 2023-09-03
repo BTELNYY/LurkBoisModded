@@ -182,6 +182,7 @@
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\RagdollDropperScript.cs" />
+    <Compile Include="Subclasses\MtfCommander.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>

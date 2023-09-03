@@ -15,17 +15,19 @@ using LurkBoisModded.Base;
 
 namespace LurkBoisModded.Abilities
 {
-    public class RemoteExplosiveAbility : CustomAbilityBase
+    public class RemoteExplosiveAbility : CustomAbilityBase, IRequiredItemAbility
     {
         public List<RadioPickup> TrackedRadios = new List<RadioPickup>();
         public bool Used = false;
 
         public override AbilityType AbilityType => AbilityType.RemoteExplosive;
 
+        public ItemType RequiredItemType => ItemType.Radio;
+
         public override void OnTrigger()
         {
             base.OnTrigger();
-            if(CurrentHub.inventory.CurItem.TypeId != ItemType.Radio)
+            if(CurrentHub.inventory.CurItem.TypeId != RequiredItemType)
             {
                 return;
             }

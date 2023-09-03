@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace LurkBoisModded.Base
 {
     [Serializable]
-    public abstract class SubclassBase
+    public class SubclassBase
     {
         public virtual string FileName { get; set; } = "default";
 
@@ -24,5 +24,10 @@ namespace LurkBoisModded.Base
         public virtual List<RoomName> SpawnRooms { get; set; } = new List<RoomName>();
 
         public virtual float[] HeightVariety { get; set; } = new float[2] { 0.95f, 1.1f };
+
+        public SubclassBase()
+        {
+
+        }
     }
 }
