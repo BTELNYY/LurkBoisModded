@@ -1,15 +1,9 @@
 ﻿using Hints;
+using LurkBoisModded.Base;
 using Mirror;
-using PluginAPI.Core;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VoiceChat.Networking;
 using VoiceChat;
-using PluginAPI.Events;
-using PlayerRoles.Spectating;
+using VoiceChat.Networking;
 
 namespace LurkBoisModded.Abilities
 {

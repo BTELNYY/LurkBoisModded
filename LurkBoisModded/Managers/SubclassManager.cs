@@ -7,8 +7,9 @@ using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization;
 using PluginAPI.Core;
 using System.IO;
+using LurkBoisModded.Base;
 
-namespace LurkBoisModded
+namespace LurkBoisModded.Managers
 {
     public class SubclassManager
     {
@@ -28,6 +29,17 @@ namespace LurkBoisModded
                 Log.Warning("Subclass folder does not exist. Generating.");
                 Directory.CreateDirectory(Plugin.instance.SubclassPath);
             }
+            int files = Directory.EnumerateFiles(Plugin.instance.SubclassPath).Count();
+            int counter = 0;
+            foreach(string fileName in Directory.EnumerateFiles(Plugin.instance.SubclassPath))
+            {
+                string procFileName = fileName.Replace(".yml", string.Empty);
+                if (GetSubclass(procFileName) != null)
+                {
+                    counter++;
+                }
+            }
+            Log.Info($"Loaded {counter}/{files} subclasses");
         }
 
         public static SubclassBase GetSubclass(string fileName, SubclassBase defaultValue = null, bool writeDefaultValueToDisk = false)
@@ -71,7 +83,7 @@ namespace LurkBoisModded
                     WriteToDisk(subClass, overwrite: overwrite);
                 }
             }
-            if (!_loadedSubClasses.ContainsKey(subClass.FileName))
+            else
             {
                 _loadedSubClasses.Add(subClass.FileName, subClass);
                 WriteToDisk(subClass, overwrite: overwrite);

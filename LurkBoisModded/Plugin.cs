@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using LurkBoisModded.EventHandlers;
+using LurkBoisModded.Managers;
 using PlayerRoles.Ragdolls;
 using PluginAPI.Core;
 using PluginAPI.Core.Attributes;
@@ -55,6 +56,8 @@ namespace LurkBoisModded
             Log.Info("Patching...");
             harmony = new Harmony("com.thelurkbois.modded");
             harmony.PatchAll();
+            Log.Info("Running Init...");
+            SubclassManager.Init();
             Log.Info("LurkBoisModded v" + PluginVersion + " loaded.");
         }
 

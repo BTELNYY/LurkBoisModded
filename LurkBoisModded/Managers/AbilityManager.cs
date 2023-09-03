@@ -1,17 +1,15 @@
-﻿using PlayerRoles.FirstPersonControl;
+﻿using LurkBoisModded.Abilities;
+using LurkBoisModded.Base;
+using PlayerRoles.FirstPersonControl;
+using PluginAPI.Core.Attributes;
+using PluginAPI.Enums;
+using PluginAPI.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using PluginAPI.Events;
-using PluginAPI.Core;
-using PluginAPI.Enums;
-using PluginAPI.Core.Attributes;
-using System;
-using LurkBoisModded.Abilities;
-using YamlDotNet.Serialization.NamingConventions;
-using YamlDotNet.Serialization;
 using UnityEngine;
 
-namespace LurkBoisModded
+namespace LurkBoisModded.Managers
 {
     public class AbilityManager
     {

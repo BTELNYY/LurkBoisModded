@@ -4,6 +4,8 @@ using Interactables.Interobjects.DoorUtils;
 using InventorySystem;
 using InventorySystem.Items;
 using InventorySystem.Items.Firearms;
+using LurkBoisModded.Base;
+using LurkBoisModded.Managers;
 using MapGeneration;
 using Mirror;
 using PlayerRoles.FirstPersonControl;

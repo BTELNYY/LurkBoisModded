@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utils;
+using LurkBoisModded.Base;
+using LurkBoisModded.Managers;
 
 namespace LurkBoisModded.Commands.RemoteAdmin
 {

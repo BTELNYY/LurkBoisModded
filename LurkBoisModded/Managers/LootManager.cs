@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LurkBoisModded
+namespace LurkBoisModded.Managers
 {
-    public class LootGenerator
+    public class LootManager
     {
         private static float MinimumQuality = 0.0f;
         private static float MaximumQuality = 0.0f;

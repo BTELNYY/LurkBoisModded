@@ -3,6 +3,7 @@ using NorthwoodLib.Pools;
 using PlayerRoles.FirstPersonControl.NetworkMessages;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using LurkBoisModded.Managers;
 //Taken from https://github.com/Jesus-QC/ScpChatExtension/tree/master, modified to suit my needs.
 namespace LurkBoisModded.Patches
 {
