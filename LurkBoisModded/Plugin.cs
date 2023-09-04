@@ -49,13 +49,13 @@ namespace LurkBoisModded
             instance = this;
             ConfigPath = PluginHandler.Get(this).PluginDirectoryPath;
             SubclassPath = Path.Combine($"{PluginHandler.Get(this).PluginDirectoryPath}", "subclasses");
+            Log.Info("Patching...");
+            harmony = new Harmony("com.thelurkbois.modded");
+            harmony.PatchAll();
             Log.Info("Registering events...");
             PluginAPI.Events.EventManager.RegisterAllEvents(this);
             RagdollManager.OnRagdollSpawned += RagdollHandler.OnRagdollSpawn;
             RagdollManager.OnRagdollSpawned += RagdollHandler.PocketRagdollHandle;
-            Log.Info("Patching...");
-            harmony = new Harmony("com.thelurkbois.modded");
-            harmony.PatchAll();
             Log.Info("Running Init...");
             SubclassManager.Init();
             Log.Info("LurkBoisModded v" + PluginVersion + " loaded.");

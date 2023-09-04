@@ -244,6 +244,11 @@ namespace LurkBoisModded
         {
             foreach (ReferenceHub referenceHub in ReferenceHub.AllHubs)
             {
+                if(referenceHub.characterClassManager.InstanceMode != ClientInstanceMode.ReadyClient)
+                {
+                    continue;
+                }
+
                 if (referenceHub.roleManager.CurrentRole is SpectatorRole && !msg.Speaker.IsSpectatedBy(referenceHub))
                 {
                     continue;
@@ -264,10 +269,10 @@ namespace LurkBoisModded
                     continue;
                 }
                 msg.Channel = VoiceChatChannel.Proximity;
-                msg.SendToSpectatorsOf(msg.Speaker);
                 msg.SendToSpectatorsOf(referenceHub);
                 referenceHub.connectionToClient.Send(msg);
             }
+            msg.SendToSpectatorsOf(msg.Speaker);
         }
         public static void AddAbility(this ReferenceHub target, AbilityType type)
         {

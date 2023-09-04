@@ -166,7 +166,6 @@
     <Compile Include="Base\SubclassBase.cs" />
     <Compile Include="Base\CustomAbilityBase.cs" />
     <Compile Include="Commands\GameConsole\CommandGas.cs" />
-    <Compile Include="Commands\GameConsole\CommandSpawnDoor.cs" />
     <Compile Include="Commands\GameConsole\CommandSuicide.cs" />
     <Compile Include="Commands\RemoteAdmin\SetScaleManual.cs" />
     <Compile Include="Commands\RemoteAdmin\SetScaleMultiplier.cs" />

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LurkBoisModded.Patches.Scp096
 {
-    [HarmonyPatch(typeof(Scp096ChargeAbility))]
+    //[HarmonyPatch(typeof(Scp096ChargeAbility))]
     public class Scp096DashPatch
     {
 
