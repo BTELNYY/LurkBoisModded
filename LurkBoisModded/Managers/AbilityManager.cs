@@ -17,7 +17,8 @@ namespace LurkBoisModded.Managers
         {
             [AbilityType.ProximityChat] = typeof(ProximityChatAbility),
             [AbilityType.RemoteExplosive] = typeof(RemoteExplosiveAbility),
-            [AbilityType.Inspire] = typeof(InspireAbility)
+            [AbilityType.Inspire] = typeof(InspireAbility),
+            [AbilityType.WarCry] = typeof(WarCryAbility)
         };
 
         [PluginEvent(ServerEventType.PlayerSpawn)]

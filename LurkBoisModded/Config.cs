@@ -1,9 +1,11 @@
 ﻿using Interactables.Interobjects.DoorUtils;
+using LurkBoisModded.Base;
 using LurkBoisModded.EventHandlers.Scp914;
 using LurkBoisModded.Managers;
 using PlayerRoles;
 using Scp914;
 using System.Collections.Generic;
+using CustomPlayerEffects;
 using System.ComponentModel;
 
 namespace LurkBoisModded
@@ -285,6 +287,8 @@ namespace LurkBoisModded
         public RemoteExplosiveAbilityConfig RemoteExplosiveAbilityConfig { get; set; } = new RemoteExplosiveAbilityConfig();
 
         public InspireAbilityConfig InspireAbilityConfig { get; set; } = new InspireAbilityConfig();
+
+        public WarCryAbilityConfig WarCryAbilityConfig { get; set; } = new WarCryAbilityConfig();
     }
 
     public class RemoteExplosiveAbilityConfig
@@ -309,5 +313,23 @@ namespace LurkBoisModded
         public float Range { get; set; } = 15f;
 
         public float AhpGranted { get; set; } = 25f;
+    }
+
+    public class WarCryAbilityConfig
+    {
+        public string NoTargetsMessage { get; set; } = "Nobody to hear your war cry.";
+
+        public string WarCryHeard { get; set; } = "{count} person(s) heard your war cry!";
+
+        public string WarCryEffectYou { get; set; } = "You heard the war cry of {playername}!";
+
+        public float Cooldown { get; set; } = 60f;
+
+        public float Range { get; set; } = 15f;
+
+        public List<EffectDefinition> Effects { get; set; } = new List<EffectDefinition>()
+        {
+            new EffectDefinition(){Name = nameof(DamageReduction), Duration = 30f, Intensity = 8}
+        };
     }
 }

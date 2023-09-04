@@ -12,6 +12,7 @@ using Mirror;
 using HarmonyLib;
 using System;
 using LurkBoisModded.Base;
+using UnityEngine;
 
 namespace LurkBoisModded.Abilities
 {
@@ -65,8 +66,10 @@ namespace LurkBoisModded.Abilities
                     continue;
                 }
                 counter++;
-                ExplosionUtils.ServerExplode(item.Position, footprint);
+                Vector3 newPos = item.Position;
+                newPos.y += 1f;
                 NetworkServer.Destroy(item.gameObject);
+                ExplosionUtils.ServerExplode(newPos, footprint);
             }
             CurrentHub.SendHint($"Detonated {counter} Explosive(s)");
             TrackedRadios.Clear();

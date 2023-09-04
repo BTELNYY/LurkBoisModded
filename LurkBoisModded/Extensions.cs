@@ -4,13 +4,16 @@ using Interactables.Interobjects.DoorUtils;
 using InventorySystem;
 using InventorySystem.Items;
 using InventorySystem.Items.Firearms;
+using InventorySystem.Items.Firearms.Attachments;
 using LurkBoisModded.Base;
 using LurkBoisModded.Managers;
+using LurkBoisModded.StatModules;
 using MapGeneration;
 using Mirror;
 using PlayerRoles.FirstPersonControl;
 using PlayerRoles.Spectating;
 using PlayerRoles.Voice;
+using PlayerStatsSystem;
 using PluginAPI.Core;
 using System;
 using System.Collections.Generic;
@@ -231,6 +234,10 @@ namespace LurkBoisModded
         }
         public static void SendHint(this ReferenceHub target, string text, float duration = 3f)
         {
+            if(target == null || target.hints == null || target.characterClassManager.InstanceMode != ClientInstanceMode.ReadyClient)
+            {
+                return;
+            }
             target.hints.Show(new TextHint(text, new HintParameter[] { new StringHintParameter(string.Empty) }, null, duration));
         }
         public static void SendProximityMessage(this VoiceMessage msg)
@@ -303,7 +310,7 @@ namespace LurkBoisModded
             {
                 player.ClearInventory();
             }
-            foreach(ItemType item in subclass.SpawnItems.Values)
+            foreach(ItemType item in subclass.SpawnItems.Keys)
             {
                 if (item.ToString().Contains("Ammo"))
                 {
@@ -317,7 +324,30 @@ namespace LurkBoisModded
                     }
                 }
             }
-            string hintFormatted = $"You are <b>{subclass.SubclassNiceName}</b>! \n ${subclass.SubclassDescription}";
+            for(int i = 0; i < subclass.NumberOfRandomItems; i++)
+            {
+                ItemType item = subclass.RandomItems.Keys.ToList().RandomItem();
+                if (item.ToString().Contains("Ammo"))
+                {
+                    player.AddAmmo(item, subclass.RandomItems[item]);
+                }
+                else
+                {
+                    for (int f = 0; f < subclass.RandomItems[item]; f++)
+                    {
+                        player.AddItem(item);
+                    }
+                }
+            }
+            player.ApplyAttachments();
+            if(subclass.MaxHealth != 0)
+            {
+                target.SetMaxHealth(subclass.MaxHealth);
+                player.Heal(subclass.MaxHealth);
+            }
+            player.PlayerInfo.IsRoleHidden = true;
+            player.CustomInfo = subclass.SubclassNiceName + " (Custom Subclass)";
+            string hintFormatted = $"You are <color={subclass.ClassColor}><b>{subclass.SubclassNiceName}</b></color>! \n {subclass.SubclassDescription}";
             target.SendHint(hintFormatted, 10f);
             //if the spawnrooms is more than one, otherwise just use the default spawn
             if(subclass.SpawnRooms.Count > 0)
@@ -326,10 +356,42 @@ namespace LurkBoisModded
                 RoomIdentifier chosenRoom = foundRooms.RandomItem();
                 //Make sure that the door can't be a keycard door
                 DoorVariant door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None).ToList().RandomItem();
+                door.SetDoorState(DoorState.Open);
                 Vector3 pos = door.transform.position;
                 pos.y += 1f;
                 target.TryOverridePosition(pos, Vector3.forward);
             }
+        }
+        public static void ApplyAttachments(this Player ply)
+        {
+            var item = ply.Items.Where(i => i is Firearm);
+
+            foreach (var fire in item)
+            {
+                if (fire is Firearm fireArm)
+                {
+                    if (AttachmentsServerHandler.PlayerPreferences.TryGetValue(ply.ReferenceHub, out var value) && value.TryGetValue(fireArm.ItemTypeId, out var value2))
+                        fireArm.ApplyAttachmentsCode(value2, reValidate: true);
+                    var firearmStatusFlags = FirearmStatusFlags.MagazineInserted;
+                    if (fireArm.HasAdvantageFlag(AttachmentDescriptiveAdvantages.Flashlight))
+                        firearmStatusFlags |= FirearmStatusFlags.FlashlightEnabled;
+
+                    fireArm.Status = new FirearmStatus(fireArm.AmmoManagerModule.MaxAmmo, firearmStatusFlags, fireArm.GetCurrentAttachmentsCode());
+                }
+            }
+        }
+        public static void SetMaxHealth(this ReferenceHub hub, float amount)
+        {
+            if(!hub.playerStats.TryGetModule<HealthStat>(out HealthStat health))
+            {
+                return;
+            }
+            if (!(health is NewHealthStat))
+            {
+                return;
+            }
+            NewHealthStat healthStat = health as NewHealthStat;
+            healthStat.SetMaxValue = amount;
         }
     }
 

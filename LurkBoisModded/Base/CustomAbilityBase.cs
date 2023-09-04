@@ -28,5 +28,6 @@ namespace LurkBoisModded.Base
         ProximityChat,
         RemoteExplosive,
         Inspire,
+        WarCry,
     }
 }

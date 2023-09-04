@@ -30,8 +30,10 @@ namespace LurkBoisModded.Managers
                 Log.Warning("Subclass folder does not exist. Generating.");
                 Directory.CreateDirectory(Plugin.instance.SubclassPath);
             }
-            SetSubclass(new MtfCommander());
-
+            AddSubclass(new MtfCommander());
+            AddSubclass(new CiDemoman());
+            AddSubclass(new CiLeader());
+            AddSubclass(new ClassDJanitor());
 
 
             //Loading
@@ -46,6 +48,11 @@ namespace LurkBoisModded.Managers
                 }
             }
             Log.Info($"Loaded {counter}/{files} subclasses");
+        }
+
+        public static List<string> GetLoadedSubclasses()
+        {
+            return _loadedSubClasses.Select(x => x.Key).ToList();
         }
 
         public static SubclassBase GetSubclass(string fileName, SubclassBase defaultValue = null, bool writeDefaultValueToDisk = false)
@@ -79,7 +86,7 @@ namespace LurkBoisModded.Managers
             }
         }
 
-        public static void SetSubclass(SubclassBase subClass, bool overwrite = false)
+        public static void AddSubclass(SubclassBase subClass, bool overwrite = false)
         {
             if (_loadedSubClasses.ContainsKey(subClass.FileName))
             {

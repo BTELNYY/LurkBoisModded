@@ -42,6 +42,14 @@ namespace LurkBoisModded.EventHandlers
             });
         }
 
+        [PluginEvent(ServerEventType.PlayerDeath)]
+        public void OnPlayerDeath(PlayerDeathEvent ev)
+        {
+            ev.Player.CustomInfo = string.Empty;
+            ev.Player.PlayerInfo.IsRoleHidden = false;
+        }
+
+
         [PluginEvent(ServerEventType.RoundEnd)]
         public void OnRoundEnd(RoundEndEvent ev)
         {

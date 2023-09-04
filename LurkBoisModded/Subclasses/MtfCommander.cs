@@ -16,6 +16,8 @@ namespace LurkBoisModded.Subclasses
 
         public override string SubclassDescription => "Use your noclip key (left alt by default) to provide a buff to nearby teammates!";
 
+        public override string ClassColor => "blue";
+
         public override RoleTypeId Role => RoleTypeId.NtfCaptain;
 
         public override List<AbilityType> Abilities => new List<AbilityType>() { AbilityType.Inspire };

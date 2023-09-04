@@ -2,6 +2,8 @@
 using PlayerRoles;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+
 namespace LurkBoisModded.Base
 {
     [Serializable]
@@ -24,6 +26,14 @@ namespace LurkBoisModded.Base
         public virtual List<RoomName> SpawnRooms { get; set; } = new List<RoomName>();
 
         public virtual float[] HeightVariety { get; set; } = new float[2] { 0.95f, 1.1f };
+
+        public virtual string ClassColor { get; set; } = "white";
+
+        public virtual float MaxHealth { get; set; } = 0f;
+
+        public virtual Dictionary<ItemType, ushort> RandomItems { get; set; } = new Dictionary<ItemType, ushort>();
+
+        public virtual int NumberOfRandomItems { get; set; } = 0;
 
         public SubclassBase()
         {
