@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using LurkBoisModded.Managers;
 
 namespace LurkBoisModded.Base
 {
@@ -21,13 +22,5 @@ namespace LurkBoisModded.Base
         {
             Ready = true;
         }
-    }
-
-    public enum AbilityType
-    {
-        ProximityChat,
-        RemoteExplosive,
-        Inspire,
-        WarCry,
     }
 }

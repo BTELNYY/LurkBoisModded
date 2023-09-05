@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using LurkBoisModded.Base;
+using LurkBoisModded.Managers;
 
 namespace LurkBoisModded.Abilities
 {

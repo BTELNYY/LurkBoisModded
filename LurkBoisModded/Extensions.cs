@@ -10,6 +10,7 @@ using LurkBoisModded.Managers;
 using LurkBoisModded.StatModules;
 using MapGeneration;
 using Mirror;
+using PlayerRoles;
 using PlayerRoles.FirstPersonControl;
 using PlayerRoles.Spectating;
 using PlayerRoles.Voice;
@@ -162,6 +163,18 @@ namespace LurkBoisModded
         public static T GetItemByType<T>(this Inventory inv, T type) where T : ItemBase
         {
             return inv.UserInventory.Items.FirstOrDefault(x => (x as T) != null).Value as T;
+        }
+        public static bool RemoveItemFromHub(this ReferenceHub target, ItemType type)
+        {
+            foreach (var item in target.inventory.UserInventory.Items.Keys)
+            {
+                if (target.inventory.UserInventory.Items[item].ItemTypeId == type)
+                {
+                    target.inventory.ServerRemoveItem(item, target.inventory.UserInventory.Items[item].PickupDropModel);
+                    return true;
+                }
+            }
+            return false;
         }
         public static Firearm GetFirearm(this Inventory inv, ItemType type = ItemType.None)
         {
@@ -360,7 +373,7 @@ namespace LurkBoisModded
                 List<RoomIdentifier> foundRooms = RoomIdentifier.AllRoomIdentifiers.Where(x => subclass.SpawnRooms.Contains(x.Name)).ToList();
                 RoomIdentifier chosenRoom = foundRooms.RandomItem();
                 //Make sure that the door can't be a keycard door
-                DoorVariant door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None).ToList().RandomItem();
+                DoorVariant door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None && !(x is INonInteractableDoor)).ToList().RandomItem();
                 door.SetDoorState(DoorState.Open);
                 Vector3 pos = door.transform.position;
                 pos.y += 1f;
@@ -397,6 +410,16 @@ namespace LurkBoisModded
             }
             NewHealthStat healthStat = health as NewHealthStat;
             healthStat.SetMaxValue = amount;
+        }
+        public static List<Player> SelectByClass(this List<Player> players, RoleTypeId role)
+        {
+            List<Player> selectedPlayers = players.Where(x => x.Role == role && x.ReferenceHub.characterClassManager.InstanceMode == ClientInstanceMode.ReadyClient).ToList();
+            return selectedPlayers;
+        }
+        public static List<ReferenceHub> GetPlayersInRoom(this RoomIdentifier room)
+        {
+            List<ReferenceHub> hubs = ReferenceHub.AllHubs.Where(x => RoomIdUtils.RoomAtPosition(x.transform.position) == room).ToList();
+            return hubs;
         }
     }
 

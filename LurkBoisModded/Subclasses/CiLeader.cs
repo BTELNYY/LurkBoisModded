@@ -3,6 +3,7 @@ using PlayerRoles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LurkBoisModded.Managers;
 using System.Text;
 using System.Threading.Tasks;
 

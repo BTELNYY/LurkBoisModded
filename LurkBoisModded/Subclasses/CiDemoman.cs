@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LurkBoisModded.Base;
 using PlayerRoles;
+using LurkBoisModded.Managers;
 
 namespace LurkBoisModded.Subclasses
 {
@@ -16,7 +17,7 @@ namespace LurkBoisModded.Subclasses
 
         public override string SubclassDescription => "You can drop remote explosives (radios) and detonate them with your noclip key (left alt) while holding another radio!";
 
-        public override RoleTypeId Role => RoleTypeId.ChaosRifleman;
+        public override RoleTypeId Role => RoleTypeId.ChaosMarauder;
 
         public override string ClassColor => "green";
 

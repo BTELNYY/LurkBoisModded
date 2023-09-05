@@ -13,7 +13,7 @@ namespace LurkBoisModded.EventHandlers
         [PluginEvent(ServerEventType.PlayerSpawn)]
         public void OnSpawn(PlayerSpawnEvent ev)
         {
-            Timing.CallDelayed(0.25f, () =>
+            Timing.CallDelayed(0.1f, () =>
             {
                 //Fix SCP 049 cloak?
                 if(ev.Player.Role == PlayerRoles.RoleTypeId.Scp049)

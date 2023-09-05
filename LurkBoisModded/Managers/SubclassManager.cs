@@ -34,7 +34,9 @@ namespace LurkBoisModded.Managers
             AddSubclass(new CiDemoman());
             AddSubclass(new CiLeader());
             AddSubclass(new ClassDJanitor());
-
+            AddSubclass(new MtfScout());
+            AddSubclass(new ClassDSmuggler());
+            AddSubclass(new ClassDTestSubject());
 
             //Loading
             int files = Directory.EnumerateFiles(Plugin.instance.SubclassPath).Count();

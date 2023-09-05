@@ -28,7 +28,7 @@ namespace LurkBoisModded.Effects
         protected override void Disabled()
         {
             base.Disabled();
-            if(TimeLeft <= 1f)
+            if(TimeLeft <= 1f && Intensity != 0)
             {
                 Player p = Player.Get(Hub);
                 p.Kill(Plugin.GetConfig().Scp914Config.Scp914BlueAshDeathReason);

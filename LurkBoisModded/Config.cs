@@ -7,6 +7,7 @@ using Scp914;
 using System.Collections.Generic;
 using CustomPlayerEffects;
 using System.ComponentModel;
+using LurkBoisModded.Effects;
 
 namespace LurkBoisModded
 {
@@ -52,11 +53,13 @@ namespace LurkBoisModded
         [Description("Controls Abilities")]
         public AbilityConfig AbilityConfig { get; set; } = new AbilityConfig();
 
-         [Description("Death message for people who use .suicide")]
+        [Description("Death message for people who use .suicide")]
         public string SuicideDeathReason { get; set; } = "Suicide by gunshot to the head";
 
         [Description("Chance that a coin will explode when you flip it")]
         public float CoinExplodeChance { get; set; } = 0.01f;
+
+        public SubclassSpawnConfig SubclassSpawnConfig { get; set; } = new SubclassSpawnConfig();
 
         [Description("List of items with weight for General random loot")]
         public List<ItemWeightDefinition> ItemQualityConfig { get; set; } = new List<ItemWeightDefinition>()
@@ -280,6 +283,28 @@ namespace LurkBoisModded
         public string DeathReason { get; set; } = "Severe burning and charring suggests death as fire";
     }
 
+    public class SubclassSpawnConfig
+    {
+        public Dictionary<string, int> MtfSpawnSubclasses { get; set; } = new Dictionary<string, int>() 
+        {
+            ["mtf_commander"] = 1,
+            ["mtf_scout"] = 2,
+        };
+
+        public Dictionary<string, int> CiSpawnSubclasses { get; set; } = new Dictionary<string, int>()
+        {
+            ["ci_leader"] = 1,
+            ["ci_demoman"] = 1,
+        };
+
+        public Dictionary<string, int> ClassDSubclasses { get; set; } = new Dictionary<string, int>()
+        {
+            ["classd_janitor"] = 1,
+            ["classd_smuggler"] = 2,
+            ["classd_test_subject"] = 2,
+        };
+    }
+
     public class AbilityConfig
     {
         public string CooldownMessage { get; set; } = "Ability is on cooldown for another {time} seconds!";
@@ -289,6 +314,10 @@ namespace LurkBoisModded
         public InspireAbilityConfig InspireAbilityConfig { get; set; } = new InspireAbilityConfig();
 
         public WarCryAbilityConfig WarCryAbilityConfig { get; set; } = new WarCryAbilityConfig();
+
+        public ScoutAbilityConfig ScoutAbilityConfig { get; set; } = new ScoutAbilityConfig();
+
+        public AreaDenialAbilityConfig AreaDenialAbilityConfig { get; set; } = new AreaDenialAbilityConfig();
     }
 
     public class RemoteExplosiveAbilityConfig
@@ -330,6 +359,39 @@ namespace LurkBoisModded
         public List<EffectDefinition> Effects { get; set; } = new List<EffectDefinition>()
         {
             new EffectDefinition(){Name = nameof(DamageReduction), Duration = 30f, Intensity = 8}
+        };
+    }
+
+    public class ScoutAbilityConfig
+    {
+        public float Cooldown { get; set; } = 150f;
+
+        public string AbilityUsed { get; set; } = "You are now {speed}% faster and have {intensity} less health for {duration} seconds.";
+
+        public List<EffectDefinition> Effects { get; set; } = new List<EffectDefinition>() 
+        {
+            new EffectDefinition(nameof(MaxHealthReduction), 25, 30f),
+            new EffectDefinition(nameof(MovementBoost), 15, 30f)
+        };
+    }
+
+    public class AreaDenialAbilityConfig
+    {
+        public float Cooldown { get; set; } = 120f;
+
+        public float Windup { get; set; } = 5f;
+
+        public string SuccessMessage { get; set; } = "Area Denial hit {count} enemies!";
+
+        public string WindupMessage { get; set; } = "Ability will occur in {windup} seconds!";
+
+        public string WarningMessage { get; set; } = "<color=yellow><b>Warning! You are within range of an Area Denial Ability! You have {windup} seconds to leave it!</b></color>";
+
+        public List<EffectDefinition> Effects = new List<EffectDefinition>()
+        {
+            new EffectDefinition(nameof(Flashed), 1, 3f),
+            new EffectDefinition(nameof(Blinded), 1, 4f),
+            new EffectDefinition(nameof(Deafened), 1, 5f),
         };
     }
 }

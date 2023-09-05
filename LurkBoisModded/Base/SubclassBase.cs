@@ -3,6 +3,7 @@ using PlayerRoles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using LurkBoisModded.Managers;
 
 namespace LurkBoisModded.Base
 {

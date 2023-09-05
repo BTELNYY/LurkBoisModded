@@ -142,6 +142,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abilities\AreaDenialAbility.cs" />
+    <Compile Include="Abilities\ScoutAbility.cs" />
     <Compile Include="Abilities\WarCryAbility.cs" />
     <Compile Include="Abilities\InspireAbility.cs" />
     <Compile Include="Abilities\ProximityChatAbility.cs" />
@@ -155,6 +157,7 @@
     <Compile Include="Base\EffectDefinition.cs" />
     <Compile Include="Commands\RemoteAdmin\SubclassList.cs" />
     <Compile Include="Effects\MaxHealthReduction.cs" />
+    <Compile Include="EventHandlers\SubclassSpawnHandler.cs" />
     <Compile Include="Patches\StatModulePatch.cs" />
     <Compile Include="StatModules\IUpdatingStat.cs" />
     <Compile Include="StatModules\NewAhpStat.cs" />
@@ -198,6 +201,9 @@
     <Compile Include="Scripts\RagdollDropperScript.cs" />
     <Compile Include="Subclasses\CiDemoman.cs" />
     <Compile Include="Subclasses\CiLeader.cs" />
+    <Compile Include="Subclasses\ClassDTestSubject.cs" />
+    <Compile Include="Subclasses\ClassDSmuggler.cs" />
+    <Compile Include="Subclasses\MtfScout.cs" />
     <Compile Include="Subclasses\ClassDJanitor.cs" />
     <Compile Include="Subclasses\MtfCommander.cs" />
     <Compile Include="Utility.cs" />

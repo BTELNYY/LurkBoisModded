@@ -155,6 +155,19 @@ namespace LurkBoisModded
             adminToyBase = null;
             return false;
         }
+
+        public static List<Player> GetPlayersByRole(RoleTypeId role)
+        {
+            List<Player> result = new List<Player>();
+            foreach(ReferenceHub hub in ReferenceHub.AllHubs)
+            {
+                if(hub.roleManager.CurrentRole.RoleTypeId == role && hub.characterClassManager.InstanceMode == ClientInstanceMode.ReadyClient)
+                {
+                    result.Add(Player.Get(hub));
+                }
+            }
+            return result;
+        }
     }
 
     public enum DoorType

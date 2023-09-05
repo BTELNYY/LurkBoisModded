@@ -18,7 +18,9 @@ namespace LurkBoisModded.Managers
             [AbilityType.ProximityChat] = typeof(ProximityChatAbility),
             [AbilityType.RemoteExplosive] = typeof(RemoteExplosiveAbility),
             [AbilityType.Inspire] = typeof(InspireAbility),
-            [AbilityType.WarCry] = typeof(WarCryAbility)
+            [AbilityType.WarCry] = typeof(WarCryAbility),
+            [AbilityType.Scout] = typeof(ScoutAbility),
+            [AbilityType.AreaDenialAbility] = typeof(AreaDenialAbility),
         };
 
         [PluginEvent(ServerEventType.PlayerSpawn)]
@@ -55,5 +57,14 @@ namespace LurkBoisModded.Managers
             }
             return false;
         }
+    }
+    public enum AbilityType
+    {
+        ProximityChat,
+        RemoteExplosive,
+        Inspire,
+        WarCry,
+        Scout,
+        AreaDenialAbility,
     }
 }

@@ -83,7 +83,7 @@ namespace LurkBoisModded.Managers
 
                 try
                 {
-                    hubPlayer.roleManager.ServerSetRole(RoleTypeId.ClassD, RoleChangeReason.RemoteAdmin);
+                    hubPlayer.roleManager.ServerSetRole(RoleTypeId.Spectator, RoleChangeReason.RemoteAdmin);
                 }
                 catch (Exception e)
                 {
