@@ -1,19 +1,7 @@
-﻿using PluginAPI.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PluginAPI.Enums;
-using PluginAPI.Core.Attributes;
-using UnityEngine;
-using PluginAPI.Core;
+﻿using LurkBoisModded.Scripts;
 using MapGeneration;
-using MEC;
-using Mirror;
 using PlayerStatsSystem;
-using PlayerRoles.Ragdolls;
-using LurkBoisModded.Scripts;
+using UnityEngine;
 
 namespace LurkBoisModded.EventHandlers
 {
@@ -43,7 +31,7 @@ namespace LurkBoisModded.EventHandlers
                 return;
             }
             RagdollDropperScript dropperScript = ragdoll.gameObject.AddComponent<RagdollDropperScript>();
-            float time = UnityEngine.Random.Range(Plugin.GetConfig().Scp106PdConfig.Scp106PdDropDelayMin, Plugin.GetConfig().Scp106PdConfig.Scp106PdDropDelayMax);
+            float time = Random.Range(Plugin.GetConfig().Scp106PdConfig.Scp106PdDropDelayMin, Plugin.GetConfig().Scp106PdConfig.Scp106PdDropDelayMax);
             dropperScript.StartTimer(time, ragdoll);
         }
     }

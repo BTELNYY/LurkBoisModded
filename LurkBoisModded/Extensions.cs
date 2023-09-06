@@ -2,9 +2,11 @@
 using Interactables.Interobjects;
 using Interactables.Interobjects.DoorUtils;
 using InventorySystem;
+using InventorySystem.Disarming;
 using InventorySystem.Items;
 using InventorySystem.Items.Firearms;
 using InventorySystem.Items.Firearms.Attachments;
+using InventorySystem.Items.Pickups;
 using LurkBoisModded.Base;
 using LurkBoisModded.Managers;
 using LurkBoisModded.StatModules;
@@ -333,13 +335,22 @@ namespace LurkBoisModded
                 if (item.ToString().Contains("Ammo"))
                 {
                     player.AddAmmo(item, subclass.SpawnItems[item]);
+                    continue;
                 }
-                else
+                if (item.ToString().Contains("Gun"))
                 {
-                    for (int i = 0; i < subclass.SpawnItems[item]; i++)
+                    ItemBase itemBase = player.ReferenceHub.inventory.ServerAddItem(item);
+                    if (itemBase is Firearm && subclass.SpawnItems[item] > 0)
                     {
-                        player.AddItem(item);
+                        Firearm firearm = (Firearm)itemBase;
+                        FirearmStatus status = new FirearmStatus((byte)subclass.SpawnItems[item], firearm.Status.Flags, firearm.Status.Attachments);
+                        firearm.Status = status;
                     }
+                    continue;
+                }
+                for (int i = 0; i < subclass.SpawnItems[item]; i++)
+                {
+                    player.AddItem(item);
                 }
             }
             for(int i = 0; i < subclass.NumberOfRandomItems; i++)
@@ -348,13 +359,22 @@ namespace LurkBoisModded
                 if (item.ToString().Contains("Ammo"))
                 {
                     player.AddAmmo(item, subclass.RandomItems[item]);
+                    continue;
                 }
-                else
+                if (item.ToString().Contains("Gun"))
                 {
-                    for (int f = 0; f < subclass.RandomItems[item]; f++)
+                    ItemBase itemBase = player.ReferenceHub.inventory.ServerAddItem(item);
+                    if (itemBase is Firearm && subclass.RandomItems[item] > 0)
                     {
-                        player.AddItem(item);
+                        Firearm firearm = (Firearm)itemBase;
+                        FirearmStatus status = new FirearmStatus((byte)subclass.RandomItems[item], firearm.Status.Flags, firearm.Status.Attachments);
+                        firearm.Status = status;
                     }
+                    continue;
+                }
+                for (int f = 0; f < subclass.RandomItems[item]; f++)
+                {
+                    player.AddItem(item);
                 }
             }
             player.ApplyAttachments();
@@ -364,7 +384,14 @@ namespace LurkBoisModded
                 player.Heal(subclass.MaxHealth);
             }
             player.PlayerInfo.IsRoleHidden = true;
-            player.CustomInfo = subclass.SubclassNiceName + " (Custom Subclass)";
+            if (subclass.ApplyClassColorToCustomInfo)
+            {
+                player.CustomInfo = subclass.SubclassNiceName + $" <color={subclass.ClassColor}>(Custom Subclass)</color>";
+            }
+            else
+            {
+                player.CustomInfo = subclass.SubclassNiceName + " (Custom Subclass)";
+            }
             string hintFormatted = $"You are <color={subclass.ClassColor}><b>{subclass.SubclassNiceName}</b></color>! \n {subclass.SubclassDescription}";
             target.SendHint(hintFormatted, 10f);
             //if the spawnrooms is more than one, otherwise just use the default spawn
@@ -373,11 +400,27 @@ namespace LurkBoisModded
                 List<RoomIdentifier> foundRooms = RoomIdentifier.AllRoomIdentifiers.Where(x => subclass.SpawnRooms.Contains(x.Name)).ToList();
                 RoomIdentifier chosenRoom = foundRooms.RandomItem();
                 //Make sure that the door can't be a keycard door
-                DoorVariant door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None && !(x is INonInteractableDoor)).ToList().RandomItem();
+                DoorVariant door = null;
+                if (subclass.AllowKeycardDoors)
+                {
+                    door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => !(x is INonInteractableDoor)).ToList().RandomItem();
+                }
+                else
+                {
+                    door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None && !(x is INonInteractableDoor)).ToList().RandomItem();
+                }
                 door.SetDoorState(DoorState.Open);
                 Vector3 pos = door.transform.position;
                 pos.y += 1f;
                 target.TryOverridePosition(pos, Vector3.forward);
+            }
+        }
+        public static void RemoveAllAbilities(this ReferenceHub target)
+        {
+            List<CustomAbilityBase> abilities = target.gameObject.GetComponents<CustomAbilityBase>().ToList();
+            foreach(CustomAbilityBase ability in abilities)
+            {
+                GameObject.Destroy(ability);
             }
         }
         public static void ApplyAttachments(this Player ply)
@@ -419,6 +462,13 @@ namespace LurkBoisModded
         public static List<ReferenceHub> GetPlayersInRoom(this RoomIdentifier room)
         {
             List<ReferenceHub> hubs = ReferenceHub.AllHubs.Where(x => RoomIdUtils.RoomAtPosition(x.transform.position) == room).ToList();
+            return hubs;
+        }
+        public static List<ReferenceHub> GetAllDisarmedPlayersByDisarmer(this ReferenceHub disarmer)
+        {
+            List<DisarmedPlayers.DisarmedEntry> disarmedEntries = DisarmedPlayers.Entries.Where(x => x.Disarmer == disarmer.networkIdentity.netId).ToList();
+            List<uint> netIds = disarmedEntries.Select(x => x.DisarmedPlayer).ToList();
+            List<ReferenceHub> hubs = ReferenceHub.AllHubs.Where(x => netIds.Contains(x.networkIdentity.netId)).ToList();
             return hubs;
         }
     }

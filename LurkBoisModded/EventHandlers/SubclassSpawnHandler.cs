@@ -38,6 +38,10 @@ namespace LurkBoisModded.EventHandlers
             {
                 List<Player> dclass = Utility.GetPlayersByRole(RoleTypeId.ClassD);
                 HandleClassD(dclass);
+                List<Player> guards = Utility.GetPlayersByRole(RoleTypeId.FacilityGuard);
+                HandleGuards(guards);
+                List<Player> scientists = Utility.GetPlayersByRole(RoleTypeId.Scientist);
+                HandleScientists(scientists);
             });
         }
 
@@ -94,6 +98,46 @@ namespace LurkBoisModded.EventHandlers
                     continue;
                 }
                 for (int i = 0; i < Plugin.GetConfig().SubclassSpawnConfig.ClassDSubclasses[subclass]; i++)
+                {
+                    Player selectedPlayer = handledPlayers.RandomItem();
+                    selectedPlayer.ReferenceHub.SetSubclass(subclassbase);
+                    handledPlayers.Remove(selectedPlayer);
+                }
+            }
+        }
+
+        private void HandleGuards(List<Player> players)
+        {
+            List<Player> handledPlayers = players;
+            foreach (string subclass in Plugin.GetConfig().SubclassSpawnConfig.GuardSubclasses.Keys)
+            {
+                SubclassBase subclassbase = SubclassManager.GetSubclass(subclass);
+                if (subclassbase == null)
+                {
+                    Log.Warning("Can't find subclass by name! Name: " + subclass);
+                    continue;
+                }
+                for (int i = 0; i < Plugin.GetConfig().SubclassSpawnConfig.GuardSubclasses[subclass]; i++)
+                {
+                    Player selectedPlayer = handledPlayers.RandomItem();
+                    selectedPlayer.ReferenceHub.SetSubclass(subclassbase);
+                    handledPlayers.Remove(selectedPlayer);
+                }
+            }
+        }
+
+        private void HandleScientists(List<Player> players)
+        {
+            List<Player> handledPlayers = players;
+            foreach (string subclass in Plugin.GetConfig().SubclassSpawnConfig.ScientistSubclasses.Keys)
+            {
+                SubclassBase subclassbase = SubclassManager.GetSubclass(subclass);
+                if (subclassbase == null)
+                {
+                    Log.Warning("Can't find subclass by name! Name: " + subclass);
+                    continue;
+                }
+                for (int i = 0; i < Plugin.GetConfig().SubclassSpawnConfig.ScientistSubclasses[subclass]; i++)
                 {
                     Player selectedPlayer = handledPlayers.RandomItem();
                     selectedPlayer.ReferenceHub.SetSubclass(subclassbase);

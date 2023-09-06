@@ -3,6 +3,7 @@ using PluginAPI.Enums;
 using PluginAPI.Core.Attributes;
 using PluginAPI.Core;
 using MEC;
+using PlayerRoles;
 using UnityEngine;
 using LurkBoisModded.Commands.GameConsole;
 
@@ -16,7 +17,7 @@ namespace LurkBoisModded.EventHandlers
             Timing.CallDelayed(0.1f, () =>
             {
                 //Fix SCP 049 cloak?
-                if(ev.Player.Role == PlayerRoles.RoleTypeId.Scp049)
+                if(ev.Player.Role == RoleTypeId.Scp049)
                 {
                     return;
                 }
@@ -33,7 +34,7 @@ namespace LurkBoisModded.EventHandlers
                     ev.Player.SetScale(vec);
                 }
                 //Randomize SCP 939
-                if(ev.Player.Role == PlayerRoles.RoleTypeId.Scp939 && Plugin.GetConfig().Scp939Config.ModifyHeight)
+                if(ev.Player.Role == RoleTypeId.Scp939 && Plugin.GetConfig().Scp939Config.ModifyHeight)
                 {
                     float randomValue = Random.Range(Plugin.GetConfig().Scp939Config.MinHeight, Plugin.GetConfig().Scp939Config.MaxHeight);
                     Vector3 scale = new Vector3(1, randomValue, 1);
@@ -47,8 +48,22 @@ namespace LurkBoisModded.EventHandlers
         {
             ev.Player.CustomInfo = string.Empty;
             ev.Player.PlayerInfo.IsRoleHidden = false;
+            ev.Player.ReferenceHub.RemoveAllAbilities();
+            ev.Player.ReferenceHub.SetMaxHealth(-1f);
         }
 
+        [PluginEvent(ServerEventType.PlayerChangeRole)]
+        public void OnClassChange(PlayerChangeRoleEvent ev)
+        {
+            if(ev.ChangeReason == RoleChangeReason.Destroyed)
+            {
+                return;
+            }
+            ev.Player.CustomInfo = string.Empty;
+            ev.Player.PlayerInfo.IsRoleHidden = false;
+            ev.Player.ReferenceHub.RemoveAllAbilities();
+            ev.Player.ReferenceHub.SetMaxHealth(-1f);
+        }
 
         [PluginEvent(ServerEventType.RoundEnd)]
         public void OnRoundEnd(RoundEndEvent ev)

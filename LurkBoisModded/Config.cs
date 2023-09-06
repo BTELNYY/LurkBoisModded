@@ -59,6 +59,24 @@ namespace LurkBoisModded
         [Description("Chance that a coin will explode when you flip it")]
         public float CoinExplodeChance { get; set; } = 0.01f;
 
+        [Description("Max disarms per weapon. Set to -1 for unlimited, 0 to disable disarming with that weapon. (Note that this is calculated by which weapon you hold and not all weapons, so if you hold a unrestricted weapon and detain more people then a restricted weapon in your inventory can, the restricted weapon won't be able to disarm.)")]
+        public Dictionary<ItemType, int> MaxDisarmsPerWeapon { get; set; } = new Dictionary<ItemType, int>()
+        {
+            [ItemType.GunCOM15] = 1,
+            [ItemType.GunCOM18] = -1,
+            [ItemType.GunFSP9] = -1,
+            [ItemType.GunCrossvec] = -1,
+            [ItemType.GunE11SR] = -1,
+            [ItemType.GunAK] = -1,
+            [ItemType.GunShotgun] = -1,
+            [ItemType.GunRevolver] = -1,
+            [ItemType.GunLogicer] = -1,
+            [ItemType.GunCom45] = -1,
+            [ItemType.ParticleDisruptor] = -1,
+        };
+
+        public string MaxDisarmsReached { get; set; } = "You cannot detain more than {count} people with this weapon!";
+
         public SubclassSpawnConfig SubclassSpawnConfig { get; set; } = new SubclassSpawnConfig();
 
         [Description("List of items with weight for General random loot")]
@@ -302,6 +320,17 @@ namespace LurkBoisModded
             ["classd_janitor"] = 1,
             ["classd_smuggler"] = 2,
             ["classd_test_subject"] = 2,
+        };
+
+        public Dictionary<string, int> GuardSubclasses { get; set; } = new Dictionary<string, int>()
+        {
+            ["guard_gym_bro"] = 1,
+            ["guard_zone_manager"] = 1,
+        };
+
+        public Dictionary<string, int> ScientistSubclasses { get; set; } = new Dictionary<string, int>()
+        {
+            ["scientist_armed"] = 1,
         };
     }
 

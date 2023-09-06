@@ -26,9 +26,13 @@ namespace LurkBoisModded.Base
 
         public virtual List<RoomName> SpawnRooms { get; set; } = new List<RoomName>();
 
+        public virtual bool AllowKeycardDoors { get; set; } = false;
+
         public virtual float[] HeightVariety { get; set; } = new float[2] { 0.95f, 1.1f };
 
         public virtual string ClassColor { get; set; } = "white";
+
+        public virtual bool ApplyClassColorToCustomInfo { get; set; } = false;
 
         public virtual float MaxHealth { get; set; } = 0f;
 
