@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abilities\AreaDenialAbility.cs" />
+    <Compile Include="Abilities\MedicAbility.cs" />
     <Compile Include="Abilities\ScoutAbility.cs" />
     <Compile Include="Abilities\WarCryAbility.cs" />
     <Compile Include="Abilities\InspireAbility.cs" />
@@ -206,6 +207,7 @@
     <Compile Include="Subclasses\CiDemoman.cs" />
     <Compile Include="Subclasses\CiLeader.cs" />
     <Compile Include="Subclasses\ArmedScientist.cs" />
+    <Compile Include="Subclasses\ScientistMedic.cs" />
     <Compile Include="Subclasses\GuardZoneManager.cs" />
     <Compile Include="Subclasses\GuardGymBro.cs" />
     <Compile Include="Subclasses\ClassDTestSubject.cs" />

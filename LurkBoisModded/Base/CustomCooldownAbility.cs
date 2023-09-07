@@ -47,6 +47,13 @@ namespace LurkBoisModded.Base
             }
         }
 
+        public void ResetCooldown()
+        {
+            Stopwatch.Stop();
+            Stopwatch.Reset();
+        }
+
+
         public bool CheckCooldown()
         {
             if(Stopwatch == null)

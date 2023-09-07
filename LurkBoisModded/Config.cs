@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using CustomPlayerEffects;
 using System.ComponentModel;
 using LurkBoisModded.Effects;
+using System.Security.Policy;
 
 namespace LurkBoisModded
 {
@@ -331,6 +332,7 @@ namespace LurkBoisModded
         public Dictionary<string, int> ScientistSubclasses { get; set; } = new Dictionary<string, int>()
         {
             ["scientist_armed"] = 1,
+            ["scientist_medic"] = 1,
         };
     }
 
@@ -347,6 +349,8 @@ namespace LurkBoisModded
         public ScoutAbilityConfig ScoutAbilityConfig { get; set; } = new ScoutAbilityConfig();
 
         public AreaDenialAbilityConfig AreaDenialAbilityConfig { get; set; } = new AreaDenialAbilityConfig();
+
+        public MedicAbilityConfig MedicAbilityConfig { get; set; } = new MedicAbilityConfig();
     }
 
     public class RemoteExplosiveAbilityConfig
@@ -422,5 +426,42 @@ namespace LurkBoisModded
             new EffectDefinition(nameof(Blinded), 1, 4f),
             new EffectDefinition(nameof(Deafened), 1, 5f),
         };
+    }
+
+    public class MedicAbilityConfig
+    {
+        public float Cooldown { get; set; } = 60f;
+
+        public bool AllowHealSCPs { get; set; } = false;
+
+        public bool AllowHealOtherHumanTeams { get; set; } = true;
+
+        [Description("Allows scientists to heal ClassD and vise versa")]
+        public bool AllowEscapeRoleCrossTeamHealing { get; set; } = true;
+
+        public string HealingItemRequired { get; set; } = "You must hold a healing item!";
+
+        public string CantHealSCPs { get; set; } = "Can't heal SCPs";
+
+        public string CantHealGeneric { get; set; } = "Can't heal this player";
+
+        public string CantHealOtherTeams { get; set; } = "Can't heal other teams";
+
+        public string HealSuccess { get; set; } = "You healed {username} for {health} HP!";
+
+        public string HealSuccessOtherPlayer { get; set; } = "You have been healed by {username} for {health} HP!";
+
+        public Dictionary<ItemType, float> HealingDict { get; set; } = new Dictionary<ItemType, float>() 
+        {
+            [ItemType.Painkillers] = 40f,
+            [ItemType.Medkit] = 65f,
+            [ItemType.SCP207] = 30f,
+            [ItemType.SCP500] = 100f,
+            [ItemType.Adrenaline] = 50f,
+        };
+
+        public float HealMaxDistance { get; set; } = 2.5f;
+
+        public string NotInRange { get; set; } = "Nobody in range to heal";
     }
 }

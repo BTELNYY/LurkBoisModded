@@ -21,6 +21,7 @@ namespace LurkBoisModded.Managers
             [AbilityType.WarCry] = typeof(WarCryAbility),
             [AbilityType.Scout] = typeof(ScoutAbility),
             [AbilityType.AreaDenialAbility] = typeof(AreaDenialAbility),
+            [AbilityType.MedicAbility] = typeof(MedicAbility)
         };
 
         [PluginEvent(ServerEventType.PlayerSpawn)]
@@ -66,5 +67,6 @@ namespace LurkBoisModded.Managers
         WarCry,
         Scout,
         AreaDenialAbility,
+        MedicAbility,
     }
 }
