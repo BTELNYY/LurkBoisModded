@@ -3,7 +3,7 @@ using LurkBoisModded.Managers;
 
 namespace LurkBoisModded.Base
 {
-    public abstract class CustomAbilityBase : MonoBehaviour
+    public abstract class CustomAbility : MonoBehaviour
     {
         public ReferenceHub CurrentHub;
         public bool Ready { get; set; } = false;

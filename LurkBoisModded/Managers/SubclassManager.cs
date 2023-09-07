@@ -20,7 +20,7 @@ namespace LurkBoisModded.Managers
         private static Deserializer _deserializer = (Deserializer)new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .Build();
-        private static Dictionary<string, SubclassBase> _loadedSubClasses = new Dictionary<string, SubclassBase>();
+        private static Dictionary<string, Subclass> _loadedSubClasses = new Dictionary<string, Subclass>();
         private static string _path = Plugin.instance.SubclassPath;
 
         public static void Init()
@@ -60,7 +60,7 @@ namespace LurkBoisModded.Managers
             return _loadedSubClasses.Select(x => x.Key).ToList();
         }
 
-        public static SubclassBase GetSubclass(string fileName, SubclassBase defaultValue = null, bool writeDefaultValueToDisk = false)
+        public static Subclass GetSubclass(string fileName, Subclass defaultValue = null, bool writeDefaultValueToDisk = false)
         {
             if (_loadedSubClasses.ContainsKey(fileName))
             {
@@ -69,7 +69,7 @@ namespace LurkBoisModded.Managers
             else
             {
                 //fileName += ".yml";
-                SubclassBase subclass = ReadFromDisk(fileName);
+                Subclass subclass = ReadFromDisk(fileName);
                 if (subclass == null)
                 {
                     Log.Warning("Failed to get subclass based on filename. Filename: " + fileName);
@@ -91,7 +91,7 @@ namespace LurkBoisModded.Managers
             }
         }
 
-        public static void AddSubclass(SubclassBase subClass, bool overwrite = false)
+        public static void AddSubclass(Subclass subClass, bool overwrite = false)
         {
             if (_loadedSubClasses.ContainsKey(subClass.FileName))
             {
@@ -120,7 +120,7 @@ namespace LurkBoisModded.Managers
             _loadedSubClasses.Clear();
         }
 
-        private static void WriteToDisk(SubclassBase subclass, bool overwrite = false)
+        private static void WriteToDisk(Subclass subclass, bool overwrite = false)
         {
             string _filepath = Path.Combine(_path, subclass.FileName) + ".yml";
             if (!File.Exists(_filepath))
@@ -139,7 +139,7 @@ namespace LurkBoisModded.Managers
             }
         }
 
-        private static SubclassBase ReadFromDisk(string filename)
+        private static Subclass ReadFromDisk(string filename)
         {
             string _filepath = Path.Combine(_path, filename) + ".yml";
             if (!File.Exists(_filepath))
@@ -151,7 +151,7 @@ namespace LurkBoisModded.Managers
             else
             {
                 string data = File.ReadAllText(_filepath);
-                SubclassBase subclass = _deserializer.Deserialize<SubclassBase>(data);
+                Subclass subclass = _deserializer.Deserialize<Subclass>(data);
                 return subclass;
             }
         }

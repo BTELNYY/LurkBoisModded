@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LurkBoisModded.Abilities
 {
-    public class WarCryAbility : CustomCooldownAbilityBase
+    public class WarCryAbility : CustomCooldownAbility
     {
         public override AbilityType AbilityType => AbilityType.WarCry;
 

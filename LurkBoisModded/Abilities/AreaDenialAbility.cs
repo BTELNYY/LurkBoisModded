@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace LurkBoisModded.Abilities
 {
-    public class AreaDenialAbility : CustomCooldownAbilityBase, IRequiredItemAbility
+    public class AreaDenialAbility : CustomCooldownAbility, IRequiredItemAbility
     {
         public override AbilityType AbilityType => AbilityType.AreaDenialAbility;
 

@@ -11,7 +11,7 @@ using CustomPlayerEffects;
 
 namespace LurkBoisModded.Abilities
 {
-    public class ScoutAbility : CustomCooldownAbilityBase
+    public class ScoutAbility : CustomCooldownAbility
     {
         public override AbilityType AbilityType => AbilityType.Scout;
 

@@ -51,7 +51,7 @@ namespace LurkBoisModded.EventHandlers
             List<Player> handledPlayers = players;
             foreach (string subclass in Plugin.GetConfig().SubclassSpawnConfig.MtfSpawnSubclasses.Keys)
             {
-                SubclassBase subclassbase = SubclassManager.GetSubclass(subclass);
+                Subclass subclassbase = SubclassManager.GetSubclass(subclass);
                 if (subclassbase == null)
                 {
                     Log.Warning("Can't find subclass by name! Name: " + subclass);
@@ -71,7 +71,7 @@ namespace LurkBoisModded.EventHandlers
             List<Player> handledPlayers = players;
             foreach (string subclass in Plugin.GetConfig().SubclassSpawnConfig.CiSpawnSubclasses.Keys)
             {
-                SubclassBase subclassbase = SubclassManager.GetSubclass(subclass);
+                Subclass subclassbase = SubclassManager.GetSubclass(subclass);
                 if (subclassbase == null)
                 {
                     Log.Warning("Can't find subclass by name! Name: " + subclass);
@@ -91,7 +91,7 @@ namespace LurkBoisModded.EventHandlers
             List<Player> handledPlayers = players;
             foreach (string subclass in Plugin.GetConfig().SubclassSpawnConfig.ClassDSubclasses.Keys)
             {
-                SubclassBase subclassbase = SubclassManager.GetSubclass(subclass);
+                Subclass subclassbase = SubclassManager.GetSubclass(subclass);
                 if (subclassbase == null)
                 {
                     Log.Warning("Can't find subclass by name! Name: " + subclass);
@@ -111,7 +111,7 @@ namespace LurkBoisModded.EventHandlers
             List<Player> handledPlayers = players;
             foreach (string subclass in Plugin.GetConfig().SubclassSpawnConfig.GuardSubclasses.Keys)
             {
-                SubclassBase subclassbase = SubclassManager.GetSubclass(subclass);
+                Subclass subclassbase = SubclassManager.GetSubclass(subclass);
                 if (subclassbase == null)
                 {
                     Log.Warning("Can't find subclass by name! Name: " + subclass);
@@ -131,7 +131,7 @@ namespace LurkBoisModded.EventHandlers
             List<Player> handledPlayers = players;
             foreach (string subclass in Plugin.GetConfig().SubclassSpawnConfig.ScientistSubclasses.Keys)
             {
-                SubclassBase subclassbase = SubclassManager.GetSubclass(subclass);
+                Subclass subclassbase = SubclassManager.GetSubclass(subclass);
                 if (subclassbase == null)
                 {
                     Log.Warning("Can't find subclass by name! Name: " + subclass);

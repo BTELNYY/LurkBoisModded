@@ -9,7 +9,7 @@ using LurkBoisModded.Managers;
 
 namespace LurkBoisModded.Subclasses
 {
-    public class MtfCommander : SubclassBase
+    public class MtfCommander : Subclass
     {
         public override string FileName => "mtf_commander";
 

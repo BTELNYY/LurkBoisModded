@@ -55,7 +55,7 @@ namespace LurkBoisModded.Commands.RemoteAdmin
                 foreach (ReferenceHub referenceHub in list)
                 {
                     Player p = Player.Get(referenceHub);
-                    SubclassBase baseSubClass = SubclassManager.GetSubclass(subclass);
+                    Subclass baseSubClass = SubclassManager.GetSubclass(subclass);
                     if(baseSubClass == null)
                     {
                         response = "Failed to find subclass!";

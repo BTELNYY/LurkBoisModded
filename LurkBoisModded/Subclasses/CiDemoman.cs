@@ -9,7 +9,7 @@ using LurkBoisModded.Managers;
 
 namespace LurkBoisModded.Subclasses
 {
-    public class CiDemoman : SubclassBase
+    public class CiDemoman : Subclass
     {
         public override string FileName => "ci_demoman";
 

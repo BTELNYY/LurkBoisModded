@@ -8,7 +8,7 @@ using LurkBoisModded.Managers;
 namespace LurkBoisModded.Base
 {
     [Serializable]
-    public class SubclassBase
+    public class Subclass
     {
         public virtual string FileName { get; set; } = "default";
 
@@ -40,7 +40,7 @@ namespace LurkBoisModded.Base
 
         public virtual int NumberOfRandomItems { get; set; } = 0;
 
-        public SubclassBase()
+        public Subclass()
         {
 
         }

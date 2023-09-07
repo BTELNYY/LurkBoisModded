@@ -3,7 +3,7 @@ using LurkBoisModded.Managers;
 
 namespace LurkBoisModded.Base
 {
-    public abstract class CustomCooldownAbilityBase : CustomAbilityBase
+    public abstract class CustomCooldownAbility : CustomAbility
     {
         public override abstract AbilityType AbilityType { get; }
 

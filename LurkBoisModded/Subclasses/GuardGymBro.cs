@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LurkBoisModded.Subclasses
 {
-    public class GuardGymBro : SubclassBase
+    public class GuardGymBro : Subclass
     {
         public override RoleTypeId Role => RoleTypeId.FacilityGuard;
 

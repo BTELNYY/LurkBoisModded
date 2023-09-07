@@ -17,7 +17,7 @@ using UnityEngine;
 
 namespace LurkBoisModded.Abilities
 {
-    public class RemoteExplosiveAbility : CustomAbilityBase, IRequiredItemAbility
+    public class RemoteExplosiveAbility : CustomAbility, IRequiredItemAbility
     {
         public List<RadioPickup> TrackedRadios = new List<RadioPickup>();
         public bool Used = false;

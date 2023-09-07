@@ -10,7 +10,7 @@ using PlayerRoles.FirstPersonControl;
 
 namespace LurkBoisModded.Abilities
 {
-    public class ProximityChatAbility : CustomAbilityBase
+    public class ProximityChatAbility : CustomAbility
     {
         public static readonly HashSet<ReferenceHub> ToggledPlayers = new HashSet<ReferenceHub>();
 

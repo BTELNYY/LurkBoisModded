@@ -26,7 +26,7 @@ namespace LurkBoisModded.Managers
         [PluginEvent(ServerEventType.PlayerSpawn)]
         public void OnSpawn(PlayerSpawnEvent ev)
         {
-            foreach (CustomAbilityBase ability in ev.Player.GameObject.GetComponents<CustomAbilityBase>())
+            foreach (CustomAbility ability in ev.Player.GameObject.GetComponents<CustomAbility>())
             {
                 GameObject.Destroy(ability);
             }
@@ -50,8 +50,8 @@ namespace LurkBoisModded.Managers
                 return true;
             }
 
-            List<CustomAbilityBase> abilities = player.gameObject.GetComponents<CustomAbilityBase>().ToList();
-            foreach(CustomAbilityBase ability in abilities)
+            List<CustomAbility> abilities = player.gameObject.GetComponents<CustomAbility>().ToList();
+            foreach(CustomAbility ability in abilities)
             {
                 ability.OnTrigger();
             }

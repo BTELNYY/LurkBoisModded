@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LurkBoisModded.Subclasses
 {
-    public class ClassDSmuggler : SubclassBase
+    public class ClassDSmuggler : Subclass
     {
         public override string ClassColor => "orange";
 

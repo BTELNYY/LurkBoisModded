@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LurkBoisModded.Subclasses
 {
-    public class ClassDJanitor : SubclassBase
+    public class ClassDJanitor : Subclass
     {
         public override string FileName => "classd_janitor";
 

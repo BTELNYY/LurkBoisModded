@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LurkBoisModded.Subclasses
 {
-    public class MtfScout : SubclassBase
+    public class MtfScout : Subclass
     {
         public override string FileName => "mtf_scout";
 

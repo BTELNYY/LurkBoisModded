@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LurkBoisModded.Subclasses
 {
-    public class GuardZoneManager : SubclassBase
+    public class GuardZoneManager : Subclass
     {
         public override RoleTypeId Role => RoleTypeId.FacilityGuard;
 
@@ -35,7 +35,7 @@ namespace LurkBoisModded.Subclasses
         public override bool AllowKeycardDoors => true;
 
         public override List<RoomName> SpawnRooms => new List<RoomName>() 
-        { 
+        {
             RoomName.LczCheckpointA, 
             RoomName.LczCheckpointB
         };

@@ -8,7 +8,7 @@ using LurkBoisModded.Managers;
 
 namespace LurkBoisModded.Abilities
 {
-    public class InspireAbility : CustomCooldownAbilityBase
+    public class InspireAbility : CustomCooldownAbility
     {
         public override AbilityType AbilityType => AbilityType.Inspire;
 

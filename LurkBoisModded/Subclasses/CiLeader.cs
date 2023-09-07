@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LurkBoisModded.Subclasses
 {
-    public class CiLeader : SubclassBase
+    public class CiLeader : Subclass
     {
         public override string FileName => "ci_leader";
         public override RoleTypeId Role => RoleTypeId.ChaosRepressor;

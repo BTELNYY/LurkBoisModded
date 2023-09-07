@@ -1,4 +1,5 @@
-﻿using Hints;
+﻿using HarmonyLib;
+using Hints;
 using Interactables.Interobjects;
 using Interactables.Interobjects.DoorUtils;
 using InventorySystem;
@@ -11,6 +12,7 @@ using LurkBoisModded.Base;
 using LurkBoisModded.Managers;
 using LurkBoisModded.StatModules;
 using MapGeneration;
+using MEC;
 using Mirror;
 using PlayerRoles;
 using PlayerRoles.FirstPersonControl;
@@ -230,6 +232,11 @@ namespace LurkBoisModded
             {
                 door.NetworkTargetState = false;
             }
+            if (door is CheckpointDoor)
+            {
+                CheckpointDoor checkPointDoor = (CheckpointDoor)door;
+                AccessTools.Method(typeof(CheckpointDoor), "UpdateSequence").Invoke(checkPointDoor, null);
+            }
         }
         public static void SetDoorState(this DoorVariant door, DoorState state, bool locked, DoorLockReason reason = DoorLockReason.AdminCommand)
         {
@@ -242,6 +249,11 @@ namespace LurkBoisModded
                 door.TargetState = false;
             }
             door.ServerChangeLock(reason, locked);
+            if (door is CheckpointDoor)
+            {
+                CheckpointDoor checkPointDoor = (CheckpointDoor)door;
+                AccessTools.Method(typeof(CheckpointDoor), "UpdateSequence").Invoke(checkPointDoor, null);
+            }
         }
         public static void SendHint(this Player target, string text, float duration = 3f)
         {
@@ -291,17 +303,27 @@ namespace LurkBoisModded
         }
         public static void AddAbility(this ReferenceHub target, AbilityType type)
         {
-            if (!AbilityManager.AbilityToType.ContainsKey(type))
+            if (target.characterClassManager.InstanceMode != ClientInstanceMode.ReadyClient || target.nicknameSync.MyNick == "Dedicated Server")
             {
-                Debug.LogError("Failed to find ability by AbilityType!");
+                Log.Error("Tried adding ability to Dedicated Server or Unready Client!");
                 return;
             }
-            CustomAbilityBase ability = (CustomAbilityBase)target.gameObject.AddComponent(AbilityManager.AbilityToType[type]);
+            if (!AbilityManager.AbilityToType.ContainsKey(type))
+            {
+                Log.Error("Failed to find ability by AbilityType!");
+                return;
+            }
+            CustomAbility ability = (CustomAbility)target.gameObject.AddComponent(AbilityManager.AbilityToType[type]);
             ability.CurrentHub = target;
             ability.OnFinishSetup();
         }
-        public static void SetSubclass(this ReferenceHub target, SubclassBase subclass)
+        public static void SetSubclass(this ReferenceHub target, Subclass subclass)
         {
+            if(target.characterClassManager.InstanceMode != ClientInstanceMode.ReadyClient || target.nicknameSync.MyNick == "Dedicated Server")
+            {
+                Log.Error("Tried adding ability to Dedicated Server or Unready Client!");
+                return;
+            }
             Player player = Player.Get(target);
             player.SetRole(subclass.Role);
             if (subclass.HeightVariety[0] == subclass.HeightVariety[1])
@@ -326,58 +348,6 @@ namespace LurkBoisModded
                     Log.Warning("Ability is missing! Ability: " + ability.ToString(), "Subclass");
                 }
             }
-            if (subclass.ClearInventoryOnSpawn)
-            {
-                player.ClearInventory();
-            }
-            foreach(ItemType item in subclass.SpawnItems.Keys)
-            {
-                if (item.ToString().Contains("Ammo"))
-                {
-                    player.AddAmmo(item, subclass.SpawnItems[item]);
-                    continue;
-                }
-                if (item.ToString().Contains("Gun"))
-                {
-                    ItemBase itemBase = player.ReferenceHub.inventory.ServerAddItem(item);
-                    if (itemBase is Firearm && subclass.SpawnItems[item] > 0)
-                    {
-                        Firearm firearm = (Firearm)itemBase;
-                        FirearmStatus status = new FirearmStatus((byte)subclass.SpawnItems[item], firearm.Status.Flags, firearm.Status.Attachments);
-                        firearm.Status = status;
-                    }
-                    continue;
-                }
-                for (int i = 0; i < subclass.SpawnItems[item]; i++)
-                {
-                    player.AddItem(item);
-                }
-            }
-            for(int i = 0; i < subclass.NumberOfRandomItems; i++)
-            {
-                ItemType item = subclass.RandomItems.Keys.ToList().RandomItem();
-                if (item.ToString().Contains("Ammo"))
-                {
-                    player.AddAmmo(item, subclass.RandomItems[item]);
-                    continue;
-                }
-                if (item.ToString().Contains("Gun"))
-                {
-                    ItemBase itemBase = player.ReferenceHub.inventory.ServerAddItem(item);
-                    if (itemBase is Firearm && subclass.RandomItems[item] > 0)
-                    {
-                        Firearm firearm = (Firearm)itemBase;
-                        FirearmStatus status = new FirearmStatus((byte)subclass.RandomItems[item], firearm.Status.Flags, firearm.Status.Attachments);
-                        firearm.Status = status;
-                    }
-                    continue;
-                }
-                for (int f = 0; f < subclass.RandomItems[item]; f++)
-                {
-                    player.AddItem(item);
-                }
-            }
-            player.ApplyAttachments();
             if(subclass.MaxHealth != 0)
             {
                 target.SetMaxHealth(subclass.MaxHealth);
@@ -386,7 +356,7 @@ namespace LurkBoisModded
             player.PlayerInfo.IsRoleHidden = true;
             if (subclass.ApplyClassColorToCustomInfo)
             {
-                player.CustomInfo = subclass.SubclassNiceName + $" <color={subclass.ClassColor}>(Custom Subclass)</color>";
+                player.CustomInfo = $"<color={subclass.ClassColor}>" + subclass.SubclassNiceName + "(Custom Subclass)</color>";
             }
             else
             {
@@ -399,26 +369,84 @@ namespace LurkBoisModded
             {
                 List<RoomIdentifier> foundRooms = RoomIdentifier.AllRoomIdentifiers.Where(x => subclass.SpawnRooms.Contains(x.Name)).ToList();
                 RoomIdentifier chosenRoom = foundRooms.RandomItem();
-                //Make sure that the door can't be a keycard door
                 DoorVariant door = null;
                 if (subclass.AllowKeycardDoors)
                 {
-                    door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => !(x is INonInteractableDoor)).ToList().RandomItem();
+                    door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => !(x is ElevatorDoor)).ToList().RandomItem();
                 }
                 else
                 {
-                    door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None && !(x is INonInteractableDoor)).ToList().RandomItem();
+                    door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None && !(x is ElevatorDoor)).ToList().RandomItem();
                 }
                 door.SetDoorState(DoorState.Open);
                 Vector3 pos = door.transform.position;
                 pos.y += 1f;
                 target.TryOverridePosition(pos, Vector3.forward);
             }
+            if (subclass.ClearInventoryOnSpawn)
+            {
+                player.ClearInventory();
+            }
+            foreach (ItemType item in subclass.SpawnItems.Keys)
+            {
+                if (item.ToString().Contains("Ammo"))
+                {
+                    player.AddAmmo(item, subclass.SpawnItems[item]);
+                    continue;
+                }
+                if (item.ToString().Contains("Gun"))
+                {
+                    //ItemBase itemBase = player.AddItem(item);
+                    //InventoryItemLoader.TryGetItem(item, out itemBase);
+                    player.AddFirearm(item, (byte)subclass.SpawnItems[item]);
+                    //if (itemBase is Firearm firearm && subclass.SpawnItems[item] > 0)
+                    //{
+                    //    Timing.CallDelayed(0.25f, () => 
+                    //    {
+                    //        byte ammo = (byte)subclass.SpawnItems[item];
+                    //        firearm.Status = new FirearmStatus(ammo, firearm.Status.Flags, firearm.Status.Attachments);
+                    //    });
+                    //}
+                    continue;
+                }
+                for (int i = 0; i < subclass.SpawnItems[item]; i++)
+                {
+                    player.AddItem(item);
+                }
+            }
+            for (int i = 0; i < subclass.NumberOfRandomItems; i++)
+            {
+                ItemType item = subclass.RandomItems.Keys.ToList().RandomItem();
+                if (item.ToString().Contains("Ammo"))
+                {
+                    player.AddAmmo(item, subclass.RandomItems[item]);
+                    continue;
+                }
+                if (item.ToString().Contains("Gun"))
+                {
+                    player.AddFirearm(item, (byte)subclass.RandomItems[item]);
+                    //ItemBase itemBase = player.AddItem(item);
+                    //if (itemBase is Firearm firearm && subclass.RandomItems[item] > 0)
+                    //{
+                    //    Timing.CallDelayed(0.25f, () => 
+                    //    {
+                    //        byte ammo = (byte)subclass.RandomItems[item];
+                    //        firearm.Status = new FirearmStatus(ammo, firearm.Status.Flags, firearm.Status.Attachments);
+                    //    });
+                    //}
+                    continue;
+                }
+                for (int f = 0; f < subclass.RandomItems[item]; f++)
+                {
+                    player.AddItem(item);
+                }
+            }
+            player.ApplyAttachments();
         }
         public static void RemoveAllAbilities(this ReferenceHub target)
         {
-            List<CustomAbilityBase> abilities = target.gameObject.GetComponents<CustomAbilityBase>().ToList();
-            foreach(CustomAbilityBase ability in abilities)
+            List<CustomAbility> abilities = target.gameObject.GetComponents<CustomAbility>().ToList();
+            foreach(CustomAbility ability in abilities)
             {
                 GameObject.Destroy(ability);
             }
@@ -470,6 +498,26 @@ namespace LurkBoisModded
             List<uint> netIds = disarmedEntries.Select(x => x.DisarmedPlayer).ToList();
             List<ReferenceHub> hubs = ReferenceHub.AllHubs.Where(x => netIds.Contains(x.networkIdentity.netId)).ToList();
             return hubs;
+        }
+        public static bool AddFirearm(this Player target, ItemType type, byte ammo)
+        {
+            if(target.ReferenceHub.characterClassManager.InstanceMode != ClientInstanceMode.ReadyClient)
+            {
+                return false;
+            }
+            if (!type.ToString().Contains("Gun"))
+            {
+                return false;
+            }
+            ItemBase item = target.AddItem(type);
+            Timing.CallDelayed(0.25f, () => 
+            {
+                if(item is Firearm firearm)
+                {
+                    firearm.Status = new FirearmStatus(ammo, firearm.Status.Flags, firearm.Status.Attachments);
+                }
+            });
+            return true;
         }
     }
 
