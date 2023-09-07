@@ -353,36 +353,6 @@ namespace LurkBoisModded
                 target.SetMaxHealth(subclass.MaxHealth);
                 player.Heal(subclass.MaxHealth);
             }
-            player.PlayerInfo.IsRoleHidden = true;
-            if (subclass.ApplyClassColorToCustomInfo)
-            {
-                player.CustomInfo = $"<color={subclass.ClassColor}>" + subclass.SubclassNiceName + "(Custom Subclass)</color>";
-            }
-            else
-            {
-                player.CustomInfo = subclass.SubclassNiceName + " (Custom Subclass)";
-            }
-            string hintFormatted = $"You are <color={subclass.ClassColor}><b>{subclass.SubclassNiceName}</b></color>! \n {subclass.SubclassDescription}";
-            target.SendHint(hintFormatted, 10f);
-            //if the spawnrooms is more than one, otherwise just use the default spawn
-            if(subclass.SpawnRooms.Count > 0)
-            {
-                List<RoomIdentifier> foundRooms = RoomIdentifier.AllRoomIdentifiers.Where(x => subclass.SpawnRooms.Contains(x.Name)).ToList();
-                RoomIdentifier chosenRoom = foundRooms.RandomItem();
-                DoorVariant door = null;
-                if (subclass.AllowKeycardDoors)
-                {
-                    door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => !(x is ElevatorDoor)).ToList().RandomItem();
-                }
-                else
-                {
-                    door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None && !(x is ElevatorDoor)).ToList().RandomItem();
-                }
-                door.SetDoorState(DoorState.Open);
-                Vector3 pos = door.transform.position;
-                pos.y += 1f;
-                target.TryOverridePosition(pos, Vector3.forward);
-            }
             if (subclass.ClearInventoryOnSpawn)
             {
                 player.ClearInventory();
@@ -442,6 +412,37 @@ namespace LurkBoisModded
                 }
             }
             player.ApplyAttachments();
+            //if the spawnrooms is more than one, otherwise just use the default spawn
+            if(subclass.SpawnRooms.Count > 0)
+            {
+                List<RoomIdentifier> foundRooms = RoomIdentifier.AllRoomIdentifiers.Where(x => subclass.SpawnRooms.Contains(x.Name)).ToList();
+                RoomIdentifier chosenRoom = foundRooms.RandomItem();
+                DoorVariant door = null;
+                if (subclass.AllowKeycardDoors)
+                {
+                    door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => !(x is ElevatorDoor)).ToList().RandomItem();
+                }
+                else
+                {
+                    door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None && !(x is ElevatorDoor)).ToList().RandomItem();
+                }
+                door.SetDoorState(DoorState.Open);
+                Vector3 pos = door.transform.position;
+                pos.y += 1f;
+                target.TryOverridePosition(pos, Vector3.forward);
+            }
+            player.PlayerInfo.IsRoleHidden = true;
+            if (subclass.ApplyClassColorToCustomInfo)
+            {
+                player.CustomInfo = $"<color={subclass.ClassColor}>" + subclass.SubclassNiceName + "(Custom Subclass)</color>";
+            }
+            else
+            {
+                player.CustomInfo = subclass.SubclassNiceName + " (Custom Subclass)";
+            }
+            string hintFormatted = $"You are <color={subclass.ClassColor}><b>{subclass.SubclassNiceName}</b></color>! \n {subclass.SubclassDescription}";
+            target.SendHint(hintFormatted, 30f);
+            target.gameConsoleTransmission.SendToClient(hintFormatted, "green");
         }
         public static void RemoveAllAbilities(this ReferenceHub target)
         {
