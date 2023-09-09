@@ -27,7 +27,7 @@ namespace LurkBoisModded.Abilities
             List<ReferenceHub> affectedHubs = sameTeamHubs.Where(x => Vector3.Distance(x.transform.position, CurrentHub.transform.position) <= Plugin.GetConfig().AbilityConfig.InspireAbilityConfig.Range).ToList();
             if (affectedHubs.Count <= 1)
             {
-                Stopwatch.Stop();
+                ResetCooldown();
                 CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.WarCryAbilityConfig.NoTargetsMessage);
                 return;
             }

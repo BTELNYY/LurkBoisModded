@@ -23,6 +23,7 @@ namespace LurkBoisModded.Patches
             new OnFire(),
             new MaxHealthReduction(),
             new BetterBleeding(),
+            new Regeneration(),
         };
 
         public static void Prefix(PlayerEffectsController __instance)

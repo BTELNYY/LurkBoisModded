@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using LurkBoisModded.Managers;
+using PluginAPI.Core;
+using UnityEngine;
 
 namespace LurkBoisModded.Base
 {
@@ -9,26 +12,89 @@ namespace LurkBoisModded.Base
 
         public abstract float Cooldown { get; }
 
-        public Stopwatch Stopwatch { get; set; }
+        public float EffectiveCooldown 
+        { 
+            get 
+            {
+                try
+                {
+                    return Math.Max(0f, Cooldown * CooldownMultiplier);
+                }
+                catch(Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    return 0f;
+                }
+            } 
+        }
 
-        public bool CooldownReady { get; set; } = true;
-
-        public float RemainingTime 
+        public Stopwatch CooldownStopwatch 
         {
             get
             {
-                if(Stopwatch == null || !Stopwatch.IsRunning)
+                if(_stopwatch == null)
+                {
+                    _stopwatch = new Stopwatch();
+                }
+                return _stopwatch;
+            }
+        }
+
+        private Stopwatch _stopwatch;
+
+        public bool CooldownReady { get; set; } = true;
+
+        public float RemainingCooldownTime 
+        {
+            get
+            {
+                if(!CooldownStopwatch.IsRunning)
                 {
                     return 0f;
                 }
-                return (float)(Cooldown - Stopwatch.Elapsed.TotalSeconds);
+                return Math.Max(0f, (float)(EffectiveCooldown - (CooldownStopwatch.Elapsed.TotalMilliseconds * 1000)));
             }
+            set
+            {
+                float newTime = EffectiveCooldown - value;
+                newTime = Math.Max(newTime, 0);
+                TimeSpan span = TimeSpan.FromSeconds(newTime);
+                CooldownStopwatch.Reset();
+                CooldownStopwatch.Elapsed.Add(span);
+                CooldownStopwatch.Start();
+            }
+        }
+
+        public float CooldownMultiplier 
+        { 
+            get 
+            {
+                return _cooldownMultiplier;
+            }
+            set 
+            {
+                float usedValue = Math.Max(0f, value);
+                _cooldownMultiplier = usedValue;
+            }
+        }
+
+        private float _cooldownMultiplier = 1f;
+
+        public const float CooldownMultiplierDefault = 1f;
+
+        public void ResetCooldownMultiplier()
+        {
+            CooldownMultiplier = CooldownMultiplierDefault;
+        }
+
+        public void SetCooldownMultiplierInverse(byte amount)
+        {
+            CooldownMultiplier /= amount;
         }
 
         public override void OnFinishSetup()
         {
             base.OnFinishSetup();
-            Stopwatch = new Stopwatch();
         }
 
         public override void OnTrigger()
@@ -36,36 +102,40 @@ namespace LurkBoisModded.Base
             base.OnTrigger();
             CooldownReady = CheckCooldown();
             if (!CooldownReady)
-            {
-
-                CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.CooldownMessage.Replace("{time}", ((int)RemainingTime).ToString()));
+            { 
+                CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.CooldownMessage.Replace("{time}", ((int)RemainingCooldownTime).ToString()));
                 return;
             }
             else
             {
-                Stopwatch.Restart();
+                CooldownStopwatch.Restart();
             }
         }
 
         public void ResetCooldown()
         {
-            Stopwatch.Stop();
-            Stopwatch.Reset();
+            CooldownStopwatch.Reset();
+        }
+
+        public void SetRemainingCooldown(float time)
+        {
+            float newTime = EffectiveCooldown - time;
+            newTime = Math.Max(newTime, 0);
+            TimeSpan span = TimeSpan.FromSeconds(newTime);
+            CooldownStopwatch.Reset();
+            CooldownStopwatch.Elapsed.Add(span);
+            CooldownStopwatch.Start();
         }
 
 
         public bool CheckCooldown()
         {
-            if(Stopwatch == null)
+            if (!CooldownStopwatch.IsRunning)
             {
+                CooldownStopwatch.Start();
                 return true;
             }
-            if (!Stopwatch.IsRunning)
-            {
-                Stopwatch.Start();
-                return true;
-            }
-            if(Stopwatch.Elapsed.TotalMilliseconds > (Cooldown * 1000))
+            if(CooldownStopwatch.Elapsed.TotalMilliseconds > (EffectiveCooldown * 1000))
             {
                 return true;
             }

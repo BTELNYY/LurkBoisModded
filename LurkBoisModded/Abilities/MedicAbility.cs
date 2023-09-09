@@ -27,20 +27,20 @@ namespace LurkBoisModded.Abilities
             }
             if(CurrentHub.inventory.CurItem == null || CurrentHub.inventory.CurInstance ==  null) 
             {
-                ResetCooldown();
+                SetRemainingCooldown(1f);
                 CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingItemRequired);
                 return;
             }
             if(CurrentHub.inventory.CurInstance.Category != ItemCategory.Medical)
             {
-                ResetCooldown();
+                SetRemainingCooldown(1f);
                 CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingItemRequired);
                 return;
             }
             float healing = 0;
             if (!Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingDict.ContainsKey(CurrentHub.inventory.CurItem.TypeId))
             {
-                ResetCooldown();
+                SetRemainingCooldown(1f);
                 CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingItemRequired);
                 return;
             }
@@ -53,7 +53,7 @@ namespace LurkBoisModded.Abilities
             raycastFrom.x += 0.25f;
             if (!Physics.Raycast(raycastFrom, cam.forward, out RaycastHit hit, Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealMaxDistance, LayerMask.GetMask("Default", "Player", "Hitbox")))
             {
-                ResetCooldown();
+                SetRemainingCooldown(1f);
                 CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.NotInRange);
                 return;
             }
@@ -65,7 +65,7 @@ namespace LurkBoisModded.Abilities
             Player hitPlayer = Player.Get(hit.transform.GetComponentInParent<ReferenceHub>());
             if(hitPlayer.ReferenceHub.Network_playerId == CurrentHub.Network_playerId)
             {
-                ResetCooldown();
+                SetRemainingCooldown(1f);
                 return;
             }
             if (!AllowHealing(CurrentHub.GetTeam(), hitPlayer.ReferenceHub.GetTeam(), out string response))
@@ -78,7 +78,7 @@ namespace LurkBoisModded.Abilities
             {
                 if(hitPlayer.MaxHealth <= hitPlayer.Health)
                 {
-                    ResetCooldown();
+                    SetRemainingCooldown(1f);
                     CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.PlayerHealthFull);
                 }
                 string message = Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealSuccess.Replace("{username}", hitPlayer.Nickname).Replace("{health}", ((int)healing).ToString());

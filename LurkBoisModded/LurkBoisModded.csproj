@@ -160,6 +160,7 @@
     <Compile Include="Commands\RemoteAdmin\SetSubclass.cs" />
     <Compile Include="Base\EffectDefinition.cs" />
     <Compile Include="Commands\RemoteAdmin\SubclassList.cs" />
+    <Compile Include="Effects\Regeneration.cs" />
     <Compile Include="Effects\MaxHealthReduction.cs" />
     <Compile Include="EventHandlers\SubclassSpawnHandler.cs" />
     <Compile Include="Patches\DisarmPatch.cs" />
