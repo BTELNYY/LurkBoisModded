@@ -8,8 +8,17 @@ using System.Threading.Tasks;
 
 namespace LurkBoisModded.Effects
 {
-    public class BetterBleeding : TickingEffectBase
+    public class BetterBleeding : TickingEffectBase, IHealablePlayerEffect
     {
+        public bool IsHealable(ItemType item)
+        {
+            if(item == ItemType.Medkit || item == ItemType.SCP500)
+            {
+                return true;
+            }
+            return false;
+        }
+
         protected override void OnTick()
         {
             float damage = 2 * Intensity;

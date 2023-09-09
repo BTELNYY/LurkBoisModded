@@ -12,9 +12,8 @@ namespace LurkBoisModded.EventHandlers.Scp939
         [PluginEvent(ServerEventType.PlayerDamage)]
         public void OnScp939Claw(PlayerDamageEvent ev)
         {
-            if(ev.DamageHandler is Scp939DamageHandler)
+            if(ev.DamageHandler is Scp939DamageHandler handler)
             {
-                Scp939DamageHandler handler = ev.DamageHandler as Scp939DamageHandler;
                 if(handler.Scp939DamageType == Scp939DamageType.Claw)
                 {
                     ev.Target.EffectsManager.ChangeState<BetterBleeding>(Plugin.GetConfig().Scp939Config.Intensity, Plugin.GetConfig().Scp939Config.Duration, Plugin.GetConfig().Scp939Config.Stacks);

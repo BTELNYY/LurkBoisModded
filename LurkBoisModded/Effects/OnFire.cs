@@ -33,14 +33,21 @@ namespace LurkBoisModded.Effects
         protected override void Update()
         {
             base.Update();
+            if(CurrentBase == null)
+            {
+                return;
+            }
             CurrentBase.NetworkPosition = Hub.transform.position;
             CurrentBase.transform.position = Hub.transform.position;
-            //CurrentBase.netIdentity.Respawn();
         }
 
         protected override void Disabled()
         {
             base.Disabled();
+            if (CurrentBase == null)
+            {
+                return;
+            }
             NetworkServer.Destroy(CurrentBase.gameObject);
         }
 

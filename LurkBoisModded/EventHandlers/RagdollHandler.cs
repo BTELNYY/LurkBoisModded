@@ -10,6 +10,10 @@ namespace LurkBoisModded.EventHandlers
         public static void OnRagdollSpawn(BasicRagdoll ragdoll)
         {
             Vector3 vec = ragdoll.NetworkInfo.OwnerHub.transform.localScale;
+            if(ragdoll.NetworkInfo.RoleType == PlayerRoles.RoleTypeId.Scp049)
+            {
+                return;
+            }
             ragdoll.netIdentity.SetScale(vec);
         }
 

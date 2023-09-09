@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using PlayerRoles;
 using LurkBoisModded.Base;
 using LurkBoisModded.Managers;
+using System.Linq;
 
 namespace LurkBoisModded.EventHandlers
 {
@@ -89,7 +90,9 @@ namespace LurkBoisModded.EventHandlers
         private void HandleClassD(List<Player> players)
         {
             List<Player> handledPlayers = players;
-            foreach (string subclass in Plugin.GetConfig().SubclassSpawnConfig.ClassDSubclasses.Keys)
+            List<string> shuffledRoles = Plugin.GetConfig().SubclassSpawnConfig.ClassDSubclasses.Keys.ToList();
+            shuffledRoles.ShuffleList();
+            foreach (string subclass in shuffledRoles)
             {
                 Subclass subclassbase = SubclassManager.GetSubclass(subclass);
                 if (subclassbase == null)
@@ -109,7 +112,9 @@ namespace LurkBoisModded.EventHandlers
         private void HandleGuards(List<Player> players)
         {
             List<Player> handledPlayers = players;
-            foreach (string subclass in Plugin.GetConfig().SubclassSpawnConfig.GuardSubclasses.Keys)
+            List<string> shuffledRoles = Plugin.GetConfig().SubclassSpawnConfig.GuardSubclasses.Keys.ToList();
+            shuffledRoles.ShuffleList();
+            foreach (string subclass in shuffledRoles)
             {
                 Subclass subclassbase = SubclassManager.GetSubclass(subclass);
                 if (subclassbase == null)
@@ -129,7 +134,9 @@ namespace LurkBoisModded.EventHandlers
         private void HandleScientists(List<Player> players)
         {
             List<Player> handledPlayers = players;
-            foreach (string subclass in Plugin.GetConfig().SubclassSpawnConfig.ScientistSubclasses.Keys)
+            List<string> shuffledRoles = Plugin.GetConfig().SubclassSpawnConfig.ScientistSubclasses.Keys.ToList();
+            shuffledRoles.ShuffleList();
+            foreach (string subclass in shuffledRoles)
             {
                 Subclass subclassbase = SubclassManager.GetSubclass(subclass);
                 if (subclassbase == null)

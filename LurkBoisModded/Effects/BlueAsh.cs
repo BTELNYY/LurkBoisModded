@@ -13,6 +13,10 @@ namespace LurkBoisModded.Effects
         protected override void Enabled()
         {
             base.Enabled();
+            if (Hub.characterClassManager.InstanceMode != ClientInstanceMode.ReadyClient)
+            {
+                return;
+            }
             Player p = Player.Get(Hub);
             p.EffectsManager.ChangeState<MovementBoost>(Intensity, TimeLeft, false);
             p.SendHint(Plugin.GetConfig().Scp914Config.Scp914BlueAshReminder.Replace("{time}", ((int)TimeLeft).ToString()));
@@ -28,7 +32,7 @@ namespace LurkBoisModded.Effects
         protected override void Disabled()
         {
             base.Disabled();
-            if(TimeLeft <= 1f && Intensity != 0)
+            if(TimeLeft <= 1f && Hub.characterClassManager.InstanceMode == ClientInstanceMode.ReadyClient)
             {
                 Player p = Player.Get(Hub);
                 p.Kill(Plugin.GetConfig().Scp914Config.Scp914BlueAshDeathReason);

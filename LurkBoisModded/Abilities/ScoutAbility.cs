@@ -41,11 +41,9 @@ namespace LurkBoisModded.Abilities
                     speedBoost = statusEffect.Intensity;
                     duration = effect.Duration;
                 }
-                if(effectName == nameof(MaxHealthReduction))
-                {
-                    healthReduction = statusEffect.Intensity;
-                }
             }
+            CurrentHub.playerEffectsController.ChangeState<MaxHealthReduction>(Plugin.GetConfig().AbilityConfig.ScoutAbilityConfig.HealthReductionAmount, Plugin.GetConfig().AbilityConfig.ScoutAbilityConfig.HealthReductionDuration);
+            healthReduction = Plugin.GetConfig().AbilityConfig.ScoutAbilityConfig.HealthReductionAmount;
             CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.ScoutAbilityConfig.AbilityUsed.Replace("{intensity}", healthReduction.ToString()).Replace("{duration}", duration.ToString()).Replace("{speed}", speedBoost.ToString()));
         }
     }

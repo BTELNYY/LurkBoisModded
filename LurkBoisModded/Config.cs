@@ -401,9 +401,12 @@ namespace LurkBoisModded
 
         public string AbilityUsed { get; set; } = "You are now {speed}% faster and have {intensity} less health for {duration} seconds.";
 
+        public byte HealthReductionAmount { get; set; } = 25;
+
+        public float HealthReductionDuration { get; set; } = 30f;
+
         public List<EffectDefinition> Effects { get; set; } = new List<EffectDefinition>() 
         {
-            new EffectDefinition(nameof(MaxHealthReduction), 25, 30f),
             new EffectDefinition(nameof(MovementBoost), 15, 30f)
         };
     }
@@ -450,6 +453,8 @@ namespace LurkBoisModded
         public string HealSuccess { get; set; } = "You healed {username} for {health} HP!";
 
         public string HealSuccessOtherPlayer { get; set; } = "You have been healed by {username} for {health} HP!";
+
+        public string PlayerHealthFull { get; set; } = "This player has full health";
 
         public Dictionary<ItemType, float> HealingDict { get; set; } = new Dictionary<ItemType, float>() 
         {

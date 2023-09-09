@@ -1,5 +1,6 @@
 ﻿using LurkBoisModded.Base;
 using LurkBoisModded.Managers;
+using Mirror;
 using PlayerRoles;
 using PluginAPI.Core;
 using System;
@@ -56,7 +57,17 @@ namespace LurkBoisModded.Abilities
                 CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.NotInRange);
                 return;
             }
+            if (hit.transform.GetComponent<NetworkIdentity>() != null && hit.transform.GetComponent<NetworkIdentity>().netId == CurrentHub.netId)
+            {
+                ResetCooldown();
+                return;
+            }
             Player hitPlayer = Player.Get(hit.transform.GetComponentInParent<ReferenceHub>());
+            if(hitPlayer.ReferenceHub.Network_playerId == CurrentHub.Network_playerId)
+            {
+                ResetCooldown();
+                return;
+            }
             if (!AllowHealing(CurrentHub.GetTeam(), hitPlayer.ReferenceHub.GetTeam(), out string response))
             {
                 ResetCooldown();
@@ -65,6 +76,11 @@ namespace LurkBoisModded.Abilities
             }
             else
             {
+                if(hitPlayer.MaxHealth <= hitPlayer.Health)
+                {
+                    ResetCooldown();
+                    CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.PlayerHealthFull);
+                }
                 string message = Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealSuccess.Replace("{username}", hitPlayer.Nickname).Replace("{health}", ((int)healing).ToString());
                 CurrentHub.SendHint(message);
                 string messageToOther = Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealSuccessOtherPlayer.Replace("{username}", CurrentHub.nicknameSync.MyNick).Replace("{health}", ((int)healing).ToString());
