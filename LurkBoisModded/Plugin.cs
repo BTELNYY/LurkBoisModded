@@ -58,6 +58,7 @@ namespace LurkBoisModded
             RagdollManager.OnRagdollSpawned += RagdollHandler.PocketRagdollHandle;
             Log.Info("Running Init...");
             SubclassManager.Init();
+            CustomItemHandler.Init();
             Log.Info("LurkBoisModded v" + PluginVersion + " loaded.");
         }
 

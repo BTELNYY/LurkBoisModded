@@ -152,6 +152,7 @@
     <Compile Include="Abilities\InspireAbility.cs" />
     <Compile Include="Abilities\ProximityChatAbility.cs" />
     <Compile Include="Abilities\RemoteExplosiveAbility.cs" />
+    <Compile Include="Base\CustomItem.cs" />
     <Compile Include="Base\StatReplacementBase.cs" />
     <Compile Include="Base\FakeConnection.cs" />
     <Compile Include="Base\IRequiredItemAbility.cs" />
@@ -160,9 +161,14 @@
     <Compile Include="Commands\RemoteAdmin\SetSubclass.cs" />
     <Compile Include="Base\EffectDefinition.cs" />
     <Compile Include="Commands\RemoteAdmin\SubclassList.cs" />
+    <Compile Include="CustomItems\SniperE11.cs" />
+    <Compile Include="CustomItems\CustomTestItem.cs" />
     <Compile Include="Effects\Regeneration.cs" />
     <Compile Include="Effects\MaxHealthReduction.cs" />
+    <Compile Include="EventHandlers\CustomItemHandler.cs" />
     <Compile Include="EventHandlers\SubclassSpawnHandler.cs" />
+    <Compile Include="Patches\OnItemRemovedViaCommand.cs" />
+    <Compile Include="Patches\ItemDestroyPatch.cs" />
     <Compile Include="Patches\DisarmPatch.cs" />
     <Compile Include="Patches\StatModulePatch.cs" />
     <Compile Include="StatModules\IUpdatingStat.cs" />

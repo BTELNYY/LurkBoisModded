@@ -41,6 +41,10 @@ namespace LurkBoisModded.EventHandlers
                     ev.Player.SetScale(scale);
                 }
             });
+            Timing.CallDelayed(1f, () => 
+            {
+                ev.Player.ReferenceHub.AddCustomItem(Base.CustomItemType.SniperE11);
+            });
         }
 
         [PluginEvent(ServerEventType.PlayerDeath)]

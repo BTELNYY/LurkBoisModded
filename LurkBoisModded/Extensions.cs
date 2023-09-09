@@ -9,6 +9,7 @@ using InventorySystem.Items.Firearms;
 using InventorySystem.Items.Firearms.Attachments;
 using InventorySystem.Items.Pickups;
 using LurkBoisModded.Base;
+using LurkBoisModded.EventHandlers;
 using LurkBoisModded.Managers;
 using LurkBoisModded.StatModules;
 using MapGeneration;
@@ -519,6 +520,10 @@ namespace LurkBoisModded
                 }
             });
             return true;
+        }
+        public static void AddCustomItem(this ReferenceHub target, CustomItemType type)
+        {
+            CustomItemHandler.AddItem(target, type);
         }
     }
 
