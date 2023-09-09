@@ -14,17 +14,21 @@ namespace LurkBoisModded.EventHandlers
 {
     public class DoorSpawnHandler
     {
-        [PluginEvent(ServerEventType.RoundStart)]
-        public void OnRoundStart(RoundStartEvent ev)
+        [PluginEvent(ServerEventType.MapGenerated)]
+        public void OnRoundStart(MapGeneratedEvent ev)
         {
-            if (Plugin.GetConfig().FacilityConfig.SpawnScp939Door)
+            Timing.CallDelayed(0.1f, () => 
             {
-                SpawnScp939Door();
-            }
-            if (Plugin.GetConfig().FacilityConfig.ModifyGr18)
-            {
-                ModifyGr18Inner();
-            }
+                Log.Info("Spawning Additional Doors!");
+                if (Plugin.GetConfig().FacilityConfig.SpawnScp939Door)
+                {
+                    SpawnScp939Door();
+                }
+                if (Plugin.GetConfig().FacilityConfig.ModifyGr18)
+                {
+                    ModifyGr18Inner();
+                }
+            });
         }
 
         void ModifyGr18Inner()
@@ -39,6 +43,7 @@ namespace LurkBoisModded.EventHandlers
             {
                 door.RequiredPermissions.RequiredPermissions |= perm;
             }
+            Log.Info("Modified GR18_INNER!");
         }
 
         void SpawnScp939Door()
@@ -81,6 +86,7 @@ namespace LurkBoisModded.EventHandlers
             DoorNametagExtension extension = result.gameObject.AddComponent<DoorNametagExtension>();
             extension.UpdateName("939_CRYO");
             NetworkServer.Destroy(targetDoor.gameObject);
+            Log.Info("Spawned SCP 939's CC Door");
         }
     }
 }
