@@ -1,4 +1,5 @@
-﻿using LurkBoisModded.Base;
+﻿using InventorySystem.Items.Firearms;
+using LurkBoisModded.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,6 +1,8 @@
 ﻿using InventorySystem;
+using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
 using LurkBoisModded.EventHandlers;
+using PluginAPI.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +49,23 @@ namespace LurkBoisModded.Base
             }
         }
 
+        public ItemBase ItemBase {
+            get
+            {
+                if(ItemState == ItemState.Inventory)
+                {
+                    return _itemBaseReference;
+                }
+                return null;
+            }
+            private set 
+            {
+                _itemBaseReference = value;
+            } 
+        }
+
+        private ItemBase _itemBaseReference;
+
         public ushort TrackedSerial
         {
             get
@@ -85,6 +104,7 @@ namespace LurkBoisModded.Base
         {
             _currentOwner = newOwner;
             _state = ItemState.Inventory;
+            _itemBaseReference = newOwner.inventory.UserInventory.Items[TrackedSerial];
         }
 
         public virtual void OnItemEquip()
@@ -96,6 +116,7 @@ namespace LurkBoisModded.Base
         {
             _state = ItemState.Dropped;
             _currentOwner = null;
+            _itemBaseReference = null;
         }
 
         public virtual void OnItemCreated(ReferenceHub owner, ushort serial)
@@ -104,6 +125,11 @@ namespace LurkBoisModded.Base
             TrackedSerial = serial;
             _state = ItemState.Inventory;
             gameObject.name = serial.ToString();
+            _itemBaseReference = owner.inventory.UserInventory.Items[TrackedSerial];
+            if (!CustomItemHandler.SerialToItem.ContainsKey(TrackedSerial))
+            {
+                CustomItemHandler.SerialToItem.Add(TrackedSerial, this);
+            }
         }
 
         public virtual void OnItemDestroyed()

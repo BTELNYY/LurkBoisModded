@@ -10,6 +10,11 @@ using System;
 using InventorySystem.Items;
 using InventorySystem;
 using LurkBoisModded.CustomItems;
+using LurkBoisModded.Patches;
+using PlayerStatsSystem;
+using InventorySystem.Items.Firearms.Modules;
+using InventorySystem.Items.Firearms;
+using LurkBoisModded.Patches.Firearm.Reload;
 
 namespace LurkBoisModded.EventHandlers
 {
@@ -62,11 +67,64 @@ namespace LurkBoisModded.EventHandlers
             SerialToItem.Clear();
         }
 
+        [PluginEvent(ServerEventType.PlayerReloadWeapon)]
+        public void OnFirearmReload(PlayerReloadWeaponEvent ev)
+        {
+            if (SerialToItem.ContainsKey(ev.Firearm.ItemSerial) && SerialToItem[ev.Firearm.ItemSerial] is ICustomFirearmItem firearm)
+            {
+                firearm.OnReloadStart();
+            }
+        }
+
+        [PluginEvent(ServerEventType.PlayerShotWeapon)]
+        public void OnFirearmShot(PlayerShotWeaponEvent ev)
+        {
+            if (SerialToItem.ContainsKey(ev.Firearm.ItemSerial) && SerialToItem[ev.Firearm.ItemSerial] is ICustomFirearmItem firearm)
+            {
+                firearm.OnShot();
+            }
+        }
+
+        [PluginEvent(ServerEventType.PlayerDamage)]
+        public void OnPlayerShotByWeapon(PlayerDamageEvent ev)
+        {
+            if(ev.DamageHandler is FirearmDamageHandler handler)
+            {
+                if(SerialToItem.TryGetValue(handler.Attacker.Hub.inventory.CurItem.SerialNumber, out CustomItem item) && item.IsHeldItem)
+                 {
+                    if(item is ICustomFirearmItem firearm)
+                    {
+                        firearm.OnDamageByItem(handler, ev.Target.ReferenceHub);
+                    }
+                }
+            }
+        }
+
+        public static void OnReloadFinish(IAmmoManagerModule module, Firearm firearm)
+        {
+            if(SerialToItem.TryGetValue(firearm.ItemSerial, out CustomItem item) && item is ICustomFirearmItem firearmItem)
+            {
+                firearmItem.OnReloadFinish(module, firearm);
+            }
+            else
+            {
+                if (!SerialToItem.ContainsKey(firearm.ItemSerial))
+                {
+                    Log.Debug(firearm.ItemSerial.ToString());
+                }
+                Log.Debug("Item isnt in dict or it isnt a ICustomFirearmItem!");
+            }
+        }
+
+
         public static void Init()
         {
             GameObject gameObject = new GameObject("CustomItems");
             GameObject.DontDestroyOnLoad(gameObject);
             CreatedGameObject = gameObject;
+            AutoFirearmReloadFinishPath.OnReloadFinish += OnReloadFinish;
+            SemiAutoFirearmFinishPatch.OnReloadFinish += OnReloadFinish;
+            TubeMagReloadFinishPatch.OnReloadFinish += OnReloadFinish;
         }
 
         public static CustomItem AddItem(ReferenceHub target, CustomItemType type)
@@ -79,8 +137,12 @@ namespace LurkBoisModded.EventHandlers
             obj.transform.parent = CreatedGameObject.transform;
             CustomItem item = (CustomItem)obj.AddComponent(itemType);
             ItemBase givenItem = target.inventory.ServerAddItem(item.BaseItemType);
-            item.OnItemCreated(target, givenItem.ItemSerial);
+            if (SerialToItem.ContainsKey(givenItem.ItemSerial))
+            {
+                SerialToItem.Remove(givenItem.ItemSerial);
+            }
             SerialToItem.Add(givenItem.ItemSerial, item);
+            item.OnItemCreated(target, givenItem.ItemSerial);
             return item;
         }
     }
