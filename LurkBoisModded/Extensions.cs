@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using CentralAuth;
+using HarmonyLib;
 using Hints;
 using Interactables.Interobjects;
 using Interactables.Interobjects.DoorUtils;
@@ -262,7 +263,7 @@ namespace LurkBoisModded
         }
         public static void SendHint(this ReferenceHub target, string text, float duration = 3f)
         {
-            if(target == null || target.hints == null || target.characterClassManager.InstanceMode != ClientInstanceMode.ReadyClient)
+            if(target == null || target.hints == null || target.authManager.InstanceMode != ClientInstanceMode.ReadyClient)
             {
                 return;
             }
@@ -272,7 +273,7 @@ namespace LurkBoisModded
         {
             foreach (ReferenceHub referenceHub in ReferenceHub.AllHubs)
             {
-                if(referenceHub.characterClassManager.InstanceMode != ClientInstanceMode.ReadyClient)
+                if(referenceHub.authManager.InstanceMode != ClientInstanceMode.ReadyClient)
                 {
                     continue;
                 }
@@ -304,7 +305,7 @@ namespace LurkBoisModded
         }
         public static void AddAbility(this ReferenceHub target, AbilityType type)
         {
-            if (target.characterClassManager.InstanceMode != ClientInstanceMode.ReadyClient || target.nicknameSync.MyNick == "Dedicated Server")
+            if (target.authManager.InstanceMode != ClientInstanceMode.ReadyClient || target.nicknameSync.MyNick == "Dedicated Server")
             {
                 Log.Error("Tried adding ability to Dedicated Server or Unready Client!");
                 return;
@@ -320,7 +321,7 @@ namespace LurkBoisModded
         }
         public static void SetSubclass(this ReferenceHub target, Subclass subclass)
         {
-            if(target.characterClassManager.InstanceMode != ClientInstanceMode.ReadyClient || target.nicknameSync.MyNick == "Dedicated Server")
+            if(target.authManager.InstanceMode != ClientInstanceMode.ReadyClient || target.nicknameSync.MyNick == "Dedicated Server")
             {
                 Log.Error("Tried adding ability to Dedicated Server or Unready Client!");
                 return;
@@ -486,7 +487,7 @@ namespace LurkBoisModded
         }
         public static List<Player> SelectByClass(this List<Player> players, RoleTypeId role)
         {
-            List<Player> selectedPlayers = players.Where(x => x.Role == role && x.ReferenceHub.characterClassManager.InstanceMode == ClientInstanceMode.ReadyClient).ToList();
+            List<Player> selectedPlayers = players.Where(x => x.Role == role && x.ReferenceHub.authManager.InstanceMode == ClientInstanceMode.ReadyClient).ToList();
             return selectedPlayers;
         }
         public static List<ReferenceHub> GetPlayersInRoom(this RoomIdentifier room)
@@ -503,7 +504,7 @@ namespace LurkBoisModded
         }
         public static bool AddFirearm(this Player target, ItemType type, byte ammo)
         {
-            if(target.ReferenceHub.characterClassManager.InstanceMode != ClientInstanceMode.ReadyClient)
+            if(target.ReferenceHub.authManager.InstanceMode != ClientInstanceMode.ReadyClient)
             {
                 return false;
             }

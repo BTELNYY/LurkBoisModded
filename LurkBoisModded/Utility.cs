@@ -12,6 +12,8 @@ using UnityEngine;
 using PluginAPI;
 using PluginAPI.Core;
 using AdminToys;
+using CentralAuth;
+using PlayerRoles.Ragdolls;
 
 namespace LurkBoisModded
 {
@@ -161,7 +163,7 @@ namespace LurkBoisModded
             List<Player> result = new List<Player>();
             foreach(ReferenceHub hub in ReferenceHub.AllHubs)
             {
-                if(hub.roleManager.CurrentRole.RoleTypeId == role && hub.characterClassManager.InstanceMode == ClientInstanceMode.ReadyClient)
+                if(hub.roleManager.CurrentRole.RoleTypeId == role && hub.authManager.InstanceMode == ClientInstanceMode.ReadyClient)
                 {
                     result.Add(Player.Get(hub));
                 }

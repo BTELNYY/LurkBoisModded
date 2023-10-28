@@ -1,4 +1,5 @@
-﻿using CustomPlayerEffects;
+﻿using CentralAuth;
+using CustomPlayerEffects;
 using PluginAPI.Core;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace LurkBoisModded.Effects
         protected override void Enabled()
         {
             base.Enabled();
-            if (Hub.characterClassManager.InstanceMode != ClientInstanceMode.ReadyClient)
+            if (Hub.authManager.InstanceMode != ClientInstanceMode.ReadyClient)
             {
                 return;
             }
@@ -32,7 +33,7 @@ namespace LurkBoisModded.Effects
         protected override void Disabled()
         {
             base.Disabled();
-            if(TimeLeft <= 1f && Hub.characterClassManager.InstanceMode == ClientInstanceMode.ReadyClient)
+            if(TimeLeft <= 1f && Hub.authManager.InstanceMode == ClientInstanceMode.ReadyClient)
             {
                 Player p = Player.Get(Hub);
                 p.Kill(Plugin.GetConfig().Scp914Config.Scp914BlueAshDeathReason);

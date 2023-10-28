@@ -1,5 +1,6 @@
 ﻿using LurkBoisModded.Scripts;
 using MapGeneration;
+using PlayerRoles.Ragdolls;
 using PlayerStatsSystem;
 using UnityEngine;
 

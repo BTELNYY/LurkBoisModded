@@ -5,7 +5,7 @@ using PluginAPI.Core;
 
 namespace LurkBoisModded.Patches
 {
-    [HarmonyPatch(typeof(DisarmedPlayers), nameof(DisarmedPlayers.CanDisarm))]
+    [HarmonyPatch(typeof(DisarmedPlayers), nameof(DisarmedPlayers.CanStartDisarming))]
     public class DisarmPatch
     {
         public static bool Prefix(ReferenceHub disarmerHub, ReferenceHub targetHub, ref bool __result)

@@ -15,6 +15,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PlayerRoles.FirstPersonControl;
+using CentralAuth;
+using PlayerRoles.Ragdolls;
 
 namespace LurkBoisModded.Managers
 {
@@ -40,9 +42,9 @@ namespace LurkBoisModded.Managers
                 {
                     newPlayer.AddComponent<ReferenceHub>();
                 }
-                if (hubPlayer.characterClassManager is null)
+                if (hubPlayer.authManager is null)
                 {
-                    hubPlayer.characterClassManager = new CharacterClassManager();
+                    hubPlayer.authManager = new PlayerAuthenticationManager();
                 }
                 #endregion
 
@@ -54,9 +56,10 @@ namespace LurkBoisModded.Managers
                 try
                 {
                     //Log.Debug("Setting the UserId of the dummy");
-                    AccessTools.Field(typeof(CharacterClassManager), "_privUserId").SetValue(hubPlayer.characterClassManager, $"Dummy-{id}@server");
+                    AccessTools.Field(typeof(PlayerAuthenticationManager), "_privUserId").SetValue(hubPlayer.authManager, $"Dummy-{id}@server");
                     //hubPlayer.characterClassManager._privUserId = $"SCP-575-{id}@server";
-                    AccessTools.Field(typeof(CharacterClassManager), "InstanceMode").SetValue(hubPlayer.characterClassManager, ClientInstanceMode.Unverified);
+                    AccessTools.Field(typeof(PlayerAuthenticationManager), "InstanceMode").SetValue(hubPlayer.authManager, ClientInstanceMode.Unverified);
+                    
                     //hubPlayer.characterClassManager.InstanceMode = ClientInstanceMode.Unverified;
                 }
                 catch
@@ -140,9 +143,9 @@ namespace LurkBoisModded.Managers
                 {
                     newPlayer.AddComponent<ReferenceHub>();
                 }
-                if (hubPlayer.characterClassManager is null)
+                if (hubPlayer.authManager is null)
                 {
-                    hubPlayer.characterClassManager = new CharacterClassManager();
+                    hubPlayer.authManager = new PlayerAuthenticationManager();
                 }
                 #endregion
 
@@ -154,13 +157,13 @@ namespace LurkBoisModded.Managers
                 try
                 {
                     //Log.Debug("Setting the UserId of the dummy");
-                    AccessTools.Field(typeof(CharacterClassManager), "_privUserId").SetValue(hubPlayer.characterClassManager, $"Dummy-{id}@server");
+                    AccessTools.Field(typeof(PlayerAuthenticationManager), "_privUserId").SetValue(hubPlayer.authManager, $"Dummy-{id}@server");
                     if (destroyOnDeath)
                     {
                         DummiesToDestroyOnDeath.Add($"Dummy-{id}@server)");
                     }
                     //hubPlayer.characterClassManager._privUserId = $"SCP-575-{id}@server";
-                    AccessTools.Field(typeof(CharacterClassManager), "InstanceMode").SetValue(hubPlayer.characterClassManager, ClientInstanceMode.Unverified);
+                    AccessTools.Field(typeof(PlayerAuthenticationManager), "InstanceMode").SetValue(hubPlayer.authManager, ClientInstanceMode.Unverified);
                     //hubPlayer.characterClassManager.InstanceMode = ClientInstanceMode.Unverified;
                 }
                 catch (Exception ex)
@@ -243,9 +246,9 @@ namespace LurkBoisModded.Managers
                 {
                     newPlayer.AddComponent<ReferenceHub>();
                 }
-                if (hubPlayer.characterClassManager is null)
+                if (hubPlayer.authManager is null)
                 {
-                    hubPlayer.characterClassManager = new CharacterClassManager();
+                    hubPlayer.authManager = new PlayerAuthenticationManager();
                 }
                 #endregion
 
@@ -257,13 +260,13 @@ namespace LurkBoisModded.Managers
                 try
                 {
                     //Log.Debug("Setting the UserId of the dummy");
-                    AccessTools.Field(typeof(CharacterClassManager), "_privUserId").SetValue(hubPlayer.characterClassManager, $"Dummy-{id}@server");
+                    AccessTools.Field(typeof(PlayerAuthenticationManager), "_privUserId").SetValue(hubPlayer.authManager, $"Dummy-{id}@server");
                     if (destroyOnDeath)
                     {
                         DummiesToDestroyOnDeath.Add($"Dummy-{id}@server");
                     }
                     //hubPlayer.characterClassManager._privUserId = $"SCP-575-{id}@server";
-                    AccessTools.Field(typeof(CharacterClassManager), "InstanceMode").SetValue(hubPlayer.characterClassManager, ClientInstanceMode.Unverified);
+                    AccessTools.Field(typeof(PlayerAuthenticationManager), "InstanceMode").SetValue(hubPlayer.authManager, ClientInstanceMode.Unverified);
                     //hubPlayer.characterClassManager.InstanceMode = ClientInstanceMode.Unverified;
                 }
                 catch (Exception)
