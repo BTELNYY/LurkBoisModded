@@ -38,6 +38,16 @@ namespace LurkBoisModded
 
         public static MethodInfo SendSpawnMessage => sendSpawnMessage = typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.NonPublic | BindingFlags.Static);
 
+        public static bool RoundEnded(this RoundSummary roundSummary)
+        {
+            FieldInfo field = AccessTools.Field(typeof(RoundSummary), "_roundEnded");
+            if(RoundSummary.singleton == null || roundSummary == null)
+            {
+                return false;
+            }
+            return (bool)field.GetValue(roundSummary);
+        }
+
         public static void SetScale(this Player target, float scale)
         {
             try
@@ -415,23 +425,32 @@ namespace LurkBoisModded
             }
             player.ApplyAttachments();
             //if the spawnrooms is more than one, otherwise just use the default spawn
-            if(subclass.SpawnRooms.Count > 0)
+            if(subclass.SpawnRooms.Count > 0 || subclass.NonNamedRoomSpawns.Count > 0)
             {
-                List<RoomIdentifier> foundRooms = RoomIdentifier.AllRoomIdentifiers.Where(x => subclass.SpawnRooms.Contains(x.Name)).ToList();
-                RoomIdentifier chosenRoom = foundRooms.RandomItem();
-                DoorVariant door = null;
-                if (subclass.AllowKeycardDoors)
+                List<RoomIdentifier> foundRooms = RoomIdentifier.AllRoomIdentifiers.Where(x => subclass.SpawnRooms.Contains(x.Name) && !SubclassManager.TempDisallowedRooms.Contains(x.Name)).ToList();
+                foreach(NonNamedRoomDefinition nonNamedRoomDefinition in subclass.NonNamedRoomSpawns)
                 {
-                    door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => !(x is ElevatorDoor)).ToList().RandomItem();
+                    List<RoomIdentifier> rooms = RoomIdUtils.FindRooms(RoomName.Unnamed, nonNamedRoomDefinition.FacilityZone, nonNamedRoomDefinition.RoomShape).ToList();
+                    foundRooms.AddRange(rooms);
                 }
-                else
+                foundRooms.ShuffleList();
+                if(foundRooms.Count != 0)
                 {
-                    door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None && !(x is ElevatorDoor)).ToList().RandomItem();
+                    RoomIdentifier chosenRoom = foundRooms.RandomItem();
+                    DoorVariant door = null;
+                    if (subclass.AllowKeycardDoors)
+                    {
+                        door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => !(x is ElevatorDoor)).ToList().RandomItem();
+                    }
+                    else
+                    {
+                        door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None && !(x is ElevatorDoor) && !(x is INonInteractableDoor)).ToList().RandomItem();
+                    }
+                    door.SetDoorState(DoorState.Open);
+                    Vector3 pos = door.transform.position;
+                    pos.y += 1f;
+                    target.TryOverridePosition(pos, Vector3.forward);
                 }
-                door.SetDoorState(DoorState.Open);
-                Vector3 pos = door.transform.position;
-                pos.y += 1f;
-                target.TryOverridePosition(pos, Vector3.forward);
             }
             player.PlayerInfo.IsRoleHidden = true;
             if (subclass.ApplyClassColorToCustomInfo)
@@ -451,6 +470,7 @@ namespace LurkBoisModded
             List<CustomAbility> abilities = target.gameObject.GetComponents<CustomAbility>().ToList();
             foreach(CustomAbility ability in abilities)
             {
+                ability.OnRemoved();
                 GameObject.Destroy(ability);
             }
         }

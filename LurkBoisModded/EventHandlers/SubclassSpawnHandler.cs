@@ -15,6 +15,8 @@ namespace LurkBoisModded.EventHandlers
 {
     public class SubclassSpawnHandler
     {
+        static bool Scp3114Spawned = false;
+
         [PluginEvent(ServerEventType.TeamRespawn)]
         public void OnTeamRespawn(TeamRespawnEvent ev)
         {
@@ -37,6 +39,8 @@ namespace LurkBoisModded.EventHandlers
         {
             Timing.CallDelayed(0.15f, () => 
             {
+                List<Player> alive = Player.GetPlayers().Where(x => !x.IsSCP && x.IsAlive).ToList();
+                HandleScp3114Spawn(alive);
                 List<Player> dclass = Utility.GetPlayersByRole(RoleTypeId.ClassD);
                 HandleClassD(dclass);
                 List<Player> guards = Utility.GetPlayersByRole(RoleTypeId.FacilityGuard);
@@ -46,6 +50,31 @@ namespace LurkBoisModded.EventHandlers
             });
         }
 
+        private void HandleScp3114Spawn(List<Player> selectablePlayers)
+        {
+            float currentSpawnChance = Plugin.GetConfig().Scp3114Config.Scp3114SpawnChance;
+            if(!(selectablePlayers.Count >= Plugin.GetConfig().Scp3114Config.MinimumPlayers))
+            {
+                currentSpawnChance = 0f;
+                return;
+            }
+            if(!(Utility.GetPlayersByRole(RoleTypeId.Scp079).Count == 0 && Plugin.GetConfig().Scp3114Config.NoScp079Means100PercentSpawn))
+            {
+                currentSpawnChance = 0f;
+                return;
+            }
+            else
+            {
+                currentSpawnChance = 1f;
+            }
+            float randomValue = Random.Range(0f, 1f);
+            if(!(randomValue <= currentSpawnChance))
+            {
+                return;
+            }
+            Scp3114Spawned = true;
+            selectablePlayers.RandomItem().SetRole(RoleTypeId.Scp3114, RoleChangeReason.RoundStart);
+        }
 
         private void HandleMtfSpawn(List<Player> players)
         {
@@ -92,6 +121,10 @@ namespace LurkBoisModded.EventHandlers
             List<Player> handledPlayers = players;
             List<string> shuffledRoles = Plugin.GetConfig().SubclassSpawnConfig.ClassDSubclasses.Keys.ToList();
             shuffledRoles.ShuffleList();
+            if (Scp3114Spawned)
+            {
+                SubclassManager.TempDisallowedRooms.Add(MapGeneration.RoomName.Lcz173);
+            }
             foreach (string subclass in shuffledRoles)
             {
                 Subclass subclassbase = SubclassManager.GetSubclass(subclass);

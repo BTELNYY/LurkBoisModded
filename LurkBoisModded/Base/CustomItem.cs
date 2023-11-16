@@ -8,7 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PluginAPI.Core.Attributes;
 using UnityEngine;
+using PluginAPI.Enums;
 
 namespace LurkBoisModded.Base
 {
@@ -49,7 +51,8 @@ namespace LurkBoisModded.Base
             }
         }
 
-        public ItemBase ItemBase {
+        public ItemBase ItemBase 
+        {
             get
             {
                 if(ItemState == ItemState.Inventory)
@@ -141,6 +144,14 @@ namespace LurkBoisModded.Base
         public virtual void ForceDropItem()
         {
             ItemPickupBase item = CurrentOwner.inventory.ServerDropItem(TrackedSerial);
+        }
+
+        public virtual void OnRoundRestart()
+        {
+            _currentOwner = null;
+            _itemBaseReference = null;
+            _trackedSerial = 0;
+            _state = ItemState.Dropped;
         }
     }
 

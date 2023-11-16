@@ -9,6 +9,7 @@ using PluginAPI.Core;
 using System.IO;
 using LurkBoisModded.Base;
 using LurkBoisModded.Subclasses;
+using MapGeneration;
 
 namespace LurkBoisModded.Managers
 {
@@ -22,6 +23,8 @@ namespace LurkBoisModded.Managers
             .Build();
         private static Dictionary<string, Subclass> _loadedSubClasses = new Dictionary<string, Subclass>();
         private static string _path = Plugin.instance.SubclassPath;
+
+        public static List<RoomName> TempDisallowedRooms = new List<RoomName>();
 
         public static void Init()
         {

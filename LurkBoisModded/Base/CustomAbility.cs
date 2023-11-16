@@ -22,5 +22,10 @@ namespace LurkBoisModded.Base
         {
             Ready = true;
         }
+
+        public virtual void OnRemoved()
+        {
+            Ready = false;
+        }
     }
 }

@@ -125,6 +125,7 @@ namespace LurkBoisModded.EventHandlers
             AutoFirearmReloadFinishPath.OnReloadFinish += OnReloadFinish;
             SemiAutoFirearmFinishPatch.OnReloadFinish += OnReloadFinish;
             TubeMagReloadFinishPatch.OnReloadFinish += OnReloadFinish;
+            GenericHandler.OnRoundRestart += OnRoundRestart;
         }
 
         public static CustomItem AddItem(ReferenceHub target, CustomItemType type)
@@ -144,6 +145,15 @@ namespace LurkBoisModded.EventHandlers
             SerialToItem.Add(givenItem.ItemSerial, item);
             item.OnItemCreated(target, givenItem.ItemSerial);
             return item;
+        }
+
+        public static void OnRoundRestart()
+        {
+            foreach(CustomItem c in SerialToItem.Values)
+            {
+                c.OnRoundRestart();
+            }
+            SerialToItem.Clear();
         }
     }
 }

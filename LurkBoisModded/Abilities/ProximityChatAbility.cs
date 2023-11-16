@@ -21,6 +21,10 @@ namespace LurkBoisModded.Abilities
         public override void OnTrigger()
         {
             base.OnTrigger();
+            if (RoundSummary.singleton.RoundEnded())
+            {
+                return;
+            }
             ReferenceHub player = CurrentHub;
             if (!Plugin.GetConfig().ProximityChatConfig.AllowedRoles.Contains(player.roleManager.CurrentRole.RoleTypeId))
             {
@@ -64,12 +68,13 @@ namespace LurkBoisModded.Abilities
             {
                 return true;
             }
-            if(player.TryGetComponent(out ProximityChatAbility ability))
+            bool result = Plugin.GetConfig().ProximityChatConfig.EnableCustomChat;
+            if (result)
             {
-                //message.Speaker = ability.MySpeaker;
+                message.SendProximityMessage();
+                return false;
             }
-            message.SendProximityMessage();
-            return !Plugin.GetConfig().ProximityChatConfig.EnableCustomChat;
+            return true;
         }
     }
 }

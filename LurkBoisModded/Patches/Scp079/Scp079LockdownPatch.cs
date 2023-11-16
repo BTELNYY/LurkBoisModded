@@ -14,7 +14,7 @@ namespace LurkBoisModded.Patches.Scp079
     {
         public static bool Prefix(Scp079LockdownRoomAbility __instance)
         {
-            if(CommandGas.CurrentRoom == __instance.ScpRole.CurrentCamera.Room)
+            if(CommandGas.CurrentRoom == __instance.CastRole.CurrentCamera)
             {
                 return false;
             }

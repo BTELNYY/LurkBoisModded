@@ -170,6 +170,11 @@ namespace LurkBoisModded
             }
             return result;
         }
+
+        public static List<Player> GetPlayersByTeam(Team team)
+        {
+            return Player.GetPlayers().Where(x => x.Team == team).ToList();
+        }
     }
 
     public enum DoorType

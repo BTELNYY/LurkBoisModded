@@ -1,11 +1,14 @@
 ﻿using PluginAPI.Events;
 using PluginAPI.Enums;
 using PluginAPI.Core.Attributes;
-using PluginAPI.Core;
 using MEC;
 using PlayerRoles;
 using UnityEngine;
 using LurkBoisModded.Commands.GameConsole;
+using LurkBoisModded.Managers;
+using LurkBoisModded.Abilities;
+using LurkBoisModded.Base;
+using System;
 
 namespace LurkBoisModded.EventHandlers
 {
@@ -29,21 +32,21 @@ namespace LurkBoisModded.EventHandlers
                 //Randomize human
                 if(Plugin.GetConfig().RandomizeHumanHeight && !ev.Player.IsSCP && ev.Player.IsAlive)
                 {
-                    float randomValue = Random.Range(Plugin.GetConfig().MinHeight, Plugin.GetConfig().MaxHeight);
+                    float randomValue = UnityEngine.Random.Range(Plugin.GetConfig().MinHeight, Plugin.GetConfig().MaxHeight);
                     Vector3 vec = new Vector3(1, randomValue, 1);
                     ev.Player.SetScale(vec);
                 }
                 //Randomize SCP 939
                 if(ev.Player.Role == RoleTypeId.Scp939 && Plugin.GetConfig().Scp939Config.ModifyHeight)
                 {
-                    float randomValue = Random.Range(Plugin.GetConfig().Scp939Config.MinHeight, Plugin.GetConfig().Scp939Config.MaxHeight);
+                    float randomValue = UnityEngine.Random.Range(Plugin.GetConfig().Scp939Config.MinHeight, Plugin.GetConfig().Scp939Config.MaxHeight);
                     Vector3 scale = new Vector3(1, randomValue, 1);
                     ev.Player.SetScale(scale);
                 }
             });
             Timing.CallDelayed(1f, () => 
             {
-                ev.Player.ReferenceHub.AddCustomItem(Base.CustomItemType.SniperE11);
+                //ev.Player.ReferenceHub.AddCustomItem(Base.CustomItemType.SniperE11);
             });
         }
 
@@ -74,6 +77,16 @@ namespace LurkBoisModded.EventHandlers
         {
             CommandGas.Cooldown = false;
             CommandGas.CurrentRoom = null;
+            SubclassManager.TempDisallowedRooms.Clear();
+            ProximityChatAbility.ToggledPlayers.Clear();
+        }
+
+        public static event Action OnRoundRestart;
+
+        [PluginEvent(ServerEventType.RoundRestart)]
+        public void OnRoundRestarted()
+        {
+            OnRoundRestart?.Invoke();
         }
     }
 }

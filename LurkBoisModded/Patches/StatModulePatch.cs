@@ -16,12 +16,12 @@ namespace LurkBoisModded.Patches
             {
                Dictionary<Type, StatBase> dictTypes = AccessTools.FieldRefAccess<PlayerStats, Dictionary<Type, StatBase>>(__instance, "_dictionarizedTypes");
                 ReferenceHub hub = ReferenceHub.GetHub(__instance.gameObject);
-                __instance.StatModules[1] = new NewHealthStat();
-                __instance.StatModules[2] = new NewAhpStat();
-                __instance.StatModules[5] = new NewHumeShieldStat();
+                __instance.StatModules[0] = new NewHealthStat();
+                __instance.StatModules[1] = new NewAhpStat();
+                __instance.StatModules[4] = new NewHumeShieldStat();
+                dictTypes[PlayerStats.DefinedModules[0]] = __instance.StatModules[0];
                 dictTypes[PlayerStats.DefinedModules[1]] = __instance.StatModules[1];
-                dictTypes[PlayerStats.DefinedModules[2]] = __instance.StatModules[2];
-                dictTypes[PlayerStats.DefinedModules[5]] = __instance.StatModules[5];
+                dictTypes[PlayerStats.DefinedModules[4]] = __instance.StatModules[4];
                 for (int i = 0; i < __instance.StatModules.Length; i++)
                 {
                     object[] obj = { hub };

@@ -26,6 +26,8 @@ namespace LurkBoisModded.Base
 
         public virtual List<RoomName> SpawnRooms { get; set; } = new List<RoomName>();
 
+        public virtual List<NonNamedRoomDefinition> NonNamedRoomSpawns { get; set; } = new List<NonNamedRoomDefinition>();
+
         public virtual bool AllowKeycardDoors { get; set; } = false;
 
         public virtual float[] HeightVariety { get; set; } = new float[2] { 0.95f, 1.1f };
@@ -44,5 +46,11 @@ namespace LurkBoisModded.Base
         {
 
         }
+    }
+    public class NonNamedRoomDefinition
+    {
+        public RoomShape RoomShape { get; set; } = RoomShape.Undefined;
+
+        public FacilityZone FacilityZone { get; set; } = FacilityZone.None;
     }
 }

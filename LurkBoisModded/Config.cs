@@ -36,6 +36,9 @@ namespace LurkBoisModded
         [Description("SCP 079 Configuration")]
         public Scp079 Scp079Config { get; set; } = new Scp079();
 
+        [Description("SCP 3114 Spawn Configuration")]
+        public Scp3114Config Scp3114Config { get; set; } = new Scp3114Config();
+
         [Description("Proximity chat config")]
         public ProximityChatConfig ProximityChatConfig { get; set; } = new ProximityChatConfig();
 
@@ -468,5 +471,17 @@ namespace LurkBoisModded
         public float HealMaxDistance { get; set; } = 2.5f;
 
         public string NotInRange { get; set; } = "Nobody in range to heal";
+    }
+
+    public class Scp3114Config
+    {
+        [Description("Minimum amount of players required for SCP 3114 to spawn. (Note: this is counted by possible spawn players, meaning there must be a minimum of X alive, human players.)")]
+        public int MinimumPlayers { get; set; } = 10;
+
+        [Description("If no SCP 079 spawns, should SCP 3114 always spawn? (Note that the minimum players check must still pass.)")]
+        public bool NoScp079Means100PercentSpawn { get; set; } = true;
+
+        [Description("SCP 3114 spawn chance. All other conditions must be met for this to be checked.")]
+        public float Scp3114SpawnChance { get; set; } = 0.5f;
     }
 }
