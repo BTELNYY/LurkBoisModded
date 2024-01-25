@@ -7,6 +7,7 @@ using LurkBoisModded.Effects;
 
 namespace LurkBoisModded.EventHandlers.Scp939
 {
+    [EventHandler]
     public class Scp939ClawHandler 
     {
         [PluginEvent(ServerEventType.PlayerDamage)]

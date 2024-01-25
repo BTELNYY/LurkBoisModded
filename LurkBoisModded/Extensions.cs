@@ -10,7 +10,7 @@ using InventorySystem.Items.Firearms;
 using InventorySystem.Items.Firearms.Attachments;
 using InventorySystem.Items.Pickups;
 using LurkBoisModded.Base;
-using LurkBoisModded.EventHandlers;
+using LurkBoisModded.EventHandlers.Item;
 using LurkBoisModded.Managers;
 using LurkBoisModded.StatModules;
 using MapGeneration;

@@ -1,4 +1,6 @@
-﻿using InventorySystem.Items.Firearms;
+﻿using InventorySystem.Items;
+using InventorySystem.Items.Firearms;
+using InventorySystem.Items.Pickups;
 using LurkBoisModded.Base;
 using System;
 using System.Collections.Generic;
@@ -14,9 +16,9 @@ namespace LurkBoisModded.CustomItems
 
         public override ItemType BaseItemType => ItemType.Medkit;
 
-        public override void OnItemDropped(ReferenceHub lastOwner)
+        public override void OnItemDropped(ReferenceHub lastOwner, ItemPickupBase pickupBase)
         {
-            base.OnItemDropped(lastOwner);
+            base.OnItemDropped(lastOwner, ItemPickupBase);
             lastOwner.SendHint("Custom Item Dropped!");
         }
 

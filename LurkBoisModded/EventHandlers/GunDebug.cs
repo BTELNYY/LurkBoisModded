@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace LurkBoisModded.EventHandlers
 {
+    [EventHandler]
     public class GunDebug
     {
         public void OnPlayerShoot(PlayerShotWeaponEvent ev)

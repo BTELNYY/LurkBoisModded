@@ -11,8 +11,9 @@ using LurkBoisModded.Base;
 using LurkBoisModded.Managers;
 using System.Linq;
 
-namespace LurkBoisModded.EventHandlers
+namespace LurkBoisModded.EventHandlers.General
 {
+    [EventHandler]
     public class SubclassSpawnHandler
     {
         static bool Scp3114Spawned = false;

@@ -1,7 +1,7 @@
 ﻿using InventorySystem;
 using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
-using LurkBoisModded.EventHandlers;
+using LurkBoisModded.EventHandlers.Item;
 using PluginAPI.Core;
 using System;
 using System.Collections.Generic;
@@ -69,6 +69,16 @@ namespace LurkBoisModded.Base
 
         private ItemBase _itemBaseReference;
 
+        private ItemPickupBase _itemPickupBase;
+
+        public ItemPickupBase ItemPickupBase
+        {
+            get
+            {
+                return _itemPickupBase;
+            }
+        }
+
         public ushort TrackedSerial
         {
             get
@@ -107,7 +117,15 @@ namespace LurkBoisModded.Base
         {
             _currentOwner = newOwner;
             _state = ItemState.Inventory;
-            _itemBaseReference = newOwner.inventory.UserInventory.Items[TrackedSerial];
+
+            if (newOwner.inventory.UserInventory.Items.ContainsKey(TrackedSerial))
+            {
+                _itemBaseReference = newOwner.inventory.UserInventory.Items[TrackedSerial];
+            }
+            else
+            {
+                Log.Warning("For some ungodly reason the fucking tracked serial ID isn't in the inventory (what the fuck?)");
+            }
         }
 
         public virtual void OnItemEquip()
@@ -115,11 +133,12 @@ namespace LurkBoisModded.Base
 
         }
 
-        public virtual void OnItemDropped(ReferenceHub lastOwner)
+        public virtual void OnItemDropped(ReferenceHub lastOwner, ItemPickupBase pickupBase)
         {
             _state = ItemState.Dropped;
             _currentOwner = null;
             _itemBaseReference = null;
+            _itemPickupBase = pickupBase;
         }
 
         public virtual void OnItemCreated(ReferenceHub owner, ushort serial)
@@ -138,7 +157,11 @@ namespace LurkBoisModded.Base
         public virtual void OnItemDestroyed()
         {
             CustomItemHandler.SerialToItem.Remove(TrackedSerial);
-            GameObject.Destroy(gameObject);
+            if (ItemState == ItemState.Inventory)
+            {
+                CurrentOwner.inventory.ServerRemoveItem(TrackedSerial, ItemPickupBase);
+            }
+            GameObject.Destroy(this);
         }
 
         public virtual void ForceDropItem()
@@ -166,5 +189,6 @@ namespace LurkBoisModded.Base
         None,
         Test,
         SniperE11,
+        Landmine,
     }
 }

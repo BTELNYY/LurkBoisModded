@@ -2,7 +2,7 @@
 using CommandSystem.Commands.RemoteAdmin.Cleanup;
 using HarmonyLib;
 using InventorySystem.Items.Pickups;
-using LurkBoisModded.EventHandlers;
+using LurkBoisModded.EventHandlers.Item;
 using Mirror;
 using System;
 using System.Collections.Generic;

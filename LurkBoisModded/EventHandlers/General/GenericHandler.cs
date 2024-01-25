@@ -10,8 +10,9 @@ using LurkBoisModded.Abilities;
 using LurkBoisModded.Base;
 using System;
 
-namespace LurkBoisModded.EventHandlers
+namespace LurkBoisModded.EventHandlers.General
 {
+    [EventHandler]
     public class GenericHandler
     {
         [PluginEvent(ServerEventType.PlayerSpawn)]
@@ -46,7 +47,7 @@ namespace LurkBoisModded.EventHandlers
             });
             Timing.CallDelayed(1f, () => 
             {
-                //ev.Player.ReferenceHub.AddCustomItem(Base.CustomItemType.SniperE11);
+                ev.Player.ReferenceHub.AddCustomItem(Base.CustomItemType.Landmine);
             });
         }
 

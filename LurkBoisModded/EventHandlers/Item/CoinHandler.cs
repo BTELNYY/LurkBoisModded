@@ -5,8 +5,9 @@ using PluginAPI.Core;
 using UnityEngine;
 using Utils;
 
-namespace LurkBoisModded.EventHandlers
+namespace LurkBoisModded.EventHandlers.Item
 {
+    [EventHandler]
     public class CoinHandler
     {
         [PluginEvent(ServerEventType.PlayerCoinFlip)]

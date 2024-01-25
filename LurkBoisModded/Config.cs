@@ -57,6 +57,9 @@ namespace LurkBoisModded
         [Description("Controls Abilities")]
         public AbilityConfig AbilityConfig { get; set; } = new AbilityConfig();
 
+        [Description("Configuration for the Landmine custom item.")]
+        public LandmineConfiguration LandmineConfiguration { get; set; } = new LandmineConfiguration();
+
         [Description("Death message for people who use .suicide")]
         public string SuicideDeathReason { get; set; } = "Suicide by gunshot to the head";
 
@@ -483,5 +486,14 @@ namespace LurkBoisModded
 
         [Description("SCP 3114 spawn chance. All other conditions must be met for this to be checked.")]
         public float Scp3114SpawnChance { get; set; } = 0.5f;
+    }
+
+    public class LandmineConfiguration
+    {
+        [Description("How far should the landmine check for a player? (in meters)")]
+        public float TriggerDistance { get; set; } = 1f;
+
+        [Description("How much should base grenade damage be multiplied?")]
+        public float DamageMultiplier { get; set; } = 1f;
     }
 }

@@ -1,12 +1,17 @@
 ﻿using HarmonyLib;
 using LurkBoisModded.EventHandlers;
+using LurkBoisModded.EventHandlers.Item;
+using LurkBoisModded.EventHandlers.Map;
 using LurkBoisModded.Managers;
 using PlayerRoles.Ragdolls;
 using PluginAPI.Core;
 using PluginAPI.Core.Attributes;
+using PluginAPI.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace LurkBoisModded
@@ -18,6 +23,7 @@ namespace LurkBoisModded
         public const string PluginDesc = "LurkBois Modded!";
         public Harmony harmony;
         public static Plugin instance;
+
         public static readonly List<Vector3> Directions = new List<Vector3>
         {
             Vector3.back,
@@ -53,7 +59,19 @@ namespace LurkBoisModded
             harmony = new Harmony("com.thelurkbois.modded");
             harmony.PatchAll();
             Log.Info("Registering events...");
-            PluginAPI.Events.EventManager.RegisterAllEvents(this);
+            List<Type> eventHandlers = Assembly.GetExecutingAssembly().GetTypes().Where(x => x.GetCustomAttribute(typeof(EventHandlerAttribute)) != null).ToList();
+            foreach (Type type in eventHandlers)
+            {
+                Log.Info("Registering Handler: " + type.Name);
+                object obj = Activator.CreateInstance(type);
+                if(obj == null)
+                {
+                    Log.Error("Unable to create instance of Handler " + type.FullName);
+                    continue;
+                }
+                PluginAPI.Events.EventManager.RegisterEvents(this, obj);
+                Log.Info("Done register of handler " + type.Name);
+            }
             RagdollManager.OnRagdollSpawned += RagdollHandler.OnRagdollSpawn;
             RagdollManager.OnRagdollSpawned += RagdollHandler.PocketRagdollHandle;
             Log.Info("Running Init...");

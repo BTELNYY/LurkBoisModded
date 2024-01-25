@@ -9,6 +9,7 @@ using Scp914;
 
 namespace LurkBoisModded.EventHandlers.Scp914
 {
+    [EventHandler]
     public class Scp914SettingEventHandler
     {
         public static void HandlePlayer(Player target, Scp914Event ev)

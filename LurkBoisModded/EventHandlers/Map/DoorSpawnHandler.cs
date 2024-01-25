@@ -10,8 +10,9 @@ using MapGeneration;
 using System.Collections.Generic;
 using Mirror;
 
-namespace LurkBoisModded.EventHandlers
+namespace LurkBoisModded.EventHandlers.Map
 {
+    [EventHandler]
     public class DoorSpawnHandler
     {
         [PluginEvent(ServerEventType.MapGenerated)]

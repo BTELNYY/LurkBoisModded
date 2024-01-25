@@ -4,8 +4,9 @@ using PlayerRoles.Ragdolls;
 using PlayerStatsSystem;
 using UnityEngine;
 
-namespace LurkBoisModded.EventHandlers
+namespace LurkBoisModded.EventHandlers.Map
 {
+    [EventHandler]
     public class RagdollHandler
     {
         public static void OnRagdollSpawn(BasicRagdoll ragdoll)
