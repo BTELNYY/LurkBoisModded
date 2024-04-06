@@ -23,8 +23,8 @@ namespace LurkBoisModded.Commands.RemoteAdmin
                 return false;
             }
             Player runner = Player.Get(sender);
-            ReferenceHub hub = DummyManager.SpawnDummy(runner.Position);
-            response = $"Success! Delete the bot by using deletedummy {hub.Network_playerId.Value}";
+            ReferenceHub hub = DummyManager.SpawnDummy(runner.Position, PlayerRoles.RoleTypeId.Tutorial);
+            response = $"Success! Delete the bot by using deletedummy {hub.PlayerId}";
             return true;
         }
     }

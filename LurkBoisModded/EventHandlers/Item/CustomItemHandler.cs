@@ -17,6 +17,7 @@ using InventorySystem.Items.Firearms.Modules;
 using InventorySystem.Items.Firearms;
 using LurkBoisModded.Patches.Firearm.Reload;
 using InventorySystem.Items.Pickups;
+using InventorySystem.Items.ThrowableProjectiles;
 
 namespace LurkBoisModded.EventHandlers.Item
 {
@@ -25,9 +26,9 @@ namespace LurkBoisModded.EventHandlers.Item
     {
         public static readonly Dictionary<CustomItemType, Type> CustomItemToType = new Dictionary<CustomItemType, Type>()
         {
-            [CustomItemType.Test] = typeof(CustomTestItem),
             [CustomItemType.SniperE11] = typeof(SniperE11),
             [CustomItemType.Landmine] = typeof(Landmine),
+            [CustomItemType.MolotovCocktail] = typeof(MolotovCocktail),
         };
 
         public static Dictionary<ushort, CustomItem> SerialToItem = new Dictionary<ushort, CustomItem>();
@@ -49,12 +50,13 @@ namespace LurkBoisModded.EventHandlers.Item
         }
 
         [PluginEvent(ServerEventType.PlayerChangeItem)]
-        public void OnPlayerEquipItem(PlayerChangeItemEvent ev)
+        public bool OnPlayerEquipItem(PlayerChangeItemEvent ev)
         {
             if (SerialToItem.ContainsKey(ev.NewItem))
             {
-                SerialToItem[ev.NewItem].OnItemEquip();
+                return SerialToItem[ev.NewItem].OnItemEquip();
             }
+            return true;
         }
 
         [PluginEvent(ServerEventType.RoundEnd)]
@@ -68,25 +70,27 @@ namespace LurkBoisModded.EventHandlers.Item
         }
 
         [PluginEvent(ServerEventType.PlayerReloadWeapon)]
-        public void OnFirearmReload(PlayerReloadWeaponEvent ev)
+        public bool OnFirearmReload(PlayerReloadWeaponEvent ev)
         {
             if (SerialToItem.ContainsKey(ev.Firearm.ItemSerial) && SerialToItem[ev.Firearm.ItemSerial] is ICustomFirearmItem firearm)
             {
-                firearm.OnReloadStart();
+                return firearm.OnReloadStart();
             }
+            return true;
         }
 
         [PluginEvent(ServerEventType.PlayerShotWeapon)]
-        public void OnFirearmShot(PlayerShotWeaponEvent ev)
+        public bool OnFirearmShot(PlayerShotWeaponEvent ev)
         {
             if (SerialToItem.ContainsKey(ev.Firearm.ItemSerial) && SerialToItem[ev.Firearm.ItemSerial] is ICustomFirearmItem firearm)
             {
-                firearm.OnShot();
+                return firearm.OnShot();
             }
+            return true;
         }
 
         [PluginEvent(ServerEventType.PlayerDamage)]
-        public void OnPlayerShotByWeapon(PlayerDamageEvent ev)
+        public bool OnPlayerShotByWeapon(PlayerDamageEvent ev)
         {
             if(ev.DamageHandler is FirearmDamageHandler handler)
             {
@@ -94,10 +98,20 @@ namespace LurkBoisModded.EventHandlers.Item
                  {
                     if(item is ICustomFirearmItem firearm)
                     {
-                        firearm.OnDamageByItem(handler, ev.Target.ReferenceHub);
+                        return firearm.OnDamageByItem(handler, ev.Target.ReferenceHub);
                     }
                 }
             }
+            return true;
+        }
+
+        public static bool OnGrenadeFuseEnd(EffectGrenade grenade)
+        {
+            if(SerialToItem.TryGetValue(grenade.Info.Serial, out CustomItem item) && item is ICustomGrenadeItem grenadeItem)
+            {
+                return grenadeItem.OnFuseEnd(grenade);
+            }
+            return true;
         }
 
         public static void OnReloadFinish(IAmmoManagerModule module, Firearm firearm)
@@ -147,6 +161,12 @@ namespace LurkBoisModded.EventHandlers.Item
             obj.transform.parent = CreatedGameObject.transform;
             CustomItem item = (CustomItem)obj.AddComponent(itemType);
             ItemBase givenItem = target.inventory.ServerAddItem(item.BaseItemType);
+            if(givenItem == null)
+            {
+                GameObject.Destroy(item);
+                GameObject.Destroy(obj);
+                return null;
+            }
             if (SerialToItem.ContainsKey(givenItem.ItemSerial))
             {
                 SerialToItem.Remove(givenItem.ItemSerial);

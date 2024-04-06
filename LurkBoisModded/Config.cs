@@ -14,6 +14,14 @@ namespace LurkBoisModded
 {
     public class Config
     {
+        public static Config CurrentConfig
+        {
+            get
+            {
+                return Plugin.GetConfig();
+            }
+        }
+
         [Description("Should the plugin be enabled")]
         public bool PluginEnabled { get; set; } = true;
 
@@ -59,6 +67,9 @@ namespace LurkBoisModded
 
         [Description("Configuration for the Landmine custom item.")]
         public LandmineConfiguration LandmineConfiguration { get; set; } = new LandmineConfiguration();
+
+        [Description("Molotov Cocktail configuration")]
+        public MolotovConfiguration MolotovConfiguration { get; set; } = new MolotovConfiguration();
 
         [Description("Death message for people who use .suicide")]
         public string SuicideDeathReason { get; set; } = "Suicide by gunshot to the head";
@@ -495,5 +506,26 @@ namespace LurkBoisModded
 
         [Description("How much should base grenade damage be multiplied?")]
         public float DamageMultiplier { get; set; } = 1f;
+    }
+
+    public class MolotovConfiguration
+    {
+        [Description("The tooltip given to players when they hold the item")]
+        public string HeldTip { get; set; } = "You are holding a Molotov Cocktail, throw to ignite an area!";
+
+        [Description("The Radius which the fire spreads to")]
+        public float FireRadius { get; set; } = 10f;
+
+        [Description("The intensity of the fire effect given to players")]
+        public byte FireDamageIntensity { get; set; } = 2;
+
+        [Description("How long should the fire effect last?")]
+        public float FireDamageEffectDuration { get; set; } = 20f;
+
+        [Description("When a player steps into the fire for the first time, how much damage should be done to the player? If the player leaves and re-enters, the damage is applied again.")]
+        public float FireFirstTickDamage { get; set; } = 10f;
+
+        [Description("How long should the fire area hazard last? (not the effect)")]
+        public float FireDuration { get; set; } = 15f;
     }
 }

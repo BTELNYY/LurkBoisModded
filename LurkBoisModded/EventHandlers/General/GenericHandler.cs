@@ -45,10 +45,6 @@ namespace LurkBoisModded.EventHandlers.General
                     ev.Player.SetScale(scale);
                 }
             });
-            Timing.CallDelayed(1f, () => 
-            {
-                ev.Player.ReferenceHub.AddCustomItem(Base.CustomItemType.Landmine);
-            });
         }
 
         [PluginEvent(ServerEventType.PlayerDeath)]
@@ -85,7 +81,7 @@ namespace LurkBoisModded.EventHandlers.General
         public static event Action OnRoundRestart;
 
         [PluginEvent(ServerEventType.RoundRestart)]
-        public void OnRoundRestarted()
+        public void OnRoundRestarted(RoundRestartEvent ev)
         {
             OnRoundRestart?.Invoke();
         }

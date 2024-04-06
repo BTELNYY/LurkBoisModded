@@ -52,7 +52,7 @@ namespace LurkBoisModded.Base
                 {
                     return 0f;
                 }
-                return Math.Max(0f, (float)(EffectiveCooldown - (CooldownStopwatch.Elapsed.TotalMilliseconds * 1000)));
+                return Math.Max(0f, (float)(EffectiveCooldown - CooldownStopwatch.Elapsed.Seconds));
             }
             set
             {
@@ -135,7 +135,7 @@ namespace LurkBoisModded.Base
                 CooldownStopwatch.Start();
                 return true;
             }
-            if(CooldownStopwatch.Elapsed.TotalMilliseconds > (EffectiveCooldown * 1000))
+            if(CooldownStopwatch.Elapsed.TotalSeconds > (EffectiveCooldown))
             {
                 return true;
             }

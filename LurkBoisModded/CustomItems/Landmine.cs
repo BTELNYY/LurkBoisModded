@@ -20,10 +20,11 @@ namespace LurkBoisModded.CustomItems
 
         public override ItemType BaseItemType => ItemType.Radio;
 
-        public override void OnItemEquip()
+        public override bool OnItemEquip()
         {
             base.OnItemEquip();
             CurrentOwner.SendHint("You are holding a landmine, drop it to set it up!");
+            return true;
         }
 
         public override void OnItemDropped(ReferenceHub lastOwner, ItemPickupBase pickupBase)

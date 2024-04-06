@@ -542,9 +542,9 @@ namespace LurkBoisModded
             });
             return true;
         }
-        public static void AddCustomItem(this ReferenceHub target, CustomItemType type)
+        public static CustomItem AddCustomItem(this ReferenceHub target, CustomItemType type)
         {
-            CustomItemHandler.AddItem(target, type);
+            return CustomItemHandler.AddItem(target, type);
         }
     }
 

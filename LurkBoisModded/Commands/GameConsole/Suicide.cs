@@ -12,7 +12,7 @@ using PlayerStatsSystem;
 namespace LurkBoisModded.Commands.GameConsole
 {
     [CommandHandler(typeof(ClientCommandHandler))]
-    public class CommandSuicide : ICommand
+    public class Suicide : ICommand
     {
         public string Command => "suicide";
 

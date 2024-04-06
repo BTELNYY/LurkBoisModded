@@ -1,5 +1,7 @@
 ﻿using LurkBoisModded.Abilities;
 using LurkBoisModded.Base;
+using LurkBoisModded.EventHandlers;
+using MEC;
 using PlayerRoles.FirstPersonControl;
 using PluginAPI.Core.Attributes;
 using PluginAPI.Enums;
@@ -11,6 +13,7 @@ using UnityEngine;
 
 namespace LurkBoisModded.Managers
 {
+    [EventHandler]
     public class AbilityManager
     {
         public static Dictionary<AbilityType, Type> AbilityToType = new Dictionary<AbilityType, Type>()
@@ -31,11 +34,14 @@ namespace LurkBoisModded.Managers
             {
                 GameObject.Destroy(ability);
             }
-            if (Plugin.GetConfig().ProximityChatConfig.AllowedRoles.Contains(ev.Role))
+            Timing.CallDelayed(1f, () =>
             {
-                ProximityChatAbility.ToggledPlayers.Remove(ev.Player.ReferenceHub);
-                ev.Player.ReferenceHub.AddAbility(AbilityType.ProximityChat);
-            }
+                if (Plugin.GetConfig().ProximityChatConfig.AllowedRoles.Contains(ev.Role))
+                {
+                    ProximityChatAbility.ToggledPlayers.Remove(ev.Player.ReferenceHub);
+                    ev.Player.ReferenceHub.AddAbility(AbilityType.ProximityChat);
+                }
+            });
         }
 
         [PluginEvent(ServerEventType.RoundRestart)]

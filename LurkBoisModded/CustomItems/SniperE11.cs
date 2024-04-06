@@ -29,19 +29,19 @@ namespace LurkBoisModded.CustomItems
             AccessTools.Field(typeof(AutomaticAmmoManager), "_defaultMaxAmmo").SetValue(manager, 1);
         }
 
-        public void OnDamageByItem(DamageHandlerBase damageHandlerBase, ReferenceHub target)
+        public bool OnDamageByItem(DamageHandlerBase damageHandlerBase, ReferenceHub target)
         {
-            
+            return true;
         }
 
-        public void OnReloadStart()
+        public bool OnReloadStart()
         {
-            
+            return true;
         }
 
-        public void OnShot()
+        public bool OnShot()
         {
-            
+            return true; 
         }
 
         public void OnReloadFinish(IAmmoManagerModule module, Firearm firearm)

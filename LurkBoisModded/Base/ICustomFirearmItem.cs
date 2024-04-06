@@ -11,9 +11,9 @@ namespace LurkBoisModded.Base
 {
     public interface ICustomFirearmItem
     {
-        void OnShot();
-        void OnReloadStart();
+        bool OnShot();
+        bool OnReloadStart();
         void OnReloadFinish(IAmmoManagerModule module, Firearm firearm);
-        void OnDamageByItem(DamageHandlerBase damageHandlerBase, ReferenceHub target);
+        bool OnDamageByItem(DamageHandlerBase damageHandlerBase, ReferenceHub target);
     }
 }

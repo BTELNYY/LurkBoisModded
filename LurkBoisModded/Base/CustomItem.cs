@@ -128,9 +128,9 @@ namespace LurkBoisModded.Base
             }
         }
 
-        public virtual void OnItemEquip()
+        public virtual bool OnItemEquip()
         {
-
+            return true;
         }
 
         public virtual void OnItemDropped(ReferenceHub lastOwner, ItemPickupBase pickupBase)
@@ -187,8 +187,8 @@ namespace LurkBoisModded.Base
     public enum CustomItemType
     {
         None,
-        Test,
         SniperE11,
         Landmine,
+        MolotovCocktail,
     }
 }

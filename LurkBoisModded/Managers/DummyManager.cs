@@ -25,96 +25,64 @@ namespace LurkBoisModded.Managers
         public static List<ReferenceHub> Dummies = new List<ReferenceHub>();
         public static List<string> DummiesToDestroyOnDeath = new List<string>();
 
-        public static ReferenceHub SpawnDummy(Vector3 pos)
+        private static ReferenceHub SpawnDummyInternal()
+        {
+            try
+            {
+                var clone = GameObject.Instantiate(NetworkManager.singleton.playerPrefab);
+                var hub = clone.GetComponent<ReferenceHub>();
+                int hubPlayerId = hub.PlayerId;
+                NetworkServer.AddPlayerForConnection(new FakeConnection(hubPlayerId++), clone);
+                AccessTools.PropertySetter(typeof(NicknameSync), nameof(NicknameSync.MyNick)).Invoke(hub.nicknameSync, new object[] {"Dummy"});
+                PlayerAuthenticationManager authManager = hub.authManager;
+                AccessTools.Field(typeof(PlayerAuthenticationManager), "_privUserId").SetValue(authManager, $"Dummy-{ReferenceHub.AllHubs.Count + 1}");
+                authManager.NetworkSyncedUserId = $"Dummy-{ReferenceHub.AllHubs.Count + 1}";
+                AccessTools.Field(typeof(PlayerAuthenticationManager), "_targetInstanceMode").SetValue(authManager, ClientInstanceMode.DedicatedServer);
+                hub.roleManager.ServerSetRole(PlayerRoles.RoleTypeId.Spectator, PlayerRoles.RoleChangeReason.RemoteAdmin);
+                Dummies.Add(hub);
+                return hub;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("SpawnDummyPlayer encountered an exception: " + ex.Message);
+                return null;
+            }
+        }
+
+        public static ReferenceHub SpawnDummy(Vector3 pos, RoleTypeId role)
         {
             //Log.Debug("Spawn dummy!");
             try
             {
-
-                #region Create Dummy
-
-                var newPlayer =
-                    UnityEngine.Object.Instantiate(NetworkManager.singleton.playerPrefab);
-                int id = Dummies.Count;
-                var fakeConnection = new FakeConnection(id++);
-                var hubPlayer = newPlayer.GetComponent<ReferenceHub>();
-                if (hubPlayer is null)
-                {
-                    newPlayer.AddComponent<ReferenceHub>();
-                }
-                if (hubPlayer.authManager is null)
-                {
-                    hubPlayer.authManager = new PlayerAuthenticationManager();
-                }
-                #endregion
-
-                //Log.Debug("Adding dummy to the list of dummies");
-                Dummies.Add(hubPlayer);
-                //Log.Debug("Spawning dummy");
-                NetworkServer.AddPlayerForConnection(fakeConnection, newPlayer);
-
-                try
-                {
-                    //Log.Debug("Setting the UserId of the dummy");
-                    AccessTools.Field(typeof(PlayerAuthenticationManager), "_privUserId").SetValue(hubPlayer.authManager, $"Dummy-{id}@server");
-                    //hubPlayer.characterClassManager._privUserId = $"SCP-575-{id}@server";
-                    AccessTools.Field(typeof(PlayerAuthenticationManager), "InstanceMode").SetValue(hubPlayer.authManager, ClientInstanceMode.Unverified);
-                    
-                    //hubPlayer.characterClassManager.InstanceMode = ClientInstanceMode.Unverified;
-                }
-                catch
-                {
-                    
-                }
-
-
-                try
-                {
-                    //Log.Debug("Applying nickname");
-                    hubPlayer.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
-                    hubPlayer.nicknameSync.ViewRange = 100f;
-                    // SetNick it will always give an error but will apply it anyway.
-                    object[] arr = { "Dummy" };
-                    AccessTools.Method(typeof(NicknameSync), "SetNick").Invoke(hubPlayer.nicknameSync, arr);
-                    //hubPlayer.nicknameSync.SetNick("Dummy");
-                }
-                catch
-                {
-                    // ignored
-                }
-
-
-                try
-                {
-                    hubPlayer.roleManager.ServerSetRole(RoleTypeId.Spectator, RoleChangeReason.RemoteAdmin);
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"Error on {nameof(DummyManager)}: Error on set dummy role {e}");
-                }
-
-                hubPlayer.characterClassManager.GodMode = false;
-
+                ReferenceHub hubPlayer = SpawnDummyInternal();
+                hubPlayer.roleManager.ServerSetRole(role, RoleChangeReason.RemoteAdmin);
                 Timing.CallDelayed(0.3f, () =>
                 {
-                    //var room = victim.Room;
+                    hubPlayer.TryOverridePosition(pos, Vector3.zero);
+                });
+                return hubPlayer;
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error on {nameof(DummyManager)}: {e} -- {e.Message}");
+                return null;
+            }
+        }
 
-                    //if (room.Name == RoomName.Lcz173)
-                    //{
-                    //    hubPlayer.TryOverridePosition(room.ApiRoom.Position + new Vector3(0f, 13.5f, 0f), Vector3.zero);
-                    //}
-                    //else if (room.Name == RoomName.HczTestroom)
-                    //{
-                    //    if (DoorVariant.DoorsByRoom.TryGetValue(room, out var hashSet))
-                    //    {
-                    //        var door = hashSet.FirstOrDefault();
-                    //        if (door != null) hubPlayer.TryOverridePosition(door.transform.position, Vector3.zero);
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    hubPlayer.TryOverridePosition(room.ApiRoom.Position + new Vector3(0f, 1.3f, 0f), Vector3.zero);
-                    //}
+        public static ReferenceHub SpawnDummy(Vector3 pos, bool destroyOnDeath, RoleTypeId role)
+        {
+            //Log.Debug("Spawn dummy!");
+            try
+            {
+                ReferenceHub hubPlayer = SpawnDummyInternal();
+                //Log.Debug("Adding dummy to the list of dummies");
+                if (destroyOnDeath)
+                {
+                    DummiesToDestroyOnDeath.Add(hubPlayer.authManager.UserId);
+                }
+                hubPlayer.roleManager.ServerSetRole(role, RoleChangeReason.RemoteAdmin);
+                Timing.CallDelayed(0.3f, () =>
+                {
                     hubPlayer.TryOverridePosition(pos + new Vector3(0f, 1.3f, 0f), Vector3.zero);
                 });
                 return hubPlayer;
@@ -126,195 +94,22 @@ namespace LurkBoisModded.Managers
             }
         }
 
-        public static void SpawnDummy(Vector3 pos, bool destroyOnDeath)
-        {
-            //Log.Debug("Spawn dummy!");
-            try
-            {
-
-                #region Create Dummy
-
-                var newPlayer =
-                    UnityEngine.Object.Instantiate(NetworkManager.singleton.playerPrefab);
-                int id = Dummies.Count;
-                var fakeConnection = new FakeConnection(id++);
-                var hubPlayer = newPlayer.GetComponent<ReferenceHub>();
-                if (hubPlayer is null)
-                {
-                    newPlayer.AddComponent<ReferenceHub>();
-                }
-                if (hubPlayer.authManager is null)
-                {
-                    hubPlayer.authManager = new PlayerAuthenticationManager();
-                }
-                #endregion
-
-                //Log.Debug("Adding dummy to the list of dummies");
-                Dummies.Add(hubPlayer);
-                //Log.Debug("Spawning dummy");
-                NetworkServer.AddPlayerForConnection(fakeConnection, newPlayer);
-
-                try
-                {
-                    //Log.Debug("Setting the UserId of the dummy");
-                    AccessTools.Field(typeof(PlayerAuthenticationManager), "_privUserId").SetValue(hubPlayer.authManager, $"Dummy-{id}@server");
-                    if (destroyOnDeath)
-                    {
-                        DummiesToDestroyOnDeath.Add($"Dummy-{id}@server)");
-                    }
-                    //hubPlayer.characterClassManager._privUserId = $"SCP-575-{id}@server";
-                    AccessTools.Field(typeof(PlayerAuthenticationManager), "InstanceMode").SetValue(hubPlayer.authManager, ClientInstanceMode.Unverified);
-                    //hubPlayer.characterClassManager.InstanceMode = ClientInstanceMode.Unverified;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-
-
-                try
-                {
-                    //Log.Debug("Applying nickname");
-                    hubPlayer.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
-                    hubPlayer.nicknameSync.ViewRange = 100f;
-                    // SetNick it will always give an error but will apply it anyway.
-                    object[] arr = { "Dummy" };
-                    AccessTools.Method(typeof(NicknameSync), "SetNick").Invoke(hubPlayer.nicknameSync, arr);
-                    //hubPlayer.nicknameSync.SetNick("Dummy");
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-
-
-                try
-                {
-                    hubPlayer.roleManager.ServerSetRole(RoleTypeId.ClassD, RoleChangeReason.RemoteAdmin);
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"Error on {nameof(DummyManager)}: Error on set dummy role {e}");
-                }
-
-                hubPlayer.characterClassManager.GodMode = false;
-
-                Timing.CallDelayed(0.3f, () =>
-                {
-                    //var room = victim.Room;
-
-                    //if (room.Name == RoomName.Lcz173)
-                    //{
-                    //    hubPlayer.TryOverridePosition(room.ApiRoom.Position + new Vector3(0f, 13.5f, 0f), Vector3.zero);
-                    //}
-                    //else if (room.Name == RoomName.HczTestroom)
-                    //{
-                    //    if (DoorVariant.DoorsByRoom.TryGetValue(room, out var hashSet))
-                    //    {
-                    //        var door = hashSet.FirstOrDefault();
-                    //        if (door != null) hubPlayer.TryOverridePosition(door.transform.position, Vector3.zero);
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    hubPlayer.TryOverridePosition(room.ApiRoom.Position + new Vector3(0f, 1.3f, 0f), Vector3.zero);
-                    //}
-                    hubPlayer.TryOverridePosition(pos + new Vector3(0f, 1.3f, 0f), Vector3.zero);
-                });
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Error on {nameof(DummyManager)}: {e} -- {e.Message}");
-            }
-        }
-
         public static ReferenceHub SpawnDummy(Vector3 pos, bool destroyOnDeath, string name, RoleTypeId role)
         {
             //Log.Debug("Spawn dummy!");
             try
             {
-
-                #region Create Dummy
-
-                var newPlayer =
-                    UnityEngine.Object.Instantiate(NetworkManager.singleton.playerPrefab);
-                int id = Dummies.Count;
-                var fakeConnection = new FakeConnection(id++);
-
-                var hubPlayer = newPlayer.GetComponent<ReferenceHub>();
-                if (hubPlayer is null)
-                {
-                    newPlayer.AddComponent<ReferenceHub>();
-                }
-                if (hubPlayer.authManager is null)
-                {
-                    hubPlayer.authManager = new PlayerAuthenticationManager();
-                }
-                #endregion
-
-                //Log.Debug("Adding dummy to the list of dummies");
-                Dummies.Add(hubPlayer);
+                ReferenceHub hubPlayer = SpawnDummyInternal();
                 //Log.Debug("Spawning dummy");
-                NetworkServer.AddPlayerForConnection(fakeConnection, newPlayer);
-
-                try
+                if(destroyOnDeath)
                 {
-                    //Log.Debug("Setting the UserId of the dummy");
-                    AccessTools.Field(typeof(PlayerAuthenticationManager), "_privUserId").SetValue(hubPlayer.authManager, $"Dummy-{id}@server");
-                    if (destroyOnDeath)
-                    {
-                        DummiesToDestroyOnDeath.Add($"Dummy-{id}@server");
-                    }
-                    //hubPlayer.characterClassManager._privUserId = $"SCP-575-{id}@server";
-                    AccessTools.Field(typeof(PlayerAuthenticationManager), "InstanceMode").SetValue(hubPlayer.authManager, ClientInstanceMode.Unverified);
-                    //hubPlayer.characterClassManager.InstanceMode = ClientInstanceMode.Unverified;
+                    DummiesToDestroyOnDeath.Add(hubPlayer.authManager.UserId);
                 }
-                catch (Exception)
-                {
-
-                }
-
-                hubPlayer.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
-                hubPlayer.nicknameSync.ViewRange = 100f;
-                // SetNick it will always give an error but will apply it anyway.
                 hubPlayer.nicknameSync.Network_myNickSync = name;
-
-
-
-                try
-                {
-                    hubPlayer.roleManager.ServerSetRole(role, RoleChangeReason.RemoteAdmin);
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"Error on {nameof(DummyManager)}: Error on set dummy role {e}");
-                    return null;
-                }
-
-                hubPlayer.characterClassManager.GodMode = false;
-
+                hubPlayer.roleManager.ServerSetRole(role, RoleChangeReason.RemoteAdmin);
                 Timing.CallDelayed(0.3f, () =>
                 {
-                    //var room = victim.Room;
-
-                    //if (room.Name == RoomName.Lcz173)
-                    //{
-                    //    hubPlayer.TryOverridePosition(room.ApiRoom.Position + new Vector3(0f, 13.5f, 0f), Vector3.zero);
-                    //}
-                    //else if (room.Name == RoomName.HczTestroom)
-                    //{
-                    //    if (DoorVariant.DoorsByRoom.TryGetValue(room, out var hashSet))
-                    //    {
-                    //        var door = hashSet.FirstOrDefault();
-                    //        if (door != null) hubPlayer.TryOverridePosition(door.transform.position, Vector3.zero);
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    hubPlayer.TryOverridePosition(room.ApiRoom.Position + new Vector3(0f, 1.3f, 0f), Vector3.zero);
-                    //}
                     hubPlayer.TryOverridePosition(pos + new Vector3(0f, 1.3f, 0f), Vector3.zero);
-                    hubPlayer.gameObject.transform.position = pos + new Vector3(0f, 1.3f, 0f);
                 });
                 return hubPlayer;
             }
@@ -329,7 +124,6 @@ namespace LurkBoisModded.Managers
         {
             var dummy = SpawnDummy(spawnPosition, true, ragdoll.Info.Nickname, ragdoll.Info.RoleType);
             DamageHandlerBase damageHandlerBase = ragdoll.Info.Handler;
-            CustomReasonDamageHandler un = new CustomReasonDamageHandler("Decayed in Pocket Dimension", -1f);
             dummy.inventory.UserInventory.ReserveAmmo.Clear();
             InventoryInfo userInventory = dummy.inventory.UserInventory;
             while (userInventory.Items.Count > 0)
@@ -338,9 +132,7 @@ namespace LurkBoisModded.Managers
             }
             Timing.CallDelayed(0.3f, () =>
             {
-                dummy.playerStats.DealDamage(un);
-                //NetworkServer.Destroy(dummy.gameObject);
-                //NetworkServer.Destroy(ragdoll.gameObject);
+                dummy.playerStats.DealDamage(ragdoll.Info.Handler);
             });
         }
 

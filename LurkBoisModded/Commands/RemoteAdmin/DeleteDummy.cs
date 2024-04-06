@@ -46,7 +46,7 @@ namespace LurkBoisModded.Commands.RemoteAdmin
             {
                 list = RAUtils.ProcessPlayerIdOrNamesList(arguments, 0, out array, false);
             }
-            List<ReferenceHub> dummies = list.Where(x => DummyManager.Dummies.Select(y => y.Network_playerId).ToList().Contains(x.Network_playerId)).ToList();
+            List<ReferenceHub> dummies = list.Where(x => DummyManager.Dummies.Select(y => y.PlayerId).ToList().Contains(x.PlayerId)).ToList();
             foreach(ReferenceHub dummy in dummies)
             {
                 NetworkServer.Destroy(dummy.gameObject);
