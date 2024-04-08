@@ -1,4 +1,4 @@
-﻿using LurkBoisModded.Base;
+﻿using LurkBoisModded.Base.CustomItems;
 using AdminToys;
 using System;
 using System.Collections.Generic;

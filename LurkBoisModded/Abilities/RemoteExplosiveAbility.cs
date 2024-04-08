@@ -12,7 +12,7 @@ using PlayerRoles.Spectating;
 using Mirror;
 using HarmonyLib;
 using System;
-using LurkBoisModded.Base;
+using LurkBoisModded.Base.Ability;
 using UnityEngine;
 
 namespace LurkBoisModded.Abilities

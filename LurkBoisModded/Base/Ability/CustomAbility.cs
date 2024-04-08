@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using LurkBoisModded.Managers;
 
-namespace LurkBoisModded.Base
+namespace LurkBoisModded.Base.Ability
 {
     public abstract class CustomAbility : MonoBehaviour
     {

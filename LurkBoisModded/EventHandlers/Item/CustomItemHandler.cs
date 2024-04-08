@@ -5,7 +5,7 @@ using PluginAPI.Core;
 using MEC;
 using UnityEngine;
 using System.Collections.Generic;
-using LurkBoisModded.Base;
+using LurkBoisModded.Base.CustomItems;
 using System;
 using InventorySystem.Items;
 using InventorySystem;

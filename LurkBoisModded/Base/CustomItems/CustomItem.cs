@@ -13,7 +13,7 @@ using UnityEngine;
 using PluginAPI.Enums;
 using InventorySystem.Items.Usables;
 
-namespace LurkBoisModded.Base
+namespace LurkBoisModded.Base.CustomItems
 {
     public abstract class CustomItem : MonoBehaviour
     {

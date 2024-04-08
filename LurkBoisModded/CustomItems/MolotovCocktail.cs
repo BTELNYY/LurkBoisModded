@@ -1,5 +1,5 @@
 ﻿using InventorySystem.Items.ThrowableProjectiles;
-using LurkBoisModded.Base;
+using LurkBoisModded.Base.CustomItems;
 using LurkBoisModded.EnvriomentalHazards;
 using LurkBoisModded.EnvriomentalHazards.Hazards.Fire;
 using System;

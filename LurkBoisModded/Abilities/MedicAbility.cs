@@ -1,4 +1,4 @@
-﻿using LurkBoisModded.Base;
+﻿using LurkBoisModded.Base.Ability;
 using LurkBoisModded.Managers;
 using Mirror;
 using PlayerRoles;

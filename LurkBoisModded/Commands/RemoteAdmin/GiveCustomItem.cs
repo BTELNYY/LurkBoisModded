@@ -1,5 +1,5 @@
 ﻿using CommandSystem;
-using LurkBoisModded.Base;
+using LurkBoisModded.Base.CustomItems;
 using RemoteAdmin;
 using System;
 using System.Collections.Generic;

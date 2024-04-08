@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using InventorySystem.Items.Pickups;
 using LurkBoisModded.Base;
+using LurkBoisModded.Base.CustomItems;
 using LurkBoisModded.EventHandlers.Item;
 using System;
 using System.Collections.Generic;

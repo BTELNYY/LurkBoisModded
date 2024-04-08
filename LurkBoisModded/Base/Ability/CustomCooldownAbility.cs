@@ -4,7 +4,7 @@ using LurkBoisModded.Managers;
 using PluginAPI.Core;
 using UnityEngine;
 
-namespace LurkBoisModded.Base
+namespace LurkBoisModded.Base.Ability
 {
     public abstract class CustomCooldownAbility : CustomAbility
     {

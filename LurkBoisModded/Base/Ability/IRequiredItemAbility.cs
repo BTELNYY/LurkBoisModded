@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LurkBoisModded.Base
+namespace LurkBoisModded.Base.Ability
 {
     public interface IRequiredItemAbility
     {

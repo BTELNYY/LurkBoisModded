@@ -9,6 +9,8 @@ using InventorySystem.Items;
 using InventorySystem.Items.Firearms;
 using InventorySystem.Items.Firearms.Attachments;
 using InventorySystem.Items.Pickups;
+using LurkBoisModded.Base.CustomItems;
+using LurkBoisModded.Base.Ability;
 using LurkBoisModded.Base;
 using LurkBoisModded.EventHandlers.Item;
 using LurkBoisModded.Managers;

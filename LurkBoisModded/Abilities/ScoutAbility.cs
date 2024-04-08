@@ -1,4 +1,5 @@
-﻿using LurkBoisModded.Base;
+﻿using LurkBoisModded.Base.Ability;
+using LurkBoisModded.Base;
 using System;
 using PluginAPI.Core;
 using System.Collections.Generic;

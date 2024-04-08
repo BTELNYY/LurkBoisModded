@@ -1,5 +1,7 @@
 ﻿using LurkBoisModded.Abilities;
 using LurkBoisModded.Base;
+using LurkBoisModded.Base.CustomItems;
+using LurkBoisModded.Base.Ability;
 using LurkBoisModded.EventHandlers;
 using MEC;
 using PlayerRoles.FirstPersonControl;

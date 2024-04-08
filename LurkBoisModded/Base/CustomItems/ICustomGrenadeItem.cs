@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LurkBoisModded.Base
+namespace LurkBoisModded.Base.CustomItems
 {
     public interface ICustomGrenadeItem
     {

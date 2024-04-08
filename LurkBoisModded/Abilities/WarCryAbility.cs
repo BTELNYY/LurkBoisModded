@@ -1,4 +1,5 @@
-﻿using LurkBoisModded.Base;
+﻿using LurkBoisModded.Base.Ability;
+using LurkBoisModded.Base;
 using PlayerRoles;
 using PlayerStatsSystem;
 using UnityEngine;
