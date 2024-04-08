@@ -173,6 +173,12 @@ namespace LurkBoisModded
         {
             return inv.UserInventory.Items.First(x => x.Value.ItemTypeId == type).Value;
         }
+
+        public static ItemBase GetItemBySerial(this Inventory inv, ushort serial)
+        {
+            return inv.UserInventory.Items.First(x => x.Value.ItemSerial == serial).Value;
+        }
+
         /// <summary>
         /// Returns the first found instance of a item from a players inventory according to type
         /// </summary>
@@ -545,6 +551,19 @@ namespace LurkBoisModded
         public static CustomItem AddCustomItem(this ReferenceHub target, CustomItemType type)
         {
             return CustomItemHandler.AddItem(target, type);
+        }
+
+        public static void AddItem(this ReferenceHub target, ItemType type)
+        {
+            target.inventory.ServerAddItem(type);
+        }
+
+        public static void AddItem(this ReferenceHub target, ItemType type, byte amount)
+        {
+            for(int i = 0; i < amount; i++)
+            {
+                target.inventory.ServerAddItem(type);
+            }
         }
     }
 

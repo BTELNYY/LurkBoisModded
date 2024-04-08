@@ -18,6 +18,7 @@ using InventorySystem.Items.Firearms;
 using LurkBoisModded.Patches.Firearm.Reload;
 using InventorySystem.Items.Pickups;
 using InventorySystem.Items.ThrowableProjectiles;
+using InventorySystem.Items.Usables;
 
 namespace LurkBoisModded.EventHandlers.Item
 {
@@ -44,9 +45,13 @@ namespace LurkBoisModded.EventHandlers.Item
         }
 
         [PluginEvent(ServerEventType.PlayerDropItem)]
-        public void OnPlayerDropItem(PlayerDropItemEvent ev)
+        public bool OnPlayerDropItem(PlayerDropItemEvent ev)
         {
-
+            if (SerialToItem.ContainsKey(ev.Item.ItemSerial))
+            {
+                return SerialToItem[ev.Item.ItemSerial];
+            }
+            return true;
         }
 
         [PluginEvent(ServerEventType.PlayerChangeItem)]
@@ -55,6 +60,36 @@ namespace LurkBoisModded.EventHandlers.Item
             if (SerialToItem.ContainsKey(ev.NewItem))
             {
                 return SerialToItem[ev.NewItem].OnItemEquip();
+            }
+            return true;
+        }
+
+        [PluginEvent(ServerEventType.PlayerUseItem)]
+        public bool OnPlayerUseItem(PlayerUsedItemEvent ev)
+        {
+            if (SerialToItem.ContainsKey(ev.Item.ItemSerial))
+            {
+                return SerialToItem[ev.Item.ItemSerial].OnItemUse(ev.Player.ReferenceHub, (UsableItem)ev.Item);
+            }
+            return true;
+        }
+
+        [PluginEvent(ServerEventType.PlayerUsedItem)]
+        public bool OnPlayerUsedItem(PlayerUsedItemEvent ev)
+        {
+            if (SerialToItem.ContainsKey(ev.Item.ItemSerial))
+            {
+                return SerialToItem[ev.Item.ItemSerial].OnItemUsed(ev.Player.ReferenceHub, (UsableItem)ev.Item);
+            }
+            return true;
+        }
+
+        [PluginEvent(ServerEventType.PlayerCancelUsingItem)]
+        public bool OnPlayerCancelUseItem(PlayerCancelUsingItemEvent ev)
+        {
+            if (SerialToItem.ContainsKey(ev.Item.ItemSerial))
+            {
+                return SerialToItem[ev.Item.ItemSerial].OnItemUseCancelled(ev.Player.ReferenceHub, ev.Item);
             }
             return true;
         }
@@ -98,7 +133,7 @@ namespace LurkBoisModded.EventHandlers.Item
                  {
                     if(item is ICustomFirearmItem firearm)
                     {
-                        return firearm.OnDamageByItem(handler, ev.Target.ReferenceHub);
+                        return firearm.OnPlayerShotByWeapon(handler, ev.Target.ReferenceHub);
                     }
                 }
             }

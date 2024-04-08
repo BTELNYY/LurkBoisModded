@@ -71,6 +71,9 @@ namespace LurkBoisModded
         [Description("Molotov Cocktail configuration")]
         public MolotovConfiguration MolotovConfiguration { get; set; } = new MolotovConfiguration();
 
+        [Description("Sniper rifle configuration")]
+        public SniperE11Config SniperE11Config { get; set;} = new SniperE11Config();
+
         [Description("Death message for people who use .suicide")]
         public string SuicideDeathReason { get; set; } = "Suicide by gunshot to the head";
 
@@ -527,5 +530,14 @@ namespace LurkBoisModded
 
         [Description("How long should the fire area hazard last? (not the effect)")]
         public float FireDuration { get; set; } = 15f;
+    }
+
+    public class SniperE11Config
+    {
+        public string CooldownMessage { get; set; } = "You can't shoot this weapon yet, on cooldown!";
+
+        public float CooldownTime { get; set; } = 10f;
+
+        public float DamageMultiplier { get; set; } = 5f;
     }
 }

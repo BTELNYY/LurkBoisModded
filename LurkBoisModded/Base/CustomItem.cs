@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using PluginAPI.Core.Attributes;
 using UnityEngine;
 using PluginAPI.Enums;
+using InventorySystem.Items.Usables;
 
 namespace LurkBoisModded.Base
 {
@@ -139,6 +140,26 @@ namespace LurkBoisModded.Base
             _currentOwner = null;
             _itemBaseReference = null;
             _itemPickupBase = pickupBase;
+        }
+
+        public virtual bool OnItemDropping(ReferenceHub player, ItemBase item)
+        {
+            return true;
+        }
+
+        public virtual bool OnItemUse(ReferenceHub player, UsableItem item)
+        {
+            return true;
+        }
+
+        public virtual bool OnItemUseCancelled(ReferenceHub player, UsableItem item)
+        {
+            return true;
+        }
+
+        public virtual bool OnItemUsed(ReferenceHub player, ItemBase item)
+        {
+            return true;
         }
 
         public virtual void OnItemCreated(ReferenceHub owner, ushort serial)

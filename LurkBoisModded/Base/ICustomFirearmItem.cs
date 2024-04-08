@@ -14,6 +14,6 @@ namespace LurkBoisModded.Base
         bool OnShot();
         bool OnReloadStart();
         void OnReloadFinish(IAmmoManagerModule module, Firearm firearm);
-        bool OnDamageByItem(DamageHandlerBase damageHandlerBase, ReferenceHub target);
+        bool OnPlayerShotByWeapon(FirearmDamageHandler damageHandlerBase, ReferenceHub target);
     }
 }
