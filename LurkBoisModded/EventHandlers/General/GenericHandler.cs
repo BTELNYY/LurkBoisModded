@@ -7,8 +7,10 @@ using UnityEngine;
 using LurkBoisModded.Commands.GameConsole;
 using LurkBoisModded.Managers;
 using LurkBoisModded.Abilities;
+using LurkBoisModded.Extensions;
 using LurkBoisModded.Base;
 using System;
+using LurkBoisModded.Patches.Firearm;
 
 namespace LurkBoisModded.EventHandlers.General
 {
@@ -76,6 +78,7 @@ namespace LurkBoisModded.EventHandlers.General
             CommandGas.CurrentRoom = null;
             SubclassManager.TempDisallowedRooms.Clear();
             ProximityChatAbility.ToggledPlayers.Clear();
+            MaxAmmoPatcher.Clear();
         }
 
         public static event Action OnRoundRestart;

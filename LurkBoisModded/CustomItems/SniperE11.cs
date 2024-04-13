@@ -2,6 +2,7 @@
 using InventorySystem.Items;
 using InventorySystem.Items.Firearms;
 using InventorySystem.Items.Firearms.Modules;
+using LurkBoisModded.Extensions;
 using LurkBoisModded.Base.CustomItems;
 using MEC;
 using PlayerRoles;
@@ -15,22 +16,13 @@ using System.Threading.Tasks;
 
 namespace LurkBoisModded.CustomItems
 {
-    public class SniperE11 : CustomItem, ICustomFirearmItem
+    public class SniperE11 : CustomFirearm, ICustomFirearmItem
     {
         public override CustomItemType CustomItemType => CustomItemType.SniperE11;
 
         public override ItemType BaseItemType => ItemType.GunE11SR;
 
         public bool OnCooldown = false;
-
-        public Firearm Firearm 
-        { 
-            get
-            {
-                return (Firearm)ItemBase;
-            } 
-        }
-
         public override void OnItemCreated(ReferenceHub owner, ushort serial)
         {
             base.OnItemCreated(owner, serial);
@@ -39,19 +31,19 @@ namespace LurkBoisModded.CustomItems
             {
                 return;
             }
-            AccessTools.Field(typeof(AutomaticAmmoManager), "_defaultMaxAmmo").SetValue(manager, (byte)1);
+            SetMaxAmmo(1);
         }
 
         public FirearmDamageHandler lastHandler = null;
 
-        public bool OnPlayerShotByWeapon(FirearmDamageHandler damageHandlerBase, ReferenceHub target)
+        public override bool OnPlayerShotByWeapon(FirearmDamageHandler damageHandlerBase, ReferenceHub target)
         {
             if(damageHandlerBase == lastHandler)
             {
                 return false;
             }
             ushort currItemSerial = damageHandlerBase.Attacker.Hub.inventory.NetworkCurItem.SerialNumber;
-            Firearm firearm = (Firearm)damageHandlerBase.Attacker.Hub.inventory.GetItemBySerial(currItemSerial);
+            Firearm firearm = (Firearm)damageHandlerBase.Attacker.Hub.GetItemBySerial(currItemSerial);
             if(firearm == null)
             {
                 return true;
@@ -71,7 +63,7 @@ namespace LurkBoisModded.CustomItems
             return true;
         }
 
-        public bool OnReloadStart()
+        public override bool OnReloadStart()
         {
             if(Firearm.Status.Ammo == 0)
             {
@@ -80,26 +72,15 @@ namespace LurkBoisModded.CustomItems
                     CurrentOwner.SendHint(Config.CurrentConfig.SniperE11Config.CooldownMessage);
                     return false;
                 }
-                return true;
             }
-            if(Firearm.Status.Ammo > 1)
+            else
             {
-                VerifyHasOneBullet();
                 return false;
             }
             return true;
         }
 
-        void Update()
-        {
-            if (OnCooldown)
-            {
-                CurrentOwner.SendHint(Config.CurrentConfig.SniperE11Config.CooldownMessage);
-                ForceSetAmmo(0);
-            }
-        }
-
-        public bool OnShot()
+        public override bool OnShot()
         {
             if(OnCooldown)
             {
@@ -111,7 +92,7 @@ namespace LurkBoisModded.CustomItems
             {
                 OnCooldown = false;
             });
-            ForceSetAmmo(0);
+            SetCurrentAmmo(0);
             return true; 
         }
 
@@ -126,7 +107,7 @@ namespace LurkBoisModded.CustomItems
             {
                 return;
             }
-            ForceSetAmmo(1);
+            SetCurrentAmmo(1);
         }
 
         public void ForceSetAmmo(byte amount)
@@ -141,7 +122,7 @@ namespace LurkBoisModded.CustomItems
             Firearm.Status = new FirearmStatus(properAmount, FirearmStatusFlags.None, Firearm.Status.Attachments);
         }
 
-        public void OnReloadFinish(IAmmoManagerModule module, Firearm firearm)
+        public override void OnReloadFinish(IAmmoManagerModule module, Firearm firearm)
         {
             VerifyHasOneBullet();
         }

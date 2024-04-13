@@ -8,6 +8,7 @@ using Interactables.Interobjects.DoorUtils;
 using System.Linq;
 using MapGeneration;
 using System.Collections.Generic;
+using LurkBoisModded.Extensions;
 using Mirror;
 
 namespace LurkBoisModded.EventHandlers.Map

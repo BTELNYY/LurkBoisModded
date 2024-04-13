@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using Hints;
+using LurkBoisModded.Extensions;
 using InventorySystem.Disarming;
 using PluginAPI.Core;
 

@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using Mirror;
 using PlayerStatsSystem;
+using LurkBoisModded.Extensions;
 
 namespace LurkBoisModded.Effects
 {

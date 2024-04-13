@@ -14,6 +14,7 @@ using PluginAPI.Core;
 using AdminToys;
 using CentralAuth;
 using PlayerRoles.Ragdolls;
+using LurkBoisModded.Extensions;
 
 namespace LurkBoisModded
 {

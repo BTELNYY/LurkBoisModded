@@ -1,6 +1,7 @@
 ﻿using CustomPlayerEffects;
 using PlayerRoles;
 using PlayerStatsSystem;
+using LurkBoisModded.Extensions;
 
 namespace LurkBoisModded.Effects
 {

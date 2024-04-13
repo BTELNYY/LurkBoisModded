@@ -11,6 +11,7 @@ using Mirror;
 using LurkBoisModded.Scripts;
 using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
+using LurkBoisModded.Extensions;
 
 namespace LurkBoisModded.CustomItems
 {

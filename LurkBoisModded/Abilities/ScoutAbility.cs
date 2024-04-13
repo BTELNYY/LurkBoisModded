@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using LurkBoisModded.Managers;
 using LurkBoisModded.Effects;
 using CustomPlayerEffects;
+using LurkBoisModded.Extensions;
 
 namespace LurkBoisModded.Abilities
 {

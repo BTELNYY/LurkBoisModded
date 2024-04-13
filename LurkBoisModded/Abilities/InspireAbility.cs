@@ -3,6 +3,7 @@ using PlayerStatsSystem;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using LurkBoisModded.Extensions;
 using LurkBoisModded.Base;
 using LurkBoisModded.Base.Ability;
 using LurkBoisModded.Managers;

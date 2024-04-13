@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using LurkBoisModded.Managers;
 using PluginAPI.Core;
+using LurkBoisModded.Extensions;
 using UnityEngine;
 
 namespace LurkBoisModded.Base.Ability

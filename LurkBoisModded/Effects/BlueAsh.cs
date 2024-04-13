@@ -1,6 +1,7 @@
 ﻿using CentralAuth;
 using CustomPlayerEffects;
 using PluginAPI.Core;
+using LurkBoisModded.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

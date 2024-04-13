@@ -195,6 +195,11 @@ namespace LurkBoisModded.EventHandlers.Item
             GameObject obj = new GameObject("Object");
             obj.transform.parent = CreatedGameObject.transform;
             CustomItem item = (CustomItem)obj.AddComponent(itemType);
+            if(item == null)
+            {
+                Log.Error("Custom item could not be created!");
+                return null;
+            }
             ItemBase givenItem = target.inventory.ServerAddItem(item.BaseItemType);
             if(givenItem == null)
             {

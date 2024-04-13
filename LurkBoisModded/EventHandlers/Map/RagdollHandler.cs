@@ -3,6 +3,7 @@ using MapGeneration;
 using PlayerRoles.Ragdolls;
 using PlayerStatsSystem;
 using UnityEngine;
+using LurkBoisModded.Extensions;
 
 namespace LurkBoisModded.EventHandlers.Map
 {

@@ -2,6 +2,7 @@
 using LurkBoisModded.Base.Ability;
 using LurkBoisModded.Base.CustomItems;
 using LurkBoisModded.Base;
+using LurkBoisModded.Extensions;
 using LurkBoisModded.Managers;
 using MapGeneration;
 using MEC;

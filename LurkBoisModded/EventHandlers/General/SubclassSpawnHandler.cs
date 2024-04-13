@@ -10,6 +10,7 @@ using PlayerRoles;
 using LurkBoisModded.Base;
 using LurkBoisModded.Managers;
 using System.Linq;
+using LurkBoisModded.Extensions;
 
 namespace LurkBoisModded.EventHandlers.General
 {

@@ -32,6 +32,11 @@ namespace LurkBoisModded
         public float MaxHeight { get; set; } = 1.1f;
         public float MinHeight { get; set; } = 0.95f;
 
+        [Description("Should kills give hints to the player who killed someone?")]
+        public bool DoKillMessages { get; set; } = true;
+
+        public string KillMessage { get; set; } = "Killed <color={color}>{playername}</color>";
+
         [Description("SCP 330 (Candy) Config")]
         public Scp330Config Scp330Config { get; set; } = new Scp330Config();
 

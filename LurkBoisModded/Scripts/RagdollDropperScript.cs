@@ -5,6 +5,7 @@ using MEC;
 using PluginAPI.Core;
 using System.Collections.Generic;
 using LurkBoisModded.EventHandlers;
+using LurkBoisModded.Extensions;
 using System.Linq;
 using MapGeneration;
 using PlayerRoles.Ragdolls;

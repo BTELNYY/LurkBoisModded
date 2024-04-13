@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using System.Text;
 using System.Threading.Tasks;
+using LurkBoisModded.Extensions;
 
 namespace LurkBoisModded.Commands.RemoteAdmin
 {

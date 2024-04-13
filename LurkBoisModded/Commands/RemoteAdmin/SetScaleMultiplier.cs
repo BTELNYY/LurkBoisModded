@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Utils;
+using LurkBoisModded.Extensions;
 
 //Copy paste from Exiled Admin tools, ported to NWAPI plus extensions.
 

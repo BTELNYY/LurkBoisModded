@@ -7,6 +7,7 @@ using PluginAPI.Core.Attributes;
 using System.Collections.Generic;
 using Utils;
 using LurkBoisModded.Managers;
+using LurkBoisModded.Extensions;
 using InventorySystem.Items.Pickups;
 using PlayerRoles.Spectating;
 using Mirror;

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using PluginAPI;
 using PluginAPI.Core;
 using InventorySystem.Items.Firearms;
+using LurkBoisModded.Extensions;
 using PlayerStatsSystem;
 
 namespace LurkBoisModded.Commands.GameConsole
@@ -23,7 +24,7 @@ namespace LurkBoisModded.Commands.GameConsole
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             Player target = Player.Get(sender);
-            Firearm firearm = target.ReferenceHub.inventory.GetFirearm(target.ReferenceHub.inventory.CurItem.TypeId);
+            Firearm firearm = target.ReferenceHub.GetFirearm(target.ReferenceHub.inventory.CurItem.TypeId);
             if (!target.IsAlive)
             {
                 response = "You are already dead!";

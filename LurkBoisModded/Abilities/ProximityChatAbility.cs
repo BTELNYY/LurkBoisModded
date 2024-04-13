@@ -7,6 +7,7 @@ using VoiceChat;
 using VoiceChat.Networking;
 using UnityEngine;
 using PlayerRoles.FirstPersonControl;
+using LurkBoisModded.Extensions;
 
 namespace LurkBoisModded.Abilities
 {

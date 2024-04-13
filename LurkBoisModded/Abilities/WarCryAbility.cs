@@ -8,6 +8,7 @@ using System.Linq;
 using LurkBoisModded.Managers;
 using System.Text;
 using System.Threading.Tasks;
+using LurkBoisModded.Extensions;
 
 namespace LurkBoisModded.Abilities
 {
