@@ -189,6 +189,8 @@
     <Compile Include="Gamemodes\Gamemode.cs" />
     <Compile Include="Gamemodes\GamemodeAttribute.cs" />
     <Compile Include="Gamemodes\GamemodeManager.cs" />
+    <Compile Include="Managers\CustomEffectManager.cs" />
+    <Compile Include="Managers\CustomItemManager.cs" />
     <Compile Include="Patches\Firearm\DamageHandler.cs" />
     <Compile Include="Patches\Firearm\MaxAmmoPatcher.cs" />
     <Compile Include="Patches\Grenade\FlashGrenadePatch.cs" />

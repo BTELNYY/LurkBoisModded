@@ -2,6 +2,7 @@
 using CommandSystem.Commands.RemoteAdmin.Cleanup;
 using HarmonyLib;
 using InventorySystem.Items.Pickups;
+using LurkBoisModded.Managers;
 using LurkBoisModded.EventHandlers.Item;
 using Mirror;
 using System;
@@ -30,9 +31,9 @@ namespace LurkBoisModded.Patches
             }
             for (int i = 0; i < num; i++)
             {
-                if (CustomItemHandler.SerialToItem.ContainsKey(array[i].Info.Serial))
+                if (CustomItemManager.SerialToItem.ContainsKey(array[i].Info.Serial))
                 {
-                    CustomItemHandler.SerialToItem[array[i].Info.Serial].OnItemDestroyed();
+                    CustomItemManager.SerialToItem[array[i].Info.Serial].OnItemDestroyed();
                 }
                 NetworkServer.Destroy(array[i].gameObject);
             }

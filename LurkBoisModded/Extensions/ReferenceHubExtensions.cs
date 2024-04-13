@@ -273,7 +273,7 @@ namespace LurkBoisModded.Extensions
 
         public static CustomItem AddCustomItem(this ReferenceHub target, CustomItemType type)
         {
-            return CustomItemHandler.AddItem(target, type);
+            return CustomItemManager.AddItem(target, type);
         }
 
         public static void AddItem(this ReferenceHub target, ItemType type)

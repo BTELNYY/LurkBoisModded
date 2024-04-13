@@ -1,7 +1,11 @@
 ﻿using AdminToys;
 using Footprinting;
+using InventorySystem.Disarming;
+using LurkBoisModded.Extensions;
+using MEC;
 using Mirror;
 using PlayerRoles;
+using PluginAPI.Core;
 using PluginAPI.Core.Items;
 using System;
 using System.Collections.Generic;
@@ -17,19 +21,51 @@ namespace LurkBoisModded.Scripts
     {
         public GameObject PrimitiveTarget;
 
-        private AdminToyBase _adminToyBase;
+        private LightSourceToy _adminToyBase;
 
         public ReferenceHub OwnerHub;
 
         private Footprint _playerFootprint;
 
+        private Team _placedTeam = Team.Dead;
+
         public bool IsReady = false;
+
+        public bool DoFriendlyFire
+        {
+            get
+            {
+                return Server.FriendlyFire;
+            }
+        }
+
+        public void DestroySelf()
+        {
+            NetworkServer.Destroy(PrimitiveTarget);
+            IsReady = false;
+            Destroy(this);
+        }
 
         public void Ready()
         {
-            _adminToyBase = PrimitiveTarget.GetComponent<AdminToyBase>();
+            _adminToyBase = PrimitiveTarget.GetComponent<LightSourceToy>();
+            _adminToyBase.NetworkScale = new Vector3(1, 1, 1);
+            _adminToyBase.NetworkLightRange = Config.CurrentConfig.LandmineConfiguration.LightRange;
+            _adminToyBase.NetworkLightIntensity = Config.CurrentConfig.LandmineConfiguration.LightIntensity;
+            _adminToyBase.NetworkLightColor = Config.CurrentConfig.LandmineConfiguration.UnarmedColor.ConvertToColor();
             _playerFootprint = new Footprint(OwnerHub);
-            IsReady = true;
+            _placedTeam = OwnerHub.GetTeam();
+            Timing.CallDelayed(Config.CurrentConfig.LandmineConfiguration.ArmTime, () => 
+            {
+                _adminToyBase.NetworkLightColor = Config.CurrentConfig.LandmineConfiguration.ArmedColor.ConvertToColor();
+                IsReady = true;
+            });
+        }
+
+        void FixedUpdate()
+        {
+            PrimitiveTarget.transform.position = gameObject.transform.position;
+            _adminToyBase.NetworkPosition = gameObject.transform.position;
         }
 
         void Update()
@@ -38,23 +74,18 @@ namespace LurkBoisModded.Scripts
             {
                 return;
             }
-            _adminToyBase.NetworkPosition = gameObject.transform.position + new Vector3(0, 0.25f, 0f);
-       }
-
-        void FixedUpdate()
-        {
-            if (!IsReady)
+            List<ReferenceHub> inRange = ReferenceHub.AllHubs.Where(x => Vector3.Distance(x.gameObject.transform.position, gameObject.transform.position) <= Plugin.GetConfig().LandmineConfiguration.TriggerDistance).ToList();
+            if (inRange.Count == 0)
             {
                 return;
             }
-            List<ReferenceHub> inRange = ReferenceHub.AllHubs.Where(x => Vector3.Distance(x.gameObject.transform.position, PrimitiveTarget.transform.position) <= Plugin.GetConfig().LandmineConfiguration.TriggerDistance).ToList();
-            if(inRange.Count == 0)
+            bool detonate = inRange.Any(x => x.GetTeam() != _placedTeam);
+            if(!detonate)
             {
                 return;
             }
-            bool detonate = inRange.Any(x => x.GetTeam() != _playerFootprint.Hub.GetTeam());
             Vector3 newPos = gameObject.transform.position;
-            newPos.y += 1f;
+            newPos.y += 0.25f;
             NetworkServer.Destroy(PrimitiveTarget);
             ExplosionUtils.ServerExplode(newPos, _playerFootprint);
             NetworkServer.Destroy(gameObject);

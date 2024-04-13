@@ -125,6 +125,19 @@ namespace LurkBoisModded.Extensions
             List<ReferenceHub> hubs = ReferenceHub.AllHubs.Where(x => RoomIdUtils.RoomAtPosition(x.transform.position) == room).ToList();
             return hubs;
         }
+
+        public static Color ConvertToColor(this float[] array)
+        {
+            if(array.Count() == 3)
+            {
+                return new Color(array[0], array[1], array[2]);
+            }
+            if(array.Count() == 4)
+            {
+                return new Color(array[0], array[1], array[2], array[3]);
+            }
+            return Color.white;
+        }
     }
 
     public enum DoorState

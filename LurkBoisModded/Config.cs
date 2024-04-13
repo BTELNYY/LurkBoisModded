@@ -9,6 +9,7 @@ using CustomPlayerEffects;
 using System.ComponentModel;
 using LurkBoisModded.Effects;
 using System.Security.Policy;
+using UnityEngine;
 
 namespace LurkBoisModded
 {
@@ -509,11 +510,21 @@ namespace LurkBoisModded
 
     public class LandmineConfiguration
     {
-        [Description("How far should the landmine check for a player? (in meters)")]
-        public float TriggerDistance { get; set; } = 1f;
+        [Description("How far should the landmine check for a player?")]
+        public float TriggerDistance { get; set; } = 2f;
 
-        [Description("How much should base grenade damage be multiplied?")]
-        public float DamageMultiplier { get; set; } = 1f;
+        [Description("How long should the landmine wait until being armed? (In seconds)")]
+        public float ArmTime { get; set; } = 5f;
+
+        [Description("How intense should the light be coming off the landmine object?")]
+        public float LightIntensity { get; set; } = 0.1f;
+
+        [Description("How far should the light reach from the landmine?")]
+        public float LightRange { get; set; } = 0.15f;
+
+        public float[] UnarmedColor { get; set; } = new float[4] { 0, 255, 0, 0.75f };
+
+        public float[] ArmedColor { get; set; } = new float[4] { 255, 0, 0, 0.25f };
     }
 
     public class MolotovConfiguration

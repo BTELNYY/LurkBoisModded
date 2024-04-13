@@ -159,6 +159,19 @@ namespace LurkBoisModded
             return false;
         }
 
+        public static AdminToyBase GetAdminToy(AdminToyType type)
+        {
+            if(TryGetAdminToyByName(type.ToString(), out  AdminToyBase adminToyBase))
+            {
+                return adminToyBase;
+            }
+            else
+            {
+                Log.Error("No admin toy could be found with ID: " + type.ToString());
+                return null;
+            }
+        }
+
         public static List<Player> GetPlayersByRole(RoleTypeId role)
         {
             List<Player> result = new List<Player>();
@@ -183,5 +196,14 @@ namespace LurkBoisModded
         LCZ,
         HCZ,
         EZ
+    }
+
+    public enum AdminToyType
+    {
+        TargetSport,
+        TargetDBoy,
+        TargetBinary,
+        PrimitiveObject,
+        LightSource
     }
 }

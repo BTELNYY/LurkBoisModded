@@ -77,6 +77,7 @@ namespace LurkBoisModded
             Log.Info("Running Init...");
             SubclassManager.Init();
             CustomItemHandler.Init();
+            CustomItemManager.Init();
             Log.Info("LurkBoisModded v" + PluginVersion + " loaded.");
         }
 

@@ -19,37 +19,60 @@ using LurkBoisModded.Patches.Firearm.Reload;
 using InventorySystem.Items.Pickups;
 using InventorySystem.Items.ThrowableProjectiles;
 using InventorySystem.Items.Usables;
+using LurkBoisModded.Managers;
+using System.Reflection;
+using System.Linq;
+using PluginAPI.Core.Items;
 
 namespace LurkBoisModded.EventHandlers.Item
 {
     [EventHandler]
     public class CustomItemHandler
     {
-        public static readonly Dictionary<CustomItemType, Type> CustomItemToType = new Dictionary<CustomItemType, Type>()
+        public static void Init()
         {
-            [CustomItemType.SniperE11] = typeof(SniperE11),
-            [CustomItemType.Landmine] = typeof(Landmine),
-            [CustomItemType.MolotovCocktail] = typeof(MolotovCocktail),
-        };
-
-        public static Dictionary<ushort, CustomItem> SerialToItem = new Dictionary<ushort, CustomItem>();
-
-        public static GameObject CreatedGameObject { get; private set; }
+            AutoFirearmReloadFinishPath.OnReloadFinish += OnReloadFinish;
+            SemiAutoFirearmFinishPatch.OnReloadFinish += OnReloadFinish;
+            TubeMagReloadFinishPatch.OnReloadFinish += OnReloadFinish;
+            GenericHandler.OnRoundRestart += OnRoundRestart;
+            DropItemPatch.OnItemDropped += OnItemDropped;
+            SearchItemCompletorPatch.OnItemPickedUp += OnPlayerPickupItem;
+        }
 
         public static void OnPlayerPickupItem(ItemPickupBase item, ReferenceHub hub)
         {
-            if (SerialToItem.ContainsKey(item.Info.Serial))
+            if (CustomItemManager.SerialToItem.ContainsKey(item.Info.Serial))
             {
-                SerialToItem[item.Info.Serial].OnItemPickedUp(hub);
+                CustomItemManager.SerialToItem[item.Info.Serial].OnItemPickedUp(hub);
             }
+        }
+
+        [PluginEvent(ServerEventType.PlayerSearchedPickup)]
+        public bool OnPlayerSearchedPickup(PlayerSearchPickupEvent ev)
+        {
+            if (CustomItemManager.SerialToItem.ContainsKey(ev.Item.Info.Serial))
+            {
+                return CustomItemManager.SerialToItem[ev.Item.Info.Serial].OnItemSearched(ev.Player.ReferenceHub, ev.Item);
+            }
+            return true;
+        }
+
+        [PluginEvent(ServerEventType.PlayerSearchPickup)]
+        public bool OnPlayerSearchPickup(PlayerSearchPickupEvent ev)
+        {
+            if (CustomItemManager.SerialToItem.ContainsKey(ev.Item.Info.Serial))
+            {
+                return CustomItemManager.SerialToItem[ev.Item.Info.Serial].OnItemSearch(ev.Player.ReferenceHub, ev.Item);
+            }
+            return true;
         }
 
         [PluginEvent(ServerEventType.PlayerDropItem)]
         public bool OnPlayerDropItem(PlayerDropItemEvent ev)
         {
-            if (SerialToItem.ContainsKey(ev.Item.ItemSerial))
+            if (CustomItemManager.SerialToItem.ContainsKey(ev.Item.ItemSerial))
             {
-                return SerialToItem[ev.Item.ItemSerial];
+                return CustomItemManager.SerialToItem[ev.Item.ItemSerial];
             }
             return true;
         }
@@ -57,9 +80,9 @@ namespace LurkBoisModded.EventHandlers.Item
         [PluginEvent(ServerEventType.PlayerChangeItem)]
         public bool OnPlayerEquipItem(PlayerChangeItemEvent ev)
         {
-            if (SerialToItem.ContainsKey(ev.NewItem))
+            if (CustomItemManager.SerialToItem.ContainsKey(ev.NewItem))
             {
-                return SerialToItem[ev.NewItem].OnItemEquip();
+                return CustomItemManager.SerialToItem[ev.NewItem].OnItemEquip();
             }
             return true;
         }
@@ -67,9 +90,9 @@ namespace LurkBoisModded.EventHandlers.Item
         [PluginEvent(ServerEventType.PlayerUseItem)]
         public bool OnPlayerUseItem(PlayerUsedItemEvent ev)
         {
-            if (SerialToItem.ContainsKey(ev.Item.ItemSerial))
+            if (CustomItemManager.SerialToItem.ContainsKey(ev.Item.ItemSerial))
             {
-                return SerialToItem[ev.Item.ItemSerial].OnItemUse(ev.Player.ReferenceHub, (UsableItem)ev.Item);
+                return CustomItemManager.SerialToItem[ev.Item.ItemSerial].OnItemUse(ev.Player.ReferenceHub, (UsableItem)ev.Item);
             }
             return true;
         }
@@ -77,9 +100,9 @@ namespace LurkBoisModded.EventHandlers.Item
         [PluginEvent(ServerEventType.PlayerUsedItem)]
         public bool OnPlayerUsedItem(PlayerUsedItemEvent ev)
         {
-            if (SerialToItem.ContainsKey(ev.Item.ItemSerial))
+            if (CustomItemManager.SerialToItem.ContainsKey(ev.Item.ItemSerial))
             {
-                return SerialToItem[ev.Item.ItemSerial].OnItemUsed(ev.Player.ReferenceHub, (UsableItem)ev.Item);
+                return CustomItemManager.SerialToItem[ev.Item.ItemSerial].OnItemUsed(ev.Player.ReferenceHub, (UsableItem)ev.Item);
             }
             return true;
         }
@@ -87,9 +110,9 @@ namespace LurkBoisModded.EventHandlers.Item
         [PluginEvent(ServerEventType.PlayerCancelUsingItem)]
         public bool OnPlayerCancelUseItem(PlayerCancelUsingItemEvent ev)
         {
-            if (SerialToItem.ContainsKey(ev.Item.ItemSerial))
+            if (CustomItemManager.SerialToItem.ContainsKey(ev.Item.ItemSerial))
             {
-                return SerialToItem[ev.Item.ItemSerial].OnItemUseCancelled(ev.Player.ReferenceHub, ev.Item);
+                return CustomItemManager.SerialToItem[ev.Item.ItemSerial].OnItemUseCancelled(ev.Player.ReferenceHub, ev.Item);
             }
             return true;
         }
@@ -97,17 +120,17 @@ namespace LurkBoisModded.EventHandlers.Item
         [PluginEvent(ServerEventType.RoundEnd)]
         public void OnRoundEnd(RoundEndEvent ev)
         {
-            foreach(var item in SerialToItem.Values)
+            foreach(var item in CustomItemManager.SerialToItem.Values)
             {
                 item.OnItemDestroyed();
             }
-            SerialToItem.Clear();
+            CustomItemManager.SerialToItem.Clear();
         }
 
         [PluginEvent(ServerEventType.PlayerReloadWeapon)]
         public bool OnFirearmReload(PlayerReloadWeaponEvent ev)
         {
-            if (SerialToItem.ContainsKey(ev.Firearm.ItemSerial) && SerialToItem[ev.Firearm.ItemSerial] is ICustomFirearmItem firearm)
+            if (CustomItemManager.SerialToItem.ContainsKey(ev.Firearm.ItemSerial) && CustomItemManager.SerialToItem[ev.Firearm.ItemSerial] is ICustomFirearmItem firearm)
             {
                 return firearm.OnReloadStart();
             }
@@ -117,7 +140,7 @@ namespace LurkBoisModded.EventHandlers.Item
         [PluginEvent(ServerEventType.PlayerShotWeapon)]
         public bool OnFirearmShot(PlayerShotWeaponEvent ev)
         {
-            if (SerialToItem.ContainsKey(ev.Firearm.ItemSerial) && SerialToItem[ev.Firearm.ItemSerial] is ICustomFirearmItem firearm)
+            if (CustomItemManager.SerialToItem.ContainsKey(ev.Firearm.ItemSerial) && CustomItemManager.SerialToItem[ev.Firearm.ItemSerial] is ICustomFirearmItem firearm)
             {
                 return firearm.OnShot();
             }
@@ -129,7 +152,7 @@ namespace LurkBoisModded.EventHandlers.Item
         {
             if(ev.DamageHandler is FirearmDamageHandler handler)
             {
-                if(SerialToItem.TryGetValue(handler.Attacker.Hub.inventory.CurItem.SerialNumber, out CustomItem item) && item.IsHeldItem)
+                if(CustomItemManager.SerialToItem.TryGetValue(handler.Attacker.Hub.inventory.CurItem.SerialNumber, out CustomItem item) && item.IsHeldItem)
                  {
                     if(item is ICustomFirearmItem firearm)
                     {
@@ -142,7 +165,7 @@ namespace LurkBoisModded.EventHandlers.Item
 
         public static bool OnGrenadeFuseEnd(EffectGrenade grenade)
         {
-            if(SerialToItem.TryGetValue(grenade.Info.Serial, out CustomItem item) && item is ICustomGrenadeItem grenadeItem)
+            if(CustomItemManager.SerialToItem.TryGetValue(grenade.Info.Serial, out CustomItem item) && item is ICustomGrenadeItem grenadeItem)
             {
                 return grenadeItem.OnFuseEnd(grenade);
             }
@@ -151,13 +174,13 @@ namespace LurkBoisModded.EventHandlers.Item
 
         public static void OnReloadFinish(IAmmoManagerModule module, Firearm firearm)
         {
-            if(SerialToItem.TryGetValue(firearm.ItemSerial, out CustomItem item) && item is ICustomFirearmItem firearmItem)
+            if(CustomItemManager.SerialToItem.TryGetValue(firearm.ItemSerial, out CustomItem item) && item is ICustomFirearmItem firearmItem)
             {
                 firearmItem.OnReloadFinish(module, firearm);
             }
             else
             {
-                if (!SerialToItem.ContainsKey(firearm.ItemSerial))
+                if (!CustomItemManager.SerialToItem.ContainsKey(firearm.ItemSerial))
                 {
                     Log.Debug(firearm.ItemSerial.ToString());
                 }
@@ -167,62 +190,19 @@ namespace LurkBoisModded.EventHandlers.Item
 
         public static void OnItemDropped(ItemPickupBase itemPickupBase, ReferenceHub hub)
         {
-            if (SerialToItem.ContainsKey(itemPickupBase.Info.Serial))
+            if (CustomItemManager.SerialToItem.ContainsKey(itemPickupBase.Info.Serial))
             {
-                SerialToItem[itemPickupBase.Info.Serial].OnItemDropped(hub, itemPickupBase);
+                CustomItemManager.SerialToItem[itemPickupBase.Info.Serial].OnItemDropped(hub, itemPickupBase);
             }
-        }
-
-        public static void Init()
-        {
-            GameObject gameObject = new GameObject("CustomItems");
-            GameObject.DontDestroyOnLoad(gameObject);
-            CreatedGameObject = gameObject;
-            AutoFirearmReloadFinishPath.OnReloadFinish += OnReloadFinish;
-            SemiAutoFirearmFinishPatch.OnReloadFinish += OnReloadFinish;
-            TubeMagReloadFinishPatch.OnReloadFinish += OnReloadFinish;
-            GenericHandler.OnRoundRestart += OnRoundRestart;
-            DropItemPatch.OnItemDropped += OnItemDropped;
-            SearchItemCompletorPatch.OnItemPickedUp += OnPlayerPickupItem;
-        }
-
-        public static CustomItem AddItem(ReferenceHub target, CustomItemType type)
-        {
-            if(!CustomItemToType.TryGetValue(type, out Type itemType))
-            {
-                return null;
-            }
-            GameObject obj = new GameObject("Object");
-            obj.transform.parent = CreatedGameObject.transform;
-            CustomItem item = (CustomItem)obj.AddComponent(itemType);
-            if(item == null)
-            {
-                Log.Error("Custom item could not be created!");
-                return null;
-            }
-            ItemBase givenItem = target.inventory.ServerAddItem(item.BaseItemType);
-            if(givenItem == null)
-            {
-                GameObject.Destroy(item);
-                GameObject.Destroy(obj);
-                return null;
-            }
-            if (SerialToItem.ContainsKey(givenItem.ItemSerial))
-            {
-                SerialToItem.Remove(givenItem.ItemSerial);
-            }
-            SerialToItem.Add(givenItem.ItemSerial, item);
-            item.OnItemCreated(target, givenItem.ItemSerial);
-            return item;
         }
 
         public static void OnRoundRestart()
         {
-            foreach(CustomItem c in SerialToItem.Values)
+            foreach(CustomItem c in CustomItemManager.SerialToItem.Values)
             {
                 c.OnRoundRestart();
             }
-            SerialToItem.Clear();
+            CustomItemManager.SerialToItem.Clear();
         }
     }
 }

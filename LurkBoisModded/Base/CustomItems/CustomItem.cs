@@ -1,6 +1,7 @@
 ﻿using InventorySystem;
 using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
+using LurkBoisModded.Managers;
 using LurkBoisModded.EventHandlers.Item;
 using PluginAPI.Core;
 using System;
@@ -118,7 +119,6 @@ namespace LurkBoisModded.Base.CustomItems
         {
             _currentOwner = newOwner;
             _state = ItemState.Inventory;
-
             if (newOwner.inventory.UserInventory.Items.ContainsKey(TrackedSerial))
             {
                 _itemBaseReference = newOwner.inventory.UserInventory.Items[TrackedSerial];
@@ -127,6 +127,16 @@ namespace LurkBoisModded.Base.CustomItems
             {
                 Log.Warning("For some ungodly reason the fucking tracked serial ID isn't in the inventory (what the fuck?)");
             }
+        }
+
+        public virtual bool OnItemSearched(ReferenceHub searcher, ItemPickupBase item)
+        {
+            return true;
+        }
+
+        public virtual bool OnItemSearch(ReferenceHub searcher, ItemPickupBase item)
+        {
+            return true;
         }
 
         public virtual bool OnItemEquip()
@@ -169,15 +179,15 @@ namespace LurkBoisModded.Base.CustomItems
             _state = ItemState.Inventory;
             gameObject.name = serial.ToString();
             _itemBaseReference = owner.inventory.UserInventory.Items[TrackedSerial];
-            if (!CustomItemHandler.SerialToItem.ContainsKey(TrackedSerial))
+            if (!CustomItemManager.SerialToItem.ContainsKey(TrackedSerial))
             {
-                CustomItemHandler.SerialToItem.Add(TrackedSerial, this);
+                CustomItemManager.SerialToItem.Add(TrackedSerial, this);
             }
         }
 
         public virtual void OnItemDestroyed()
         {
-            CustomItemHandler.SerialToItem.Remove(TrackedSerial);
+            CustomItemManager.SerialToItem.Remove(TrackedSerial);
             if (ItemState == ItemState.Inventory)
             {
                 CurrentOwner.inventory.ServerRemoveItem(TrackedSerial, ItemPickupBase);

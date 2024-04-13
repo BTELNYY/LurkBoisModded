@@ -12,6 +12,8 @@ using LurkBoisModded.Scripts;
 using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
 using LurkBoisModded.Extensions;
+using System.Security.Policy;
+using InventorySystem.Disarming;
 
 namespace LurkBoisModded.CustomItems
 {
@@ -20,6 +22,8 @@ namespace LurkBoisModded.CustomItems
         public override CustomItemType CustomItemType => CustomItemType.Landmine;
 
         public override ItemType BaseItemType => ItemType.Radio;
+
+        public LandmineScript landmineScript = null;
 
         public override bool OnItemEquip()
         {
@@ -31,10 +35,13 @@ namespace LurkBoisModded.CustomItems
         public override void OnItemDropped(ReferenceHub lastOwner, ItemPickupBase pickupBase)
         {
             base.OnItemDropped(lastOwner, ItemPickupBase);
-            bool success = Utility.TryGetAdminToyByName("PrimitiveObject", out AdminToyBase @base);
-            if (!success)
+            if (lastOwner.inventory.IsDisarmed())
             {
-                Log.Error("Can't find admin toy by name! Name: " + "PrimitiveObject");
+                return;
+            }
+            AdminToyBase @base = Utility.GetAdminToy(AdminToyType.LightSource);
+            if (@base == null)
+            {
                 lastOwner.SendHint("Something went wrong when placing landmine.");
                 return;
             }
@@ -44,7 +51,18 @@ namespace LurkBoisModded.CustomItems
             landMine.OwnerHub = lastOwner;
             landMine.PrimitiveTarget = newObject;
             landMine.Ready();
+            landmineScript = landMine;
             lastOwner.SendHint("Landmine set.");
+        }
+
+        public override void OnItemPickedUp(ReferenceHub newOwner)
+        {
+            base.OnItemPickedUp(newOwner);
+            if(landmineScript != null)
+            {
+                landmineScript.DestroySelf();
+                landmineScript = null;
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using LurkBoisModded.Extensions;
 using System.Threading.Tasks;
+using PlayerRoles;
 
 namespace LurkBoisModded.EventHandlers.General
 {
@@ -22,7 +23,7 @@ namespace LurkBoisModded.EventHandlers.General
             }
             if(Config.CurrentConfig.DoKillMessages)
             {
-                string proc = Config.CurrentConfig.KillMessage.Replace("{playername}", @event.Player.Nickname).Replace("{color}", @event.Player.RoleColor);
+                string proc = Config.CurrentConfig.KillMessage.Replace("{playername}", @event.Player.Nickname).Replace("{color}", @event.Player.RoleBase.RoleColor.ToHex());
                 @event.Attacker.SendHint(proc);
             }
         }
