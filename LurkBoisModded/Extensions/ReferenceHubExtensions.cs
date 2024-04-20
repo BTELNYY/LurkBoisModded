@@ -22,6 +22,8 @@ using UnityEngine;
 using InventorySystem.Disarming;
 using LurkBoisModded.Base.CustomItems;
 using LurkBoisModded.EventHandlers.Item;
+using PlayerRoles;
+using LurkBoisModded.EventHandlers.General;
 
 namespace LurkBoisModded.Extensions
 {
@@ -260,7 +262,7 @@ namespace LurkBoisModded.Extensions
                 return;
             }
             NewHealthStat healthStat = health as NewHealthStat;
-            healthStat.SetMaxValue = amount;
+            healthStat.NewMaxValue = amount;
         }
 
         public static List<ReferenceHub> GetAllDisarmedPlayersByDisarmer(this ReferenceHub disarmer)
@@ -293,6 +295,18 @@ namespace LurkBoisModded.Extensions
         {
             Player p = Player.Get(target);
             p.RemoveItems(type, amount);
+        }
+
+        public static PlayerRoleBase GetLastLife(this ReferenceHub target)
+        {
+            if (DeathHandler.Instance.deadToOldRoles.TryGetValue(target.characterClassManager.netId, out PlayerRoleBase value))
+            {
+                return value;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

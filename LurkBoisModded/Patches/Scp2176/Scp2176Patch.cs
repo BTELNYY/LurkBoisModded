@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using InventorySystem.Items.ThrowableProjectiles;
 using LurkBoisModded.EventHandlers.Item;
 
-namespace LurkBoisModded.Patches.Grenade
+namespace LurkBoisModded.Patches.Scp2176
 {
     [HarmonyPatch(typeof(Scp2176Projectile), "ServerFuseEnd")]
     public class Scp2176Patch

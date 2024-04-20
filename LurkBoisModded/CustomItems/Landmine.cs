@@ -64,5 +64,11 @@ namespace LurkBoisModded.CustomItems
                 landmineScript = null;
             }
         }
+
+        public override void OnItemDestroyed()
+        {
+            landmineScript?.DestroySelf();
+            base.OnItemDestroyed();
+        }
     }
 }

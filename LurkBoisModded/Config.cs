@@ -36,6 +36,11 @@ namespace LurkBoisModded
         [Description("Should kills give hints to the player who killed someone?")]
         public bool DoKillMessages { get; set; } = true;
 
+        [Description("Should guards be able to escape?")]
+        public bool GuardsCanEscape { get; set; } = true;
+
+        public bool Scp2176DisablesElevators { get; set; } = true;
+
         public string KillMessage { get; set; } = "Killed <color={color}>{playername}</color>";
 
         [Description("SCP 330 (Candy) Config")]
@@ -131,6 +136,10 @@ namespace LurkBoisModded
             new ItemWeightDefinition(ItemType.GunCrossvec, 3f),
             new ItemWeightDefinition(ItemType.GunE11SR, 4f),
         };
+
+        public KillCountConfig KillCountConfig { get; set; } = new KillCountConfig();
+
+        public RadiationConfig RadiationConfig { get; set; } = new RadiationConfig();
     }
 
     public class Scp330Config
@@ -533,13 +542,13 @@ namespace LurkBoisModded
         public string HeldTip { get; set; } = "You are holding a Molotov Cocktail, throw to ignite an area!";
 
         [Description("The Radius which the fire spreads to")]
-        public float FireRadius { get; set; } = 10f;
+        public float FireRadius { get; set; } = 3f;
 
         [Description("The intensity of the fire effect given to players")]
         public byte FireDamageIntensity { get; set; } = 2;
 
         [Description("How long should the fire effect last?")]
-        public float FireDamageEffectDuration { get; set; } = 20f;
+        public float FireDamageEffectDuration { get; set; } = 12f;
 
         [Description("When a player steps into the fire for the first time, how much damage should be done to the player? If the player leaves and re-enters, the damage is applied again.")]
         public float FireFirstTickDamage { get; set; } = 10f;
@@ -555,5 +564,46 @@ namespace LurkBoisModded
         public float CooldownTime { get; set; } = 10f;
 
         public float DamageMultiplier { get; set; } = 5f;
+    }
+
+    public class KillCountConfig
+    {
+        public string Message { get; set; } = "Kill Scorebaord (top 3)\n";
+
+        [Description("Should SCP Kills count? (when a SCP kills a human)")]
+        public bool IgnoreSCPKills { get; set; } = true;
+
+        public bool ResetOnDeath { get; set; } = false;
+
+        public ushort MessageDuration { get; set; } = 10;
+
+        public int MaxAmountDisplayed { get; set; } = 3;
+    }
+
+    public class RadiationConfig
+    {
+        public bool DoRadiation { get; set; } = true;
+
+        [Description("Controls the effects intensity as the time on the warhead decreases, this array controls based on index. These are the time frames compared to indexes: \n # 90-80 Seconds: index 0 \n # 80-50 Seconds: index 1 \n # 50-30 Seconds: index 2 \n # 30 and bellow: index 3")]
+        public byte[] IntensityPerTime { get; set; } = { 0, 1, 2, 3 };
+
+        public float MinDamage { get; set; } = 1f;
+
+        public float DamageMultiplier { get; set; } = 2f;
+
+        public int MultiplyDamageEveryTicks { get; set; } = 15;
+
+        [Description("How often should the plugin check for who is in nuke? Note: this is also the value that is added to exposure while the player is detected in nuke. Exposure also reduces by this value every time the server checks and the player is not in nuke.")]
+        public float CheckInterval { get; set; } = 5.0f;
+
+        [Description("How long should a player be allowed to stay in nuke before radiation effects them?")]
+        public float MaxExposure { get; set; } = 50f;
+
+        [Description("Extra length of effect when it is applied.")]
+        public float EffectDurationBuffer { get; set; } = 1f;
+
+        public string DeathMessage { get; set; } = "Lack of hair, Pale skin and Skin irritation suggest the cause as Acute Radiation Sickness";
+
+        public string EffectHint { get; set; } = "You are in an irradiated envoirment!";
     }
 }

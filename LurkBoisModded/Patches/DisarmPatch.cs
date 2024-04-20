@@ -11,8 +11,16 @@ namespace LurkBoisModded.Patches
     {
         public static bool Prefix(ReferenceHub disarmerHub, ReferenceHub targetHub, ref bool __result)
         {
+            if (targetHub.inventory.IsDisarmed())
+            {
+                return true;
+            }
             int currentDisarmedPlayers = disarmerHub.GetAllDisarmedPlayersByDisarmer().Count;
             ItemType currentItemType = disarmerHub.inventory.CurItem.TypeId;
+            if(!Plugin.GetConfig().MaxDisarmsPerWeapon.ContainsKey(currentItemType))
+            {
+                return true;
+            }
             if (Plugin.GetConfig().MaxDisarmsPerWeapon[currentItemType] == -1)
             {
                 return true;

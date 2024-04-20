@@ -68,6 +68,7 @@ namespace LurkBoisModded.Extensions
             }
             return (T)Enum.ToObject(flags.GetType(), flagsInt);
         }
+
         public static T SetAll<T>(this T value, bool state) where T : Enum
         {
             if (typeof(T).GetCustomAttribute(typeof(FlagsAttribute), false) == null)

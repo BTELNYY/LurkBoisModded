@@ -20,7 +20,7 @@ namespace LurkBoisModded.EnvriomentalHazards
         {
             get
             {
-                return (Duration * 1000) - (stopwatch.ElapsedMilliseconds);
+                return Math.Max(0, (Duration * 1000) - (stopwatch.ElapsedMilliseconds));
             }
         }
 
@@ -53,7 +53,7 @@ namespace LurkBoisModded.EnvriomentalHazards
 
         void Update()
         {
-            if((stopwatch.ElapsedMilliseconds * 1000) <= Duration)
+            if(TimeRemaining == 0)
             {
                 Destroy();
             }

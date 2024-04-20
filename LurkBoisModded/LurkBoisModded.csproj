@@ -169,6 +169,7 @@
     <Compile Include="CustomItems\Landmine.cs" />
     <Compile Include="CustomItems\MolotovCocktail.cs" />
     <Compile Include="CustomItems\SniperE11.cs" />
+    <Compile Include="Effects\Radiation.cs" />
     <Compile Include="Effects\Regeneration.cs" />
     <Compile Include="Effects\MaxHealthReduction.cs" />
     <Compile Include="EnvriomentalHazards\BasicHazard.cs" />
@@ -176,10 +177,12 @@
     <Compile Include="EnvriomentalHazards\HazardManager.cs" />
     <Compile Include="EnvriomentalHazards\Hazards\Fire\FireHazard.cs" />
     <Compile Include="EventHandlers\EventHandlerAttribute.cs" />
-    <Compile Include="EventHandlers\General\DeathNotificationHandler.cs" />
+    <Compile Include="EventHandlers\General\DeathHandler.cs" />
     <Compile Include="EventHandlers\General\GamemodeInitHandler.cs" />
+    <Compile Include="EventHandlers\General\KillCountHandler.cs" />
     <Compile Include="EventHandlers\Item\CustomItemHandler.cs" />
     <Compile Include="EventHandlers\General\SubclassSpawnHandler.cs" />
+    <Compile Include="EventHandlers\Map\WarheadEventHandler.cs" />
     <Compile Include="Extensions\DoorExtensions.cs" />
     <Compile Include="Extensions\FirearmExtensions.cs" />
     <Compile Include="Extensions\MirrorExtensions.cs" />
@@ -191,11 +194,13 @@
     <Compile Include="Gamemodes\GamemodeManager.cs" />
     <Compile Include="Managers\CustomEffectManager.cs" />
     <Compile Include="Managers\CustomItemManager.cs" />
+    <Compile Include="Patches\EscapePatch.cs" />
     <Compile Include="Patches\Firearm\DamageHandler.cs" />
     <Compile Include="Patches\Firearm\MaxAmmoPatcher.cs" />
     <Compile Include="Patches\Grenade\FlashGrenadePatch.cs" />
     <Compile Include="Patches\Grenade\HEGrenadePatch.cs" />
-    <Compile Include="Patches\Grenade\Scp2176Patch.cs" />
+    <Compile Include="Patches\Scp2176\Scp2176Patch.cs" />
+    <Compile Include="Patches\Scp2176\ShatterPatch.cs" />
     <Compile Include="Patches\SearchItemCompletorPatch.cs" />
     <Compile Include="Patches\DropItemPatch.cs" />
     <Compile Include="Patches\Firearm\Reload\AutoFirearmReloadFinishPath.cs" />
@@ -204,6 +209,7 @@
     <Compile Include="Patches\OnItemRemovedViaCommand.cs" />
     <Compile Include="Patches\ItemDestroyPatch.cs" />
     <Compile Include="Patches\DisarmPatch.cs" />
+    <Compile Include="Patches\ServerFix\DelayConnectionsPatch.cs" />
     <Compile Include="Patches\StatModulePatch.cs" />
     <Compile Include="Scripts\LandmineScript.cs" />
     <Compile Include="StatModules\IUpdatingStat.cs" />

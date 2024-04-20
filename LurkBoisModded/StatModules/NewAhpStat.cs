@@ -8,13 +8,13 @@ namespace LurkBoisModded.StatModules
     {
         public override float CurValue { get => base.CurValue; set => base.CurValue = value; }
 
-        public override float MaxValue => SetMaxValue;
+        public override float MaxValue => NewMaxValue;
 
-        public float SetMaxValue = 75f;
+        public float NewMaxValue = 75f;
 
-        public override float MinValue => SetMinValue;
+        public override float MinValue => NewMinValue;
 
-        public float SetMinValue = 0f;
+        public float NewMinValue = 0f;
 
         public List<AhpProcess> AhpProcesses
         {

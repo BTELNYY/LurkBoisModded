@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using InventorySystem.Items.Pickups;
+using PlayerRoles;
+using PluginAPI.Core;
 
 namespace LurkBoisModded.CustomItems
 {
@@ -16,6 +19,8 @@ namespace LurkBoisModded.CustomItems
         public override CustomItemType CustomItemType => CustomItemType.MolotovCocktail;
 
         public override ItemType BaseItemType => ItemType.GrenadeFlash;
+
+        FireHazard _createdHazard;
 
         public override bool OnItemEquip()
         {
@@ -27,8 +32,21 @@ namespace LurkBoisModded.CustomItems
         {
             FireHazard haz = (FireHazard)HazardManager.CreateHazard(HazardType.Fire);
             haz.gameObject.transform.position = grenade.transform.position;
+            haz.Owner = new Footprinting.Footprint(grenade.PreviousOwner.Hub);
+            haz.OwnerTeam = grenade.PreviousOwner.Hub.GetTeam();
+            haz.Create();
+            _createdHazard = haz;
             grenade.DestroySelf();
             return false;
+        }
+
+        public override void OnItemDestroyed()
+        {
+            if(_createdHazard != null)
+            {
+                _createdHazard?.Destroy();
+            }
+            base.OnItemDestroyed();
         }
     }
 }

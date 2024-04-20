@@ -7,6 +7,12 @@ using UnityEngine;
 using PluginAPI.Core;
 using PlayerStatsSystem;
 using LurkBoisModded.Effects;
+using InventorySystem.Items.Pickups;
+using AdminToys;
+using LurkBoisModded.Extensions;
+using Mirror;
+using PlayerRoles;
+using Footprinting;
 
 namespace LurkBoisModded.EnvriomentalHazards.Hazards.Fire
 {
@@ -16,44 +22,56 @@ namespace LurkBoisModded.EnvriomentalHazards.Hazards.Fire
 
         public override HazardType HazardType => HazardType.Fire;
 
-        private SphereCollider collider;
+        public LightSourceToy LightSource;
+
+        public GameObject LightSourceObject;
+
+        public Team OwnerTeam = Team.Dead;
+
+        public Footprint Owner;
 
         public override void Create()
         {
             base.Create();
-            collider = gameObject.AddComponent<SphereCollider>();
-            collider.isTrigger = true;
-            collider.radius = Config.CurrentConfig.MolotovConfiguration.FireRadius;
+            LightSourceObject = Utility.CreateAdminToy(AdminToyType.LightSource);
+            LightSourceObject.transform.position = gameObject.transform.position;
+            LightSource = LightSourceObject.GetComponent<LightSourceToy>();
+            if(LightSource == null)
+            {
+                Log.Error("Can't get light source toy from light source!");
+            }
+            else
+            {
+                LightSource.NetworkLightColor = Config.CurrentConfig.FireConfig.FireColor.ConvertToColor();
+                LightSource.NetworkLightRange = Config.CurrentConfig.MolotovConfiguration.FireRadius;
+            }
         }
 
         public override void Destroy()
         {
-            Destroy(collider);
+            NetworkServer.Destroy(LightSourceObject);
             base.Destroy();
         }
 
-        public void OnCollisionEnter(Collision collision)
+        public void FixedUpdate()
         {
-            Log.Debug(collision.gameObject.name);
-            Player player = Player.Get(collision.gameObject);
-            if(player == null)
+            if(LightSourceObject != null)
             {
-                return;
+                LightSourceObject.transform.position = gameObject.transform.position;
             }
-            CustomReasonDamageHandler handler = new CustomReasonDamageHandler(Config.CurrentConfig.FireConfig.DeathReason, Config.CurrentConfig.MolotovConfiguration.FireFirstTickDamage);
-            player.Damage(handler);
-            player.ReferenceHub.playerEffectsController.ChangeState<OnFire>(Config.CurrentConfig.MolotovConfiguration.FireDamageIntensity, Config.CurrentConfig.MolotovConfiguration.FireDuration);
-        }
-
-        public void OnCollisionStay(Collision collision)
-        {
-            Log.Debug(collision.gameObject.name);
-            Player player = Player.Get(collision.gameObject);
-            if (player == null)
+            if(LightSource != null)
             {
-                return;
+                LightSource.NetworkPosition = gameObject.transform.position;
             }
-            player.ReferenceHub.playerEffectsController.ChangeState<OnFire>(Config.CurrentConfig.MolotovConfiguration.FireDamageIntensity, Config.CurrentConfig.MolotovConfiguration.FireDuration);
+            List<ReferenceHub> inRange = ReferenceHub.AllHubs.Where(x => Vector3.Distance(x.gameObject.transform.position, gameObject.transform.position) <= Config.CurrentConfig.MolotovConfiguration.FireRadius).ToList();
+            foreach(ReferenceHub hub in inRange)
+            {
+                if(hub.GetTeam() == OwnerTeam && Owner.Hub != hub)
+                {
+                    continue;
+                }
+                hub.playerEffectsController.ChangeState<OnFire>(Config.CurrentConfig.MolotovConfiguration.FireDamageIntensity, Config.CurrentConfig.MolotovConfiguration.FireDuration);
+            }
         }
     }
 }

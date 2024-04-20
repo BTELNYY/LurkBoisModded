@@ -206,6 +206,7 @@ namespace LurkBoisModded.Base.CustomItems
             _itemBaseReference = null;
             _trackedSerial = 0;
             _state = ItemState.Dropped;
+            GameObject.Destroy(this);
         }
     }
 

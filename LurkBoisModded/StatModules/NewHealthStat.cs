@@ -11,9 +11,9 @@ namespace LurkBoisModded.StatModules
     {
         public override float CurValue { get => base.CurValue; set => base.CurValue = value; }
 
-        public override float MaxValue => SetMaxValue;
+        public override float MaxValue => NewMaxValue;
 
-        public float SetMaxValue 
+        public float NewMaxValue 
         { 
             get 
             {
@@ -36,9 +36,9 @@ namespace LurkBoisModded.StatModules
 
         private float MaxHealthField = -1f;
 
-        public override float MinValue => SetMinValue;
+        public override float MinValue => NewMinValue;
 
-        public float SetMinValue = 0f;
+        public float NewMinValue = 0f;
 
         public new void ServerHeal(float healAmount)
         {

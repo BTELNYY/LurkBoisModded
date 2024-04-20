@@ -159,6 +159,19 @@ namespace LurkBoisModded
             return false;
         }
 
+        public static GameObject CreateAdminToy(AdminToyType type)
+        {
+            AdminToyBase @base = GetAdminToy(type);
+            if (@base == null)
+            {
+                Log.Error("Failed to create admin toy!");
+                return null;
+            }
+            GameObject newObject = GameObject.Instantiate(@base.gameObject);
+            NetworkServer.Spawn(newObject);
+            return newObject;
+        }
+
         public static AdminToyBase GetAdminToy(AdminToyType type)
         {
             if(TryGetAdminToyByName(type.ToString(), out  AdminToyBase adminToyBase))

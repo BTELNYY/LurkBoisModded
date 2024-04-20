@@ -13,9 +13,9 @@ namespace LurkBoisModded.StatModules
 
         public float SetMinValue = 0f;
 
-        public override float MaxValue => SetMaxValue;
+        public override float MaxValue => NewMaxValue;
 
-        public float SetMaxValue 
+        public float NewMaxValue 
         {
             get 
             {
@@ -46,10 +46,10 @@ namespace LurkBoisModded.StatModules
         {
             if (!TryGetHsModule(out var controller))
             {
-                SetMaxValue = 0f;
+                NewMaxValue = 0f;
                 return;
             }
-            SetMaxValue = controller.HsMax;
+            NewMaxValue = controller.HsMax;
         }
 
         public void Update()

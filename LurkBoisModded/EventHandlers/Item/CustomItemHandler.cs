@@ -48,7 +48,7 @@ namespace LurkBoisModded.EventHandlers.Item
         }
 
         [PluginEvent(ServerEventType.PlayerSearchedPickup)]
-        public bool OnPlayerSearchedPickup(PlayerSearchPickupEvent ev)
+        public bool OnPlayerSearchedPickup(PlayerSearchedPickupEvent ev)
         {
             if (CustomItemManager.SerialToItem.ContainsKey(ev.Item.Info.Serial))
             {
@@ -88,7 +88,7 @@ namespace LurkBoisModded.EventHandlers.Item
         }
 
         [PluginEvent(ServerEventType.PlayerUseItem)]
-        public bool OnPlayerUseItem(PlayerUsedItemEvent ev)
+        public bool OnPlayerUseItem(PlayerUseItemEvent ev)
         {
             if (CustomItemManager.SerialToItem.ContainsKey(ev.Item.ItemSerial))
             {
@@ -120,7 +120,8 @@ namespace LurkBoisModded.EventHandlers.Item
         [PluginEvent(ServerEventType.RoundEnd)]
         public void OnRoundEnd(RoundEndEvent ev)
         {
-            foreach(var item in CustomItemManager.SerialToItem.Values)
+            List<CustomItem> items = CustomItemManager.SerialToItem.Values.ToList();
+            foreach(var item in items)
             {
                 item.OnItemDestroyed();
             }

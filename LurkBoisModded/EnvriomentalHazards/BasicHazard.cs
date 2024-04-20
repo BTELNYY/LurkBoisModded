@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Mirror;
 using UnityEngine;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LurkBoisModded.EnvriomentalHazards
 {
@@ -11,11 +7,11 @@ namespace LurkBoisModded.EnvriomentalHazards
     {
         public abstract HazardType HazardType { get; }
 
-        public ushort ItemSerial { get; private set; } = 0;
+        public ushort HazardSerial { get; private set; } = 0;
 
         void Start()
         {
-            ItemSerial = HazardManager.GetNextSerial();
+            HazardSerial = HazardManager.GetNextSerial();
         }
 
         public virtual void Create()
@@ -25,7 +21,8 @@ namespace LurkBoisModded.EnvriomentalHazards
 
         public virtual void Destroy()
         {
-            GameObject.Destroy(gameObject);
+            NetworkServer.Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 }
