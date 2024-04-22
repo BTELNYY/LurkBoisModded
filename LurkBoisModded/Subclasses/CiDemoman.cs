@@ -23,7 +23,7 @@ namespace LurkBoisModded.Subclasses
 
         public override List<AbilityType> Abilities => new List<AbilityType>() { AbilityType.RemoteExplosive };
 
-        public override Dictionary<ItemType, ushort> SpawnItems => new Dictionary<ItemType, ushort>() 
+        public override Dictionary<ItemType, short> SpawnItems => new Dictionary<ItemType, short>() 
         {
             [ItemType.Radio] = 2,
         };

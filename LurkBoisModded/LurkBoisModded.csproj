@@ -183,11 +183,13 @@
     <Compile Include="EventHandlers\Item\CustomItemHandler.cs" />
     <Compile Include="EventHandlers\General\SubclassSpawnHandler.cs" />
     <Compile Include="EventHandlers\Map\WarheadEventHandler.cs" />
+    <Compile Include="EventHandlers\Scp079\Scp079Handler.cs" />
     <Compile Include="Extensions\DoorExtensions.cs" />
     <Compile Include="Extensions\FirearmExtensions.cs" />
     <Compile Include="Extensions\MirrorExtensions.cs" />
     <Compile Include="Extensions\PlayerExtensions.cs" />
     <Compile Include="Extensions\ReferenceHubExtensions.cs" />
+    <Compile Include="Extensions\RoomExtensions.cs" />
     <Compile Include="Gamemodes\Deathmatch\DeathmatchGamemode.cs" />
     <Compile Include="Gamemodes\Gamemode.cs" />
     <Compile Include="Gamemodes\GamemodeAttribute.cs" />
@@ -207,7 +209,7 @@
     <Compile Include="Patches\Firearm\Reload\TubeMagReloadFinishPatch.cs" />
     <Compile Include="Patches\Firearm\Reload\SemiAutoFirearmFinishPatch.cs" />
     <Compile Include="Patches\OnItemRemovedViaCommand.cs" />
-    <Compile Include="Patches\ItemDestroyPatch.cs" />
+    <Compile Include="Patches\ServerFix\ItemDestroyPatch.cs" />
     <Compile Include="Patches\DisarmPatch.cs" />
     <Compile Include="Patches\ServerFix\DelayConnectionsPatch.cs" />
     <Compile Include="Patches\StatModulePatch.cs" />
@@ -255,6 +257,9 @@
     <Compile Include="Subclasses\CiDemoman.cs" />
     <Compile Include="Subclasses\CiLeader.cs" />
     <Compile Include="Subclasses\ArmedScientist.cs" />
+    <Compile Include="Subclasses\ClassDLeader.cs" />
+    <Compile Include="Subclasses\GuardCaptain.cs" />
+    <Compile Include="Subclasses\MtfPyro.cs" />
     <Compile Include="Subclasses\ScientistMedic.cs" />
     <Compile Include="Subclasses\GuardZoneManager.cs" />
     <Compile Include="Subclasses\GuardGymBro.cs" />

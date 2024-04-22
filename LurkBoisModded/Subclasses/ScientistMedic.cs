@@ -28,7 +28,7 @@ namespace LurkBoisModded.Subclasses
 
         public override int NumberOfRandomItems => 2;
 
-        public override Dictionary<ItemType, ushort> RandomItems => new Dictionary<ItemType, ushort>() 
+        public override Dictionary<ItemType, short> RandomItems => new Dictionary<ItemType, short>() 
         {
             [ItemType.Medkit] = 1,
             [ItemType.Painkillers] = 1,

@@ -28,6 +28,7 @@ namespace LurkBoisModded.Effects
                 CurrentBase.NetworkLightIntensity = Plugin.GetConfig().FireConfig.ColorIntensity;
                 CurrentBase.OnSpawned(Hub, new ArraySegment<string>());
             }
+            Hub.playerEffectsController.ChangeState<Burned>(Intensity, Duration);
             Hub.SendHint(Plugin.GetConfig().FireConfig.FireTip);
         }
 
@@ -54,8 +55,13 @@ namespace LurkBoisModded.Effects
 
         protected override void OnTick()
         {
-            float currentDamage = Plugin.GetConfig().FireConfig.Damage * Intensity;
-            CustomReasonDamageHandler handler = new CustomReasonDamageHandler(Plugin.GetConfig().FireConfig.DeathReason, currentDamage);
+            float multiplier = 1f;
+            if (Config.CurrentConfig.FireConfig.DamageMultipliers.ContainsKey(Hub.roleManager.CurrentRole.RoleTypeId))
+            {
+                multiplier = Config.CurrentConfig.FireConfig.DamageMultipliers[Hub.roleManager.CurrentRole.RoleTypeId];
+            }
+            float currentDamage = (Plugin.GetConfig().FireConfig.Damage * Intensity) * multiplier;
+            CustomReasonDamageHandler handler = new CustomReasonDamageHandler(Plugin.GetConfig().FireConfig.DeathReason, currentDamage, customCassieAnnouncement: "SUCCESSFULLY TERMINATED . TERMINATION CAUSE UNSPECIFIED");
             Hub.playerStats.DealDamage(handler);
         }
     }

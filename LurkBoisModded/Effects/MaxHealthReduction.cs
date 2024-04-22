@@ -2,6 +2,7 @@
 using PlayerRoles;
 using PlayerStatsSystem;
 using LurkBoisModded.Extensions;
+using PluginAPI.Core;
 
 namespace LurkBoisModded.Effects
 {
@@ -15,7 +16,10 @@ namespace LurkBoisModded.Effects
             float newMaxHealth = Hub.playerStats.StatModules[0].MaxValue - Intensity;
             SavedIntensity = Intensity;
             Hub.SetMaxHealth(newMaxHealth);
-            (Hub.playerStats.StatModules[0] as HealthStat).ServerHeal(newMaxHealth);
+            if (Hub.playerStats.StatModules[0].CurValue > newMaxHealth)
+            {
+                Player.Get(Hub).Health = newMaxHealth;
+            }
         }
 
         protected override void Disabled()

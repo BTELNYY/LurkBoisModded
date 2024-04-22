@@ -15,13 +15,13 @@ namespace LurkBoisModded.EventHandlers.General
     public class GamemodeInitHandler
     {
         [PluginEvent(ServerEventType.WaitingForPlayers)]
-        public void OnLobbyReady()
+        public void OnLobbyReady(WaitingForPlayersEvent ev)
         {
             GamemodeManager.TriggerNextRoundGamemode();
         }
 
         [PluginEvent(ServerEventType.RoundEnd)]
-        public void OnRoundEnd()
+        public void OnRoundEnd(RoundEndEvent ev)
         {
             GamemodeManager.StopGamemode();
         }

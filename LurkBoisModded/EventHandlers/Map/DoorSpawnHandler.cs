@@ -45,7 +45,7 @@ namespace LurkBoisModded.EventHandlers.Map
             {
                 door.RequiredPermissions.RequiredPermissions |= perm;
             }
-            Log.Info("Modified GR18_INNER!");
+            Log.Info("Modified GR18_INNER");
         }
 
         void SpawnScp939Door()
@@ -88,7 +88,7 @@ namespace LurkBoisModded.EventHandlers.Map
             DoorNametagExtension extension = result.gameObject.AddComponent<DoorNametagExtension>();
             extension.UpdateName("939_CRYO");
             NetworkServer.Destroy(targetDoor.gameObject);
-            Log.Info("Spawned SCP 939's CC Door");
+            Log.Info("Spawned 939_CRYO");
         }
     }
 }

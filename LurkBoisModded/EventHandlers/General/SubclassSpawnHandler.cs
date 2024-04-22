@@ -37,19 +37,66 @@ namespace LurkBoisModded.EventHandlers.General
         }
 
         [PluginEvent(ServerEventType.RoundStart)]
-        public void OnRoundStart(RoundStartEvent ev)
+        public void Handle3114(RoundStartEvent ev)
         {
-            Timing.CallDelayed(0.15f, () => 
+            Timing.CallDelayed(0.2f, () => 
             {
                 List<Player> alive = Player.GetPlayers().Where(x => !x.IsSCP && x.IsAlive).ToList();
                 HandleScp3114Spawn(alive);
+            });
+        }
+
+        [PluginEvent(ServerEventType.RoundStart)]
+        public void HandleClassD(RoundStartEvent ev)
+        {
+            Timing.CallDelayed(0.2f, () => 
+            {
                 List<Player> dclass = Utility.GetPlayersByRole(RoleTypeId.ClassD);
                 HandleClassD(dclass);
+            });
+        }
+
+        [PluginEvent(ServerEventType.RoundStart)]
+        public void HandleGuards(RoundStartEvent ev)
+        {
+            Timing.CallDelayed(0.2f, () =>
+            {
                 List<Player> guards = Utility.GetPlayersByRole(RoleTypeId.FacilityGuard);
                 HandleGuards(guards);
+            });
+        }
+
+        [PluginEvent(ServerEventType.RoundStart)]
+        public void HandleScientists(RoundStartEvent ev)
+        {
+            Timing.CallDelayed(0.2f, () =>
+            {
                 List<Player> scientists = Utility.GetPlayersByRole(RoleTypeId.Scientist);
                 HandleScientists(scientists);
             });
+        }
+
+        public void HandleSpawn(List<Player> players, Dictionary<string, int> subclass)
+        {
+            foreach (string s in subclass.Keys)
+            {
+                Subclass subclassbase = SubclassManager.GetSubclass(s);
+                if (subclassbase == null)
+                {
+                    Log.Warning("Can't find subclass by name! Name: " + s);
+                    continue;
+                }
+                for (int i = 0; i < subclass[s]; i++)
+                {
+                    if (players.IsEmpty())
+                    {
+                        continue;
+                    }
+                    Player selectedPlayer = players.ToArray().RandomItem();
+                    selectedPlayer.ReferenceHub.SetSubclass(subclassbase);
+                    players.Remove(selectedPlayer);
+                }
+            }
         }
 
         private void HandleScp3114Spawn(List<Player> selectablePlayers)
@@ -81,67 +128,23 @@ namespace LurkBoisModded.EventHandlers.General
         private void HandleMtfSpawn(List<Player> players)
         {
             List<Player> handledPlayers = players;
-            foreach (string subclass in Plugin.GetConfig().SubclassSpawnConfig.MtfSpawnSubclasses.Keys)
-            {
-                Subclass subclassbase = SubclassManager.GetSubclass(subclass);
-                if (subclassbase == null)
-                {
-                    Log.Warning("Can't find subclass by name! Name: " + subclass);
-                    continue;
-                }
-                for (int i = 0; i < Plugin.GetConfig().SubclassSpawnConfig.MtfSpawnSubclasses[subclass]; i++)
-                {
-                    Player selectedPlayer = handledPlayers.RandomItem();
-                    selectedPlayer.ReferenceHub.SetSubclass(subclassbase);
-                    handledPlayers.Remove(selectedPlayer);
-                }
-            }
+            HandleSpawn(handledPlayers, Config.CurrentConfig.SubclassSpawnConfig.MtfSpawnSubclasses);
         }
 
         private void HandleCiSpawn(List<Player> players)
         {
             List<Player> handledPlayers = players;
-            foreach (string subclass in Plugin.GetConfig().SubclassSpawnConfig.CiSpawnSubclasses.Keys)
-            {
-                Subclass subclassbase = SubclassManager.GetSubclass(subclass);
-                if (subclassbase == null)
-                {
-                    Log.Warning("Can't find subclass by name! Name: " + subclass);
-                    continue;
-                }
-                for (int i = 0; i < Plugin.GetConfig().SubclassSpawnConfig.CiSpawnSubclasses[subclass]; i++)
-                {
-                    Player selectedPlayer = handledPlayers.RandomItem();
-                    selectedPlayer.ReferenceHub.SetSubclass(subclassbase);
-                    handledPlayers.Remove(selectedPlayer);
-                }
-            }
+            HandleSpawn(handledPlayers, Config.CurrentConfig.SubclassSpawnConfig.CiSpawnSubclasses);
         }
 
         private void HandleClassD(List<Player> players)
         {
             List<Player> handledPlayers = players;
-            List<string> shuffledRoles = Plugin.GetConfig().SubclassSpawnConfig.ClassDSubclasses.Keys.ToList();
-            shuffledRoles.ShuffleList();
             if (Scp3114Spawned)
             {
                 SubclassManager.TempDisallowedRooms.Add(MapGeneration.RoomName.Lcz173);
             }
-            foreach (string subclass in shuffledRoles)
-            {
-                Subclass subclassbase = SubclassManager.GetSubclass(subclass);
-                if (subclassbase == null)
-                {
-                    Log.Warning("Can't find subclass by name! Name: " + subclass);
-                    continue;
-                }
-                for (int i = 0; i < Plugin.GetConfig().SubclassSpawnConfig.ClassDSubclasses[subclass]; i++)
-                {
-                    Player selectedPlayer = handledPlayers.RandomItem();
-                    selectedPlayer.ReferenceHub.SetSubclass(subclassbase);
-                    handledPlayers.Remove(selectedPlayer);
-                }
-            }
+            HandleSpawn(handledPlayers, Config.CurrentConfig.SubclassSpawnConfig.ClassDSubclasses);
         }
 
         private void HandleGuards(List<Player> players)
@@ -149,21 +152,7 @@ namespace LurkBoisModded.EventHandlers.General
             List<Player> handledPlayers = players;
             List<string> shuffledRoles = Plugin.GetConfig().SubclassSpawnConfig.GuardSubclasses.Keys.ToList();
             shuffledRoles.ShuffleList();
-            foreach (string subclass in shuffledRoles)
-            {
-                Subclass subclassbase = SubclassManager.GetSubclass(subclass);
-                if (subclassbase == null)
-                {
-                    Log.Warning("Can't find subclass by name! Name: " + subclass);
-                    continue;
-                }
-                for (int i = 0; i < Plugin.GetConfig().SubclassSpawnConfig.GuardSubclasses[subclass]; i++)
-                {
-                    Player selectedPlayer = handledPlayers.RandomItem();
-                    selectedPlayer.ReferenceHub.SetSubclass(subclassbase);
-                    handledPlayers.Remove(selectedPlayer);
-                }
-            }
+            HandleSpawn(handledPlayers, Config.CurrentConfig.SubclassSpawnConfig.GuardSubclasses);
         }
 
         private void HandleScientists(List<Player> players)
@@ -171,21 +160,7 @@ namespace LurkBoisModded.EventHandlers.General
             List<Player> handledPlayers = players;
             List<string> shuffledRoles = Plugin.GetConfig().SubclassSpawnConfig.ScientistSubclasses.Keys.ToList();
             shuffledRoles.ShuffleList();
-            foreach (string subclass in shuffledRoles)
-            {
-                Subclass subclassbase = SubclassManager.GetSubclass(subclass);
-                if (subclassbase == null)
-                {
-                    Log.Warning("Can't find subclass by name! Name: " + subclass);
-                    continue;
-                }
-                for (int i = 0; i < Plugin.GetConfig().SubclassSpawnConfig.ScientistSubclasses[subclass]; i++)
-                {
-                    Player selectedPlayer = handledPlayers.RandomItem();
-                    selectedPlayer.ReferenceHub.SetSubclass(subclassbase);
-                    handledPlayers.Remove(selectedPlayer);
-                }
-            }
+            HandleSpawn(handledPlayers, Config.CurrentConfig.SubclassSpawnConfig.ScientistSubclasses);
         }
     }
 }

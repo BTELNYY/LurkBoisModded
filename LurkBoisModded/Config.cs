@@ -41,6 +41,10 @@ namespace LurkBoisModded
 
         public bool Scp2176DisablesElevators { get; set; } = true;
 
+        public bool EndOfGameFriendlyFire { get; set; } = true;
+
+        public string EndOfGameFriendlyFireMessage { get; set; } = "Friendly fire has been enabled.";
+
         public string KillMessage { get; set; } = "Killed <color={color}>{playername}</color>";
 
         [Description("SCP 330 (Candy) Config")]
@@ -251,6 +255,14 @@ namespace LurkBoisModded
 
         [Description("Suffocation death message")]
         public string SuffocationDeathMessage { get; set; } = "Blue lips and pale skin puts the cause as suffocation";
+
+        public bool Scp079LoseConnectionOnGeneratorActivation { get; set; } = true;
+
+        public float Scp079ConnectionLostFromGenLength { get; set; } = 15;
+
+        public bool Scp079CanLockElevators { get; set; } = true;
+
+        public float Scp079LockElevatorsExtraCost { get; set; } = 10f;
     }
 
     public class Scp939Config
@@ -297,14 +309,15 @@ namespace LurkBoisModded
         {
             RoleTypeId.Scp939,
             RoleTypeId.Scp049,
+            RoleTypeId.Scp0492,
         };
 
         [Description("Distance where proximity can be heard")]
         public float ProximityChatDistance { get; set; } = 10f;
 
-        public string ProximityChatEnabled { get; set; } = "Proximity chat Enabled!";
+        public string ProximityChatEnabled { get; set; } = "Proximity chat <color=green>Enabled!</color>";
 
-        public string ProximityChatDisabled { get; set; } = "Proximity chat Disabled!";
+        public string ProximityChatDisabled { get; set; } = "Proximity chat <color=red>Disabled!</color>";
 
         public string ProximityChatCanBeUsed { get; set; } = "Your class can use proximity chat! Press your noclip key to activate it! (left alt by default)";
     }
@@ -335,6 +348,17 @@ namespace LurkBoisModded
         public string FireTip { get; set; } = "You are on fire!";
 
         public string DeathReason { get; set; } = "Severe burning and charring suggests death as fire";
+
+        [Description("Damage multipliers for roles, if a role is not specified, the plugin uses 1 as the muliplier")]
+        public Dictionary<RoleTypeId, float> DamageMultipliers { get; set; } = new Dictionary<RoleTypeId, float>()
+        {
+            [RoleTypeId.Scp939] = 4f,
+            [RoleTypeId.Scp3114] = 3f,
+            [RoleTypeId.Scp0492] = 2f,
+            [RoleTypeId.Scp049] = 2f,
+            [RoleTypeId.Scp096] = 2f,
+            [RoleTypeId.Scp106] =  1.5f,
+        };
     }
 
     public class SubclassSpawnConfig
@@ -343,6 +367,7 @@ namespace LurkBoisModded
         {
             ["mtf_commander"] = 1,
             ["mtf_scout"] = 2,
+            ["mtf_pyro"] = 3,
         };
 
         public Dictionary<string, int> CiSpawnSubclasses { get; set; } = new Dictionary<string, int>()
@@ -353,15 +378,17 @@ namespace LurkBoisModded
 
         public Dictionary<string, int> ClassDSubclasses { get; set; } = new Dictionary<string, int>()
         {
-            ["classd_janitor"] = 1,
+            ["classd_janitor"] = 2,
             ["classd_smuggler"] = 2,
             ["classd_test_subject"] = 2,
+            ["classd_leader"] = 1,
         };
 
         public Dictionary<string, int> GuardSubclasses { get; set; } = new Dictionary<string, int>()
         {
             ["guard_gym_bro"] = 1,
-            ["guard_zone_manager"] = 1,
+            ["guard_zone_manager"] = 2,
+            ["guard_captain"] = 1,
         };
 
         public Dictionary<string, int> ScientistSubclasses { get; set; } = new Dictionary<string, int>()
@@ -432,7 +459,7 @@ namespace LurkBoisModded
 
     public class ScoutAbilityConfig
     {
-        public float Cooldown { get; set; } = 150f;
+        public float Cooldown { get; set; } = 60f;
 
         public string AbilityUsed { get; set; } = "You are now {speed}% faster and have {intensity} less health for {duration} seconds.";
 
@@ -442,7 +469,7 @@ namespace LurkBoisModded
 
         public List<EffectDefinition> Effects { get; set; } = new List<EffectDefinition>() 
         {
-            new EffectDefinition(nameof(MovementBoost), 15, 30f)
+            new EffectDefinition(nameof(MovementBoost), 20, 30f)
         };
     }
 
@@ -541,6 +568,8 @@ namespace LurkBoisModded
         [Description("The tooltip given to players when they hold the item")]
         public string HeldTip { get; set; } = "You are holding a Molotov Cocktail, throw to ignite an area!";
 
+        public string PickupTip { get; set; } = "You picked up a Molotov Cocktail (appears as flashbang in inventory)";
+
         [Description("The Radius which the fire spreads to")]
         public float FireRadius { get; set; } = 3f;
 
@@ -585,7 +614,7 @@ namespace LurkBoisModded
         public bool DoRadiation { get; set; } = true;
 
         [Description("Controls the effects intensity as the time on the warhead decreases, this array controls based on index. These are the time frames compared to indexes: \n # 90-80 Seconds: index 0 \n # 80-50 Seconds: index 1 \n # 50-30 Seconds: index 2 \n # 30 and bellow: index 3")]
-        public byte[] IntensityPerTime { get; set; } = { 0, 1, 2, 3 };
+        public byte[] IntensityPerTime { get; set; } = { 1, 2, 3, 4 };
 
         public float MinDamage { get; set; } = 1f;
 

@@ -179,14 +179,6 @@ namespace LurkBoisModded.EventHandlers.Item
             {
                 firearmItem.OnReloadFinish(module, firearm);
             }
-            else
-            {
-                if (!CustomItemManager.SerialToItem.ContainsKey(firearm.ItemSerial))
-                {
-                    Log.Debug(firearm.ItemSerial.ToString());
-                }
-                Log.Debug("Item isnt in dict or it isnt a ICustomFirearmItem!");
-            }
         }
 
         public static void OnItemDropped(ItemPickupBase itemPickupBase, ReferenceHub hub)

@@ -11,6 +11,7 @@ using LurkBoisModded.Extensions;
 using LurkBoisModded.Base;
 using System;
 using LurkBoisModded.Patches.Firearm;
+using PluginAPI.Core;
 
 namespace LurkBoisModded.EventHandlers.General
 {
@@ -71,14 +72,20 @@ namespace LurkBoisModded.EventHandlers.General
             ev.Player.ReferenceHub.SetMaxHealth(-1f);
         }
 
+        public bool OldValueOfFriendlyFire = false;
+
         [PluginEvent(ServerEventType.RoundEnd)]
         public void OnRoundEnd(RoundEndEvent ev)
         {
-            CommandGas.Cooldown = false;
-            CommandGas.CurrentRoom = null;
-            SubclassManager.TempDisallowedRooms.Clear();
-            ProximityChatAbility.ToggledPlayers.Clear();
-            MaxAmmoPatcher.Clear();
+            OldValueOfFriendlyFire = Server.FriendlyFire;
+            if (Config.CurrentConfig.EndOfGameFriendlyFire)
+            {
+                Server.FriendlyFire = true;
+                foreach(ReferenceHub hub in ReferenceHub.AllHubs)
+                {
+                    hub.SendHint(Config.CurrentConfig.EndOfGameFriendlyFireMessage);
+                }
+            }
         }
 
         public static event Action OnRoundRestart;
@@ -86,6 +93,12 @@ namespace LurkBoisModded.EventHandlers.General
         [PluginEvent(ServerEventType.RoundRestart)]
         public void OnRoundRestarted(RoundRestartEvent ev)
         {
+            Server.FriendlyFire = OldValueOfFriendlyFire;
+            CommandGas.Cooldown = false;
+            CommandGas.CurrentRoom = null;
+            SubclassManager.TempDisallowedRooms.Clear();
+            ProximityChatAbility.ToggledPlayers.Clear();
+            MaxAmmoPatcher.Clear();
             OnRoundRestart?.Invoke();
         }
     }

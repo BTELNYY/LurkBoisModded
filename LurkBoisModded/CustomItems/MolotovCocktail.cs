@@ -28,6 +28,12 @@ namespace LurkBoisModded.CustomItems
             return base.OnItemEquip();
         }
 
+        public override void OnItemPickedUp(ReferenceHub newOwner)
+        {
+            base.OnItemPickedUp(newOwner);
+            CurrentOwner.SendHint(Plugin.GetConfig().MolotovConfiguration.PickupTip);
+        }
+
         public bool OnFuseEnd(EffectGrenade grenade)
         {
             FireHazard haz = (FireHazard)HazardManager.CreateHazard(HazardType.Fire);

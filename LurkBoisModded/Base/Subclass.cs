@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using LurkBoisModded.Managers;
+using LurkBoisModded.Base.CustomItems;
 
 namespace LurkBoisModded.Base
 {
@@ -20,7 +21,9 @@ namespace LurkBoisModded.Base
 
         public virtual RoleTypeId Role { get; set; } = RoleTypeId.ClassD;
 
-        public virtual Dictionary<ItemType, ushort> SpawnItems { get; set; } = new Dictionary<ItemType, ushort>();
+        public virtual Dictionary<ItemType, short> SpawnItems { get; set; } = new Dictionary<ItemType, short>();
+
+        public virtual Dictionary<CustomItemType, short> CustomItems { get; set; } = new Dictionary<CustomItemType, short>();
 
         public virtual bool ClearInventoryOnSpawn { get; set; } = false;
 
@@ -38,9 +41,13 @@ namespace LurkBoisModded.Base
 
         public virtual float MaxHealth { get; set; } = 0f;
 
-        public virtual Dictionary<ItemType, ushort> RandomItems { get; set; } = new Dictionary<ItemType, ushort>();
+        public virtual Dictionary<ItemType, short> RandomItems { get; set; } = new Dictionary<ItemType, short>();
 
         public virtual int NumberOfRandomItems { get; set; } = 0;
+
+        public virtual Dictionary<CustomItemType, short> RandomCustomItems { get; set; } = new Dictionary<CustomItemType, short>();
+
+        public virtual int NumberOfCustomRandomItems { get; set; } = 0;
 
         public Subclass()
         {

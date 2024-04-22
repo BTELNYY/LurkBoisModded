@@ -21,6 +21,12 @@ namespace LurkBoisModded.Subclasses
 
         public override RoleTypeId Role => RoleTypeId.NtfCaptain;
 
+        public override Dictionary<ItemType, short> SpawnItems => new Dictionary<ItemType, short>() 
+        {
+            [ItemType.GunFRMG0] = -1,
+            [ItemType.GunE11SR] = 40,
+        };
+
         public override List<AbilityType> Abilities => new List<AbilityType>() { AbilityType.Inspire };
 
         public MtfCommander()

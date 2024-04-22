@@ -1,4 +1,5 @@
 ﻿using LurkBoisModded.Base;
+using LurkBoisModded.Base.CustomItems;
 using PlayerRoles;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace LurkBoisModded.Subclasses
 
         public override string SubclassDescription => "You spawn with random items, its good to have deep pockets.";
 
-        public override Dictionary<ItemType, ushort> RandomItems => new Dictionary<ItemType, ushort>() 
+        public override Dictionary<ItemType, short> RandomItems => new Dictionary<ItemType, short>() 
         {
             [ItemType.Ammo9x19] = 10,
             [ItemType.KeycardJanitor] = 1,

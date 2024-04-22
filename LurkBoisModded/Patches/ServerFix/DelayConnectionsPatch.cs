@@ -21,14 +21,14 @@ namespace LurkBoisModded.Patches.ServerFix
         {
             if(value)
             {
-                Timing.CallDelayed(7f, () => 
+                Timing.CallDelayed(12.5f, () => 
                 {
                     if (!killProccess)
                     {
                         return;
                     }
                     Log.Debug("Server is out of time. Killing.");
-                    NetworkServer.SendToAll<RoundRestartMessage>(new RoundRestartMessage(RoundRestartType.FullRestart, 0f, 0, false, true), 0, false);
+                    NetworkServer.SendToAll<RoundRestartMessage>(new RoundRestartMessage(RoundRestartType.FullRestart, 0f, 0, false, false), 0, false);
                     Application.Quit(0);
                 });
                 Log.Info("Frozen server killer started, server has a few seconds to allow connections or it will be killed.");

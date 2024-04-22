@@ -85,8 +85,6 @@ namespace LurkBoisModded.EventHandlers.Map
         }
 
 
-
-
         [PluginEvent(ServerEventType.PlayerSpawn)]
         public void OnPlayerRoleChange(PlayerSpawnEvent ev)
         {
@@ -115,7 +113,6 @@ namespace LurkBoisModded.EventHandlers.Map
                     affectedPlayers.Add(hub);
                     if (!Exposure.ContainsKey(hub))
                     {
-                        Log.Debug("Player not in dict, adding");
                         Exposure.Add(hub, 0f);
                     }
                 }
@@ -129,14 +126,12 @@ namespace LurkBoisModded.EventHandlers.Map
                 float targetExposure = Exposure[player];
                 if (targetExposure >= Plugin.GetConfig().RadiationConfig.MaxExposure)
                 {
-                    Log.Debug("Giving radiation!");
                     float effectDuration = Plugin.GetConfig().RadiationConfig.CheckInterval + Plugin.GetConfig().RadiationConfig.EffectDurationBuffer;
                     byte intensity = Plugin.GetConfig().RadiationConfig.IntensityPerTime[CurrentMode];
                     player.playerEffectsController.ChangeState<Radiation>(intensity, effectDuration, false);
                 }
                 if (CurrentMode != 0)
                 {
-                    Log.Debug("Giving exposure!");
                     Exposure[player] += Plugin.GetConfig().RadiationConfig.CheckInterval;
                 }
             }

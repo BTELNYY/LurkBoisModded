@@ -20,6 +20,8 @@ namespace LurkBoisModded
 {
     public class Utility
     {
+
+
         public static List<DoorVariant> SpawnedDoors = new List<DoorVariant>();
 
         public static BasicRagdoll MoveRagdoll(BasicRagdoll oldRagdoll, Vector3 position)

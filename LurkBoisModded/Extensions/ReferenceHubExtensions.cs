@@ -24,6 +24,7 @@ using LurkBoisModded.Base.CustomItems;
 using LurkBoisModded.EventHandlers.Item;
 using PlayerRoles;
 using LurkBoisModded.EventHandlers.General;
+using PluginAPI.Core.Items;
 
 namespace LurkBoisModded.Extensions
 {
@@ -105,142 +106,161 @@ namespace LurkBoisModded.Extensions
             ability.CurrentHub = target;
             ability.OnFinishSetup();
         }
+
         public static void SetSubclass(this ReferenceHub target, Subclass subclass)
         {
-            if (target.authManager.InstanceMode != ClientInstanceMode.ReadyClient || target.nicknameSync.MyNick == "Dedicated Server")
+            try
             {
-                Log.Error("Tried adding ability to Dedicated Server or Unready Client!");
-                return;
-            }
-            Player player = Player.Get(target);
-            player.SetRole(subclass.Role);
-            if (subclass.HeightVariety[0] == subclass.HeightVariety[1])
-            {
-                Vector3 nonRandomHeight = new Vector3(1, subclass.HeightVariety[0], 1);
-                player.SetScale(nonRandomHeight);
-            }
-            else
-            {
-                float height = UnityEngine.Random.Range(subclass.HeightVariety[0], subclass.HeightVariety[1]);
-                Vector3 heightVec = new Vector3(1, height, 1);
-                player.SetScale(heightVec);
-            }
-            foreach (AbilityType ability in subclass.Abilities)
-            {
-                if (AbilityManager.AbilityToType.ContainsKey(ability))
+                Log.Info($"Player {target.nicknameSync.MyNick} was set to Subclass: {subclass.FileName}");
+                if (target.authManager.InstanceMode != ClientInstanceMode.ReadyClient || target.nicknameSync.MyNick == "Dedicated Server")
                 {
-                    target.AddAbility(ability);
+                    Log.Error("Tried setting subclass to Dedicated Server or Unready Client!", nameof(SubclassManager));
+                    return;
+                }
+                Player player = Player.Get(target);
+                player.SetRole(subclass.Role);
+                if (subclass.HeightVariety[0] == subclass.HeightVariety[1])
+                {
+                    Vector3 nonRandomHeight = new Vector3(1, subclass.HeightVariety[0], 1);
+                    player.SetScale(nonRandomHeight);
                 }
                 else
                 {
-                    Log.Warning("Ability is missing! Ability: " + ability.ToString(), "Subclass");
+                    float height = UnityEngine.Random.Range(subclass.HeightVariety[0], subclass.HeightVariety[1]);
+                    Vector3 heightVec = new Vector3(1, height, 1);
+                    player.SetScale(heightVec);
                 }
-            }
-            if (subclass.MaxHealth != 0)
-            {
-                target.SetMaxHealth(subclass.MaxHealth);
-                player.Heal(subclass.MaxHealth);
-            }
-            if (subclass.ClearInventoryOnSpawn)
-            {
-                player.ClearInventory();
-            }
-            foreach (ItemType item in subclass.SpawnItems.Keys)
-            {
-                if (item.ToString().Contains("Ammo"))
+                foreach (AbilityType ability in subclass.Abilities)
                 {
-                    player.AddAmmo(item, subclass.SpawnItems[item]);
-                    continue;
-                }
-                if (item.ToString().Contains("Gun"))
-                {
-                    //ItemBase itemBase = player.AddItem(item);
-                    //InventoryItemLoader.TryGetItem(item, out itemBase);
-                    player.AddFirearm(item, (byte)subclass.SpawnItems[item]);
-                    //if (itemBase is Firearm firearm && subclass.SpawnItems[item] > 0)
-                    //{
-                    //    Timing.CallDelayed(0.25f, () => 
-                    //    {
-                    //        byte ammo = (byte)subclass.SpawnItems[item];
-                    //        firearm.Status = new FirearmStatus(ammo, firearm.Status.Flags, firearm.Status.Attachments);
-                    //    });
-                    //}
-                    continue;
-                }
-                for (int i = 0; i < subclass.SpawnItems[item]; i++)
-                {
-                    player.AddItem(item);
-                }
-            }
-            for (int i = 0; i < subclass.NumberOfRandomItems; i++)
-            {
-                ItemType item = subclass.RandomItems.Keys.ToList().RandomItem();
-                if (item.ToString().Contains("Ammo"))
-                {
-                    player.AddAmmo(item, subclass.RandomItems[item]);
-                    continue;
-                }
-                if (item.ToString().Contains("Gun"))
-                {
-                    player.AddFirearm(item, (byte)subclass.RandomItems[item]);
-                    //ItemBase itemBase = player.AddItem(item);
-                    //if (itemBase is Firearm firearm && subclass.RandomItems[item] > 0)
-                    //{
-                    //    Timing.CallDelayed(0.25f, () => 
-                    //    {
-                    //        byte ammo = (byte)subclass.RandomItems[item];
-                    //        firearm.Status = new FirearmStatus(ammo, firearm.Status.Flags, firearm.Status.Attachments);
-                    //    });
-                    //}
-                    continue;
-                }
-                for (int f = 0; f < subclass.RandomItems[item]; f++)
-                {
-                    player.AddItem(item);
-                }
-            }
-            player.ApplyAttachments();
-            //if the spawnrooms is more than one, otherwise just use the default spawn
-            if (subclass.SpawnRooms.Count > 0 || subclass.NonNamedRoomSpawns.Count > 0)
-            {
-                List<RoomIdentifier> foundRooms = RoomIdentifier.AllRoomIdentifiers.Where(x => subclass.SpawnRooms.Contains(x.Name) && !SubclassManager.TempDisallowedRooms.Contains(x.Name)).ToList();
-                foreach (NonNamedRoomDefinition nonNamedRoomDefinition in subclass.NonNamedRoomSpawns)
-                {
-                    List<RoomIdentifier> rooms = RoomIdUtils.FindRooms(RoomName.Unnamed, nonNamedRoomDefinition.FacilityZone, nonNamedRoomDefinition.RoomShape).ToList();
-                    foundRooms.AddRange(rooms);
-                }
-                foundRooms.ShuffleList();
-                if (foundRooms.Count != 0)
-                {
-                    RoomIdentifier chosenRoom = foundRooms.RandomItem();
-                    DoorVariant door = null;
-                    if (subclass.AllowKeycardDoors)
+                    if (AbilityManager.AbilityToType.ContainsKey(ability))
                     {
-                        door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => !(x is ElevatorDoor)).ToList().RandomItem();
+                        target.AddAbility(ability);
                     }
                     else
                     {
-                        door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None && !(x is ElevatorDoor) && !(x is INonInteractableDoor)).ToList().RandomItem();
+                        Log.Warning("Ability is missing! Ability: " + ability.ToString(), nameof(SubclassManager));
                     }
-                    door.SetDoorState(DoorState.Open);
-                    Vector3 pos = door.transform.position;
-                    pos.y += 1f;
-                    target.TryOverridePosition(pos, Vector3.forward);
                 }
+                if (subclass.MaxHealth != 0)
+                {
+                    target.SetMaxHealth(subclass.MaxHealth);
+                    player.Heal(subclass.MaxHealth);
+                }
+                if (subclass.ClearInventoryOnSpawn)
+                {
+                    player.ClearInventory();
+                }
+                foreach (ItemType item in subclass.SpawnItems.Keys)
+                {
+                    short amount = subclass.SpawnItems[item];
+                    if (amount < 0)
+                    {
+                        player.RemoveItems(item, Math.Abs(amount));
+                        continue;
+                    }
+                    if (item.ToString().Contains("Ammo"))
+                    {
+                        player.AddAmmo(item, (ushort)subclass.SpawnItems[item]);
+                        continue;
+                    }
+                    if (item.ToString().Contains("Gun"))
+                    {
+                        player.AddFirearm(item, (byte)subclass.SpawnItems[item]);
+                        continue;
+                    }
+                    for (int i = 0; i < subclass.SpawnItems[item]; i++)
+                    {
+                        player.AddItem(item);
+                    }
+                }
+                foreach (CustomItemType type in subclass.CustomItems.Keys)
+                {
+                    for (int i = 0; i < subclass.CustomItems[type]; i++)
+                    {
+                        player.ReferenceHub.AddCustomItem(type);
+                    }
+                }
+                for (int i = 0; i < subclass.NumberOfRandomItems; i++)
+                {
+                    ItemType item = subclass.RandomItems.Keys.ToArray().RandomItem();
+                    short amount = subclass.RandomItems[item];
+                    if (amount < 0)
+                    {
+                        player.RemoveItems(item, Math.Abs(amount));
+                        continue;
+                    }
+                    if (item.ToString().Contains("Ammo"))
+                    {
+                        player.AddAmmo(item, (ushort)subclass.RandomItems[item]);
+                        continue;
+                    }
+                    if (item.ToString().Contains("Gun"))
+                    {
+                        player.AddFirearm(item, (byte)subclass.RandomItems[item]);
+                        continue;
+                    }
+                    for (int f = 0; f < subclass.RandomItems[item]; f++)
+                    {
+                        player.AddItem(item);
+                    }
+                }
+                for (int i = 0; i < subclass.NumberOfCustomRandomItems; i++)
+                {
+                    CustomItemType item = subclass.RandomCustomItems.Keys.ToArray().RandomItem();
+                    short amount = subclass.RandomCustomItems[item];
+                    for (int f = 0; f < subclass.RandomCustomItems[item]; f++)
+                    {
+                        player.ReferenceHub.AddCustomItem(item);
+                    }
+                }
+                player.ApplyAttachments();
+                //if the spawnrooms is more than one, otherwise just use the default spawn
+                if (subclass.SpawnRooms.Count > 0 || subclass.NonNamedRoomSpawns.Count > 0)
+                {
+                    List<RoomIdentifier> foundRooms = RoomIdentifier.AllRoomIdentifiers.Where(x => subclass.SpawnRooms.Contains(x.Name) && !SubclassManager.TempDisallowedRooms.Contains(x.Name)).ToList();
+                    foreach (NonNamedRoomDefinition nonNamedRoomDefinition in subclass.NonNamedRoomSpawns)
+                    {
+                        List<RoomIdentifier> rooms = RoomIdUtils.FindRooms(RoomName.Unnamed, nonNamedRoomDefinition.FacilityZone, nonNamedRoomDefinition.RoomShape).ToList();
+                        foundRooms.AddRange(rooms);
+                    }
+                    foundRooms.ShuffleList();
+                    if (foundRooms.Count != 0)
+                    {
+                        RoomIdentifier chosenRoom = foundRooms.ToArray().RandomItem();
+                        DoorVariant door = null;
+                        if (subclass.AllowKeycardDoors)
+                        {
+                            door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => !(x is ElevatorDoor)).ToArray().RandomItem();
+                        }
+                        else
+                        {
+                            door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None && !(x is ElevatorDoor) && !(x is INonInteractableDoor)).ToArray().RandomItem();
+                        }
+                        door.SetDoorState(DoorState.Open);
+                        Vector3 pos = door.transform.position;
+                        pos.y += 1f;
+                        target.TryOverridePosition(pos, Vector3.forward);
+                    }
+                }
+                player.PlayerInfo.IsRoleHidden = true;
+                if (subclass.ApplyClassColorToCustomInfo)
+                {
+                    player.CustomInfo = $"<color={subclass.ClassColor}>" + subclass.SubclassNiceName + "(Custom Subclass)</color>";
+                }
+                else
+                {
+                    player.CustomInfo = subclass.SubclassNiceName + " (Custom Subclass)";
+                }
+                string hintFormatted = $"You are <color={subclass.ClassColor}><b>{subclass.SubclassNiceName}</b></color>! \n {subclass.SubclassDescription}";
+                target.SendHint(hintFormatted, 30f);
+                target.gameConsoleTransmission.SendToClient(hintFormatted, "green");
             }
-            player.PlayerInfo.IsRoleHidden = true;
-            if (subclass.ApplyClassColorToCustomInfo)
+            catch(Exception ex) 
             {
-                player.CustomInfo = $"<color={subclass.ClassColor}>" + subclass.SubclassNiceName + "(Custom Subclass)</color>";
+                Log.Error(ex.ToString(), nameof(SubclassManager));
             }
-            else
-            {
-                player.CustomInfo = subclass.SubclassNiceName + " (Custom Subclass)";
-            }
-            string hintFormatted = $"You are <color={subclass.ClassColor}><b>{subclass.SubclassNiceName}</b></color>! \n {subclass.SubclassDescription}";
-            target.SendHint(hintFormatted, 30f);
-            target.gameConsoleTransmission.SendToClient(hintFormatted, "green");
         }
+
         public static void RemoveAllAbilities(this ReferenceHub target)
         {
             List<CustomAbility> abilities = target.gameObject.GetComponents<CustomAbility>().ToList();
@@ -276,6 +296,22 @@ namespace LurkBoisModded.Extensions
         public static CustomItem AddCustomItem(this ReferenceHub target, CustomItemType type)
         {
             return CustomItemManager.AddItem(target, type);
+        }
+
+        public static CustomItem[] AddCustomItem(this ReferenceHub target, CustomItemType type, short amount)
+        {
+            List<CustomItem> items = new List<CustomItem>();
+            for(int i = 0; i > amount; i++)
+            {
+                CustomItem item = AddCustomItem(target, type);
+                if(item == null)
+                {
+                    Log.Warning($"Failed to give custom item to target! Target: {target.nicknameSync.MyNick}, Item: {type}");
+                    continue;
+                }
+                items.Add(item);
+            }
+            return items.ToArray();
         }
 
         public static void AddItem(this ReferenceHub target, ItemType type)

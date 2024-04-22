@@ -21,7 +21,7 @@ namespace LurkBoisModded.Subclasses
 
         public override string ClassColor => "#FFFF7C";
 
-        public override Dictionary<ItemType, ushort> SpawnItems => new Dictionary<ItemType, ushort>() 
+        public override Dictionary<ItemType, short> SpawnItems => new Dictionary<ItemType, short>() 
         {
             [ItemType.GunCOM15] = 3,
         };

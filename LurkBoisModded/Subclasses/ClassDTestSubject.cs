@@ -27,7 +27,7 @@ namespace LurkBoisModded.Subclasses
             RoomName.LczGlassroom,
         };
 
-        public override Dictionary<ItemType, ushort> RandomItems => new Dictionary<ItemType, ushort>() 
+        public override Dictionary<ItemType, short> RandomItems => new Dictionary<ItemType, short>() 
         {
             [ItemType.Flashlight] = 1,
             [ItemType.Coin] = 1,
