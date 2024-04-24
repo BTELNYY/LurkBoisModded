@@ -1,22 +1,27 @@
 ﻿using HarmonyLib;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using LurkBoisModded.Extensions;
 using PlayerRoles.Ragdolls;
 using PlayerStatsSystem;
 using System;
 using System.Collections.Generic;
-using LurkBoisModded.Extensions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.Profiling;
 using UnityEngine;
 
-namespace LurkBoisModded.Patches.Firearm
+namespace LurkBoisModded.Patches.DamageHandler
 {
     [HarmonyPatch(typeof(FirearmDamageHandler), nameof(FirearmDamageHandler.ProcessRagdoll))]
-    public class DamageHandler
+    public class FirearmDamageHandlerProccessRagdollPatch
     {
-        public static bool Prefix(FirearmDamageHandler __instance, BasicRagdoll ragdoll) 
+        public static Dictionary<FirearmDamageHandler, float> HandlerToForceDict = new Dictionary<FirearmDamageHandler, float>();
+
+        public static Dictionary<FirearmDamageHandler, float> HandlerToForceMultiplierDict = new Dictionary<FirearmDamageHandler, float>();
+
+        public static bool Prefix(FirearmDamageHandler __instance, BasicRagdoll ragdoll)
         {
+            __instance.ProcessRagdoll(ragdoll);
             float num;
             sbyte hitDirX = (sbyte)AccessTools.Field(typeof(FirearmDamageHandler), "_hitDirectionX").GetValue(__instance);
             sbyte hitDirZ = (sbyte)AccessTools.Field(typeof(FirearmDamageHandler), "_hitDirectionZ").GetValue(__instance);
@@ -32,7 +37,20 @@ namespace LurkBoisModded.Patches.Firearm
                 return false;
             }
             float num3;
+            float addedKnockback = 0f;
+            if (HandlerToForceDict.ContainsKey(__instance))
+            {
+                addedKnockback = HandlerToForceDict[__instance];
+                HandlerToForceDict.Remove(__instance );
+            }
+            float multiplier = 1f;
+            if (HandlerToForceMultiplierDict.ContainsKey(__instance))
+            {
+                multiplier = HandlerToForceMultiplierDict[__instance];
+                HandlerToForceMultiplierDict.Remove(__instance );
+            }
             float num2 = num * (__instance.GetForceByAmmoType().TryGetValue(ammoType, out num3) ? num3 : 1f);
+            num2 = (num2 * multiplier) + addedKnockback;
             Rigidbody[] linkedRigidbodies = dynamicRagdoll.LinkedRigidbodies;
             for (int i = 0; i < linkedRigidbodies.Length; i++)
             {

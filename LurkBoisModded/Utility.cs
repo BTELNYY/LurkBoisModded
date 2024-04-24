@@ -15,11 +15,18 @@ using AdminToys;
 using CentralAuth;
 using PlayerRoles.Ragdolls;
 using LurkBoisModded.Extensions;
+using MapGeneration;
 
 namespace LurkBoisModded
 {
     public class Utility
     {
+
+        public static List<DoorVariant> GetDoorsByZone(FacilityZone zone)
+        {
+            List<DoorVariant> doors = DoorVariant.AllDoors.Where(x => x.IsInZone(zone)).ToList();
+            return doors;
+        }
 
 
         public static List<DoorVariant> SpawnedDoors = new List<DoorVariant>();

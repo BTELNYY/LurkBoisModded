@@ -38,20 +38,12 @@ namespace LurkBoisModded.CustomItems
 
         public override bool OnPlayerShotByWeapon(FirearmDamageHandler damageHandlerBase, ReferenceHub target)
         {
-            if(damageHandlerBase == lastHandler)
-            {
-                return false;
-            }
-            ushort currItemSerial = damageHandlerBase.Attacker.Hub.inventory.NetworkCurItem.SerialNumber;
-            Firearm firearm = (Firearm)damageHandlerBase.Attacker.Hub.GetItemBySerial(currItemSerial);
-            if(firearm == null)
-            {
-                return true;
-            }
-            FirearmDamageHandler handler = new FirearmDamageHandler(firearm, damageHandlerBase.Damage * Config.CurrentConfig.SniperE11Config.DamageMultiplier, target.IsHuman());
-            lastHandler = handler;
-            target.playerStats.DealDamage(handler);
-            return false;
+            float curDamage = damageHandlerBase.Damage;
+            float newDamage = curDamage * Config.CurrentConfig.SniperE11Config.DamageMultiplier;
+            damageHandlerBase.SetDamage(newDamage);
+            damageHandlerBase.SetKnockbackMultiplier(Config.CurrentConfig.SniperE11Config.KnockbackMultiplier);
+            damageHandlerBase.SetKnockbackAddative(Config.CurrentConfig.SniperE11Config.KnockbackAdditive);
+            return true;
         }
 
         public override bool OnItemEquip()

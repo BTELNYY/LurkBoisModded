@@ -25,6 +25,7 @@ using LurkBoisModded.EventHandlers.Item;
 using PlayerRoles;
 using LurkBoisModded.EventHandlers.General;
 using PluginAPI.Core.Items;
+using MEC;
 
 namespace LurkBoisModded.Extensions
 {
@@ -119,17 +120,6 @@ namespace LurkBoisModded.Extensions
                 }
                 Player player = Player.Get(target);
                 player.SetRole(subclass.Role);
-                if (subclass.HeightVariety[0] == subclass.HeightVariety[1])
-                {
-                    Vector3 nonRandomHeight = new Vector3(1, subclass.HeightVariety[0], 1);
-                    player.SetScale(nonRandomHeight);
-                }
-                else
-                {
-                    float height = UnityEngine.Random.Range(subclass.HeightVariety[0], subclass.HeightVariety[1]);
-                    Vector3 heightVec = new Vector3(1, height, 1);
-                    player.SetScale(heightVec);
-                }
                 foreach (AbilityType ability in subclass.Abilities)
                 {
                     if (AbilityManager.AbilityToType.ContainsKey(ability))
@@ -149,6 +139,61 @@ namespace LurkBoisModded.Extensions
                 if (subclass.ClearInventoryOnSpawn)
                 {
                     player.ClearInventory();
+                }
+                //if the spawnrooms is more than one, otherwise just use the default spawn
+                DoorVariant door = null;
+                if (subclass.SpawnRooms.Count > 0 || subclass.NonNamedRoomSpawns.Count > 0)
+                {
+                    List<RoomIdentifier> foundRooms = RoomIdentifier.AllRoomIdentifiers.Where(x => subclass.SpawnRooms.Contains(x.Name) && !SubclassManager.TempDisallowedRooms.Contains(x.Name)).ToList();
+                    foreach (NonNamedRoomDefinition nonNamedRoomDefinition in subclass.NonNamedRoomSpawns)
+                    {
+                        List<RoomIdentifier> rooms = RoomIdUtils.FindRooms(RoomName.Unnamed, nonNamedRoomDefinition.FacilityZone, nonNamedRoomDefinition.RoomShape).ToList();
+                        foundRooms.AddRange(rooms);
+                    }
+                    foundRooms.ShuffleList();
+                    if (foundRooms.Count != 0)
+                    {
+                        RoomIdentifier chosenRoom = foundRooms.GetRandomItem();
+                        if (subclass.AllowKeycardDoors)
+                        {
+                            if (DoorVariant.DoorsByRoom[chosenRoom].Where(x => !(x is ElevatorDoor)).Count() == 0)
+                            {
+                                Log.Warning($"Tried to get door out of room with no doors! Room: {chosenRoom.Name} Subclass: {subclass.FileName}");
+                            }
+                            else
+                            {
+                                door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => !(x is ElevatorDoor)).GetRandomItem();
+                            }
+                        }
+                        else
+                        {
+                            if (DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.CheckPermissions(null, target) && !(x is ElevatorDoor)).Count() == 0)
+                            {
+                                Log.Warning($"Tried to get door out of room with no doors! (No keycard needed) Room: {chosenRoom.Name} Subclass: {subclass.FileName}");
+                            }
+                            else
+                            {
+                                door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.CheckPermissions(null, target) && !(x is ElevatorDoor)).GetRandomItem();
+                            }
+                        }
+                        if (door != null)
+                        {
+                            door.SetDoorState(DoorState.Open);
+                            Vector3 pos = door.transform.position;
+                            pos.y += 1f;
+                            target.TryOverridePosition(pos, Vector3.forward);
+                        }
+                        else
+                        {
+                            Log.Warning($"Door chosen is null! Room: {chosenRoom.Name}, Subclass: {subclass.FileName}");
+                        }
+                    }
+                }
+                if (door != null)
+                {
+                    Vector3 pos = door.transform.position;
+                    pos.y += 1f;
+                    target.TryOverridePosition(pos, Vector3.forward);
                 }
                 foreach (ItemType item in subclass.SpawnItems.Keys)
                 {
@@ -182,7 +227,12 @@ namespace LurkBoisModded.Extensions
                 }
                 for (int i = 0; i < subclass.NumberOfRandomItems; i++)
                 {
-                    ItemType item = subclass.RandomItems.Keys.ToArray().RandomItem();
+                    if (subclass.RandomItems.Keys.IsEmpty())
+                    {
+                        Log.Warning("Tried to spawn random items from an empty random item list. Subclass: " + subclass.FileName);
+                        continue;
+                    }
+                    ItemType item = subclass.RandomItems.Keys.GetRandomItem();
                     short amount = subclass.RandomItems[item];
                     if (amount < 0)
                     {
@@ -206,7 +256,12 @@ namespace LurkBoisModded.Extensions
                 }
                 for (int i = 0; i < subclass.NumberOfCustomRandomItems; i++)
                 {
-                    CustomItemType item = subclass.RandomCustomItems.Keys.ToArray().RandomItem();
+                    if (subclass.RandomCustomItems.Keys.IsEmpty())
+                    {
+                        Log.Warning("Tried to spawn random custom items from an empty random item list. Subclass: " + subclass.FileName);
+                        continue;
+                    }
+                    CustomItemType item = subclass.RandomCustomItems.Keys.GetRandomItem();
                     short amount = subclass.RandomCustomItems[item];
                     for (int f = 0; f < subclass.RandomCustomItems[item]; f++)
                     {
@@ -214,34 +269,6 @@ namespace LurkBoisModded.Extensions
                     }
                 }
                 player.ApplyAttachments();
-                //if the spawnrooms is more than one, otherwise just use the default spawn
-                if (subclass.SpawnRooms.Count > 0 || subclass.NonNamedRoomSpawns.Count > 0)
-                {
-                    List<RoomIdentifier> foundRooms = RoomIdentifier.AllRoomIdentifiers.Where(x => subclass.SpawnRooms.Contains(x.Name) && !SubclassManager.TempDisallowedRooms.Contains(x.Name)).ToList();
-                    foreach (NonNamedRoomDefinition nonNamedRoomDefinition in subclass.NonNamedRoomSpawns)
-                    {
-                        List<RoomIdentifier> rooms = RoomIdUtils.FindRooms(RoomName.Unnamed, nonNamedRoomDefinition.FacilityZone, nonNamedRoomDefinition.RoomShape).ToList();
-                        foundRooms.AddRange(rooms);
-                    }
-                    foundRooms.ShuffleList();
-                    if (foundRooms.Count != 0)
-                    {
-                        RoomIdentifier chosenRoom = foundRooms.ToArray().RandomItem();
-                        DoorVariant door = null;
-                        if (subclass.AllowKeycardDoors)
-                        {
-                            door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => !(x is ElevatorDoor)).ToArray().RandomItem();
-                        }
-                        else
-                        {
-                            door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.RequiredPermissions == KeycardPermissions.None && !(x is ElevatorDoor) && !(x is INonInteractableDoor)).ToArray().RandomItem();
-                        }
-                        door.SetDoorState(DoorState.Open);
-                        Vector3 pos = door.transform.position;
-                        pos.y += 1f;
-                        target.TryOverridePosition(pos, Vector3.forward);
-                    }
-                }
                 player.PlayerInfo.IsRoleHidden = true;
                 if (subclass.ApplyClassColorToCustomInfo)
                 {
@@ -254,6 +281,30 @@ namespace LurkBoisModded.Extensions
                 string hintFormatted = $"You are <color={subclass.ClassColor}><b>{subclass.SubclassNiceName}</b></color>! \n {subclass.SubclassDescription}";
                 target.SendHint(hintFormatted, 30f);
                 target.gameConsoleTransmission.SendToClient(hintFormatted, "green");
+                if (subclass.HeightVariety[0] == subclass.HeightVariety[1])
+                {
+                    Vector3 nonRandomHeight = new Vector3(1, subclass.HeightVariety[0], 1);
+                    player.SetScale(nonRandomHeight);
+                }
+                else
+                {
+                    float height = UnityEngine.Random.Range(subclass.HeightVariety[0], subclass.HeightVariety[1]);
+                    Vector3 heightVec = new Vector3(1, height, 1);
+                    player.SetScale(heightVec);
+                }
+                Timing.CallDelayed(0.15f, () => 
+                {
+                    if (door != null)
+                    {
+                        Vector3 pos = door.transform.position;
+                        pos.y += 1f;
+                        target.TryOverridePosition(pos, Vector3.forward);
+                    }
+                });
+                foreach (EffectDefinition effect in subclass.SpawnEffects)
+                {
+                    target.playerEffectsController.ChangeState(effect.Name, effect.Intensity, effect.Duration);
+                }
             }
             catch(Exception ex) 
             {

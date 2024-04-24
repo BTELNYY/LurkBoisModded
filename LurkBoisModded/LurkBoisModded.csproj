@@ -158,6 +158,7 @@
     <Compile Include="Base\CustomItems\ICustomGrenadeItem.cs" />
     <Compile Include="Base\FakeConnection.cs" />
     <Compile Include="Base\Ability\IRequiredItemAbility.cs" />
+    <Compile Include="Base\ICustomRadioItem.cs" />
     <Compile Include="Commands\RemoteAdmin\DeleteDummy.cs" />
     <Compile Include="Commands\RemoteAdmin\GiveCustomItem.cs" />
     <Compile Include="Commands\RemoteAdmin\ListCustomItems.cs" />
@@ -166,8 +167,10 @@
     <Compile Include="Commands\RemoteAdmin\SetSubclass.cs" />
     <Compile Include="Base\EffectDefinition.cs" />
     <Compile Include="Commands\RemoteAdmin\SubclassList.cs" />
+    <Compile Include="CustomItems\C4Charge.cs" />
     <Compile Include="CustomItems\Landmine.cs" />
     <Compile Include="CustomItems\MolotovCocktail.cs" />
+    <Compile Include="CustomItems\C4Detonator.cs" />
     <Compile Include="CustomItems\SniperE11.cs" />
     <Compile Include="Effects\Radiation.cs" />
     <Compile Include="Effects\Regeneration.cs" />
@@ -182,12 +185,17 @@
     <Compile Include="EventHandlers\General\KillCountHandler.cs" />
     <Compile Include="EventHandlers\Item\CustomItemHandler.cs" />
     <Compile Include="EventHandlers\General\SubclassSpawnHandler.cs" />
+    <Compile Include="EventHandlers\Map\GuardBodySpawner.cs" />
     <Compile Include="EventHandlers\Map\WarheadEventHandler.cs" />
     <Compile Include="EventHandlers\Scp079\Scp079Handler.cs" />
+    <Compile Include="EventHandlers\Scp096\Scp096EnrageHandler.cs" />
+    <Compile Include="Extensions\DamageHandlerExtensions.cs" />
     <Compile Include="Extensions\DoorExtensions.cs" />
+    <Compile Include="Extensions\FirearmDamageHandlerExtensions.cs" />
     <Compile Include="Extensions\FirearmExtensions.cs" />
     <Compile Include="Extensions\MirrorExtensions.cs" />
     <Compile Include="Extensions\PlayerExtensions.cs" />
+    <Compile Include="Extensions\RadioitemExtensions.cs" />
     <Compile Include="Extensions\ReferenceHubExtensions.cs" />
     <Compile Include="Extensions\RoomExtensions.cs" />
     <Compile Include="Gamemodes\Deathmatch\DeathmatchGamemode.cs" />
@@ -196,11 +204,12 @@
     <Compile Include="Gamemodes\GamemodeManager.cs" />
     <Compile Include="Managers\CustomEffectManager.cs" />
     <Compile Include="Managers\CustomItemManager.cs" />
+    <Compile Include="Patches\DamageHandler\FirearmDamageHandlerProccessRagdollPatch.cs" />
     <Compile Include="Patches\EscapePatch.cs" />
-    <Compile Include="Patches\Firearm\DamageHandler.cs" />
     <Compile Include="Patches\Firearm\MaxAmmoPatcher.cs" />
     <Compile Include="Patches\Grenade\FlashGrenadePatch.cs" />
     <Compile Include="Patches\Grenade\HEGrenadePatch.cs" />
+    <Compile Include="Patches\LczDeconPatch.cs" />
     <Compile Include="Patches\Scp2176\Scp2176Patch.cs" />
     <Compile Include="Patches\Scp2176\ShatterPatch.cs" />
     <Compile Include="Patches\SearchItemCompletorPatch.cs" />
@@ -235,7 +244,6 @@
     <Compile Include="Effects\Spin.cs" />
     <Compile Include="EventHandlers\Map\DoorSpawnHandler.cs" />
     <Compile Include="EventHandlers\GunDebug.cs" />
-    <Compile Include="EventHandlers\Item\CoinHandler.cs" />
     <Compile Include="EventHandlers\Map\RagdollHandler.cs" />
     <Compile Include="EventHandlers\General\GenericHandler.cs" />
     <Compile Include="EventHandlers\Scp914\Scp914SettingEventHandler.cs" />
@@ -260,6 +268,7 @@
     <Compile Include="Subclasses\ClassDLeader.cs" />
     <Compile Include="Subclasses\GuardCaptain.cs" />
     <Compile Include="Subclasses\MtfPyro.cs" />
+    <Compile Include="Subclasses\MtfSniper.cs" />
     <Compile Include="Subclasses\ScientistMedic.cs" />
     <Compile Include="Subclasses\GuardZoneManager.cs" />
     <Compile Include="Subclasses\GuardGymBro.cs" />

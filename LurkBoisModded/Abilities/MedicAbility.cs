@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using LurkBoisModded.Extensions;
+using MonoMod;
 
 namespace LurkBoisModded.Abilities
 {
@@ -26,28 +27,19 @@ namespace LurkBoisModded.Abilities
             {
                 return;
             }
-            if(CurrentHub.inventory.CurItem == null || CurrentHub.inventory.CurInstance ==  null) 
-            {
-                SetRemainingCooldown(1f);
-                CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingItemRequired);
-                return;
-            }
-            if(CurrentHub.inventory.CurInstance.Category != ItemCategory.Medical)
-            {
-                SetRemainingCooldown(1f);
-                CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingItemRequired);
-                return;
-            }
             float healing = 0;
-            if (!Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingDict.ContainsKey(CurrentHub.inventory.CurItem.TypeId))
+            bool remItem = false;
+            if (CurrentHub.inventory.CurItem == null || CurrentHub.inventory.CurInstance == null || CurrentHub.inventory.CurInstance.Category != ItemCategory.Medical)
             {
-                SetRemainingCooldown(1f);
-                CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingItemRequired);
-                return;
+                healing = 25;
             }
             else
             {
-                healing = Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingDict[CurrentHub.inventory.CurItem.TypeId];
+                if (Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingDict.ContainsKey(CurrentHub.inventory.CurItem.TypeId))
+                {
+                    remItem = true;
+                    healing = Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingDict[CurrentHub.inventory.CurItem.TypeId];
+                }
             }
             Transform cam = CurrentHub.PlayerCameraReference;
             Vector3 raycastFrom = cam.position;
@@ -87,7 +79,10 @@ namespace LurkBoisModded.Abilities
                 string messageToOther = Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealSuccessOtherPlayer.Replace("{username}", CurrentHub.nicknameSync.MyNick).Replace("{health}", ((int)healing).ToString());
                 hitPlayer.Heal(healing);
                 hitPlayer.SendHint(messageToOther);
-                CurrentHub.RemoveItemFromHub(CurrentHub.inventory.CurItem.TypeId);
+                if (remItem)
+                {
+                    CurrentHub.RemoveItemFromHub(CurrentHub.inventory.CurItem.TypeId);
+                }
             }
         }
 

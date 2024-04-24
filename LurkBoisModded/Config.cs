@@ -10,6 +10,7 @@ using System.ComponentModel;
 using LurkBoisModded.Effects;
 using System.Security.Policy;
 using UnityEngine;
+using MapGeneration;
 
 namespace LurkBoisModded
 {
@@ -47,8 +48,12 @@ namespace LurkBoisModded
 
         public string KillMessage { get; set; } = "Killed <color={color}>{playername}</color>";
 
+        public NPCConfig NPCConfig { get; set; } = new NPCConfig();
+
         [Description("SCP 330 (Candy) Config")]
         public Scp330Config Scp330Config { get; set; } = new Scp330Config();
+
+        public Scp096Config Scp096Config { get; set; } = new Scp096Config();
 
         [Description("SCP 914 Config")]
         public Scp914Config Scp914Config { get; set; } = new Scp914Config();
@@ -57,7 +62,7 @@ namespace LurkBoisModded
         public Scp106PocketDimensionConfig Scp106PdConfig { get; set; } = new Scp106PocketDimensionConfig();
 
         [Description("SCP 079 Configuration")]
-        public Scp079 Scp079Config { get; set; } = new Scp079();
+        public Scp079Config Scp079Config { get; set; } = new Scp079Config();
 
         [Description("SCP 3114 Spawn Configuration")]
         public Scp3114Config Scp3114Config { get; set; } = new Scp3114Config();
@@ -89,11 +94,10 @@ namespace LurkBoisModded
         [Description("Sniper rifle configuration")]
         public SniperE11Config SniperE11Config { get; set;} = new SniperE11Config();
 
+        public C4Config C4Config { get; set; } = new C4Config();
+
         [Description("Death message for people who use .suicide")]
         public string SuicideDeathReason { get; set; } = "Suicide by gunshot to the head";
-
-        [Description("Chance that a coin will explode when you flip it")]
-        public float CoinExplodeChance { get; set; } = 0.01f;
 
         [Description("Max disarms per weapon. Set to -1 for unlimited, 0 to disable disarming with that weapon. (Note that this is calculated by which weapon you hold and not all weapons, so if you hold a unrestricted weapon and detain more people then a restricted weapon in your inventory can, the restricted weapon won't be able to disarm.)")]
         public Dictionary<ItemType, int> MaxDisarmsPerWeapon { get; set; } = new Dictionary<ItemType, int>()
@@ -109,6 +113,8 @@ namespace LurkBoisModded
             [ItemType.GunLogicer] = -1,
             [ItemType.GunCom45] = -1,
             [ItemType.ParticleDisruptor] = -1,
+            [ItemType.GunFRMG0] = -1,
+            [ItemType.GunA7] = -1,
         };
 
         public string MaxDisarmsReached { get; set; } = "You cannot detain more than {count} people with this weapon!";
@@ -162,7 +168,11 @@ namespace LurkBoisModded
         {
             [Scp914KnobSetting.Rough] = new List<Scp914SettingEventHandler.Scp914Event>()
             {
-                Scp914SettingEventHandler.Scp914Event.Death,
+                Scp914SettingEventHandler.Scp914Event.Scp914DamageOverTimeEffect,
+                Scp914SettingEventHandler.Scp914Event.Nothing,
+                Scp914SettingEventHandler.Scp914Event.Nothing,
+                Scp914SettingEventHandler.Scp914Event.Nothing,
+                Scp914SettingEventHandler.Scp914Event.Nothing,
                 Scp914SettingEventHandler.Scp914Event.Nothing,
             },
             [Scp914KnobSetting.Coarse] = new List<Scp914SettingEventHandler.Scp914Event>()
@@ -233,7 +243,8 @@ namespace LurkBoisModded
         public float Scp106PdDropDelayMax { get; set; } = 1f;
     }
 
-    public class Scp079
+
+    public class Scp079Config
     {
         [Description("Enable SCP 079 Gas?")]
         public bool GasEnabled { get; set; } = true;
@@ -297,6 +308,91 @@ namespace LurkBoisModded
         {
             KeycardPermissions.ContainmentLevelTwo
         };
+
+        public GuardBodyConfig GuardBodyConfig { get; set; } = new GuardBodyConfig();
+    }
+
+    public class NPCConfig
+    {
+        public List<string> Names { get; set; } = new List<string>()
+        {
+                "Gregory",
+                "Joe mama",
+                "D-9341",
+                "Joseph Stalin",
+                "William Afton",
+                "???",
+                "Bob",
+                "Adam Smith",
+                "Johnny",
+                "the pacer gram fitness test",
+                "catcloner",
+                "gonegooner",
+        };
+
+        public List<string> MemeDeathReasons { get; set; } = new List<string>() 
+        {
+                "Mauled by Roxanne Wolf",
+                "Became discord kitten",
+                "I don't know how they died",
+                "Got [REDACTED] by SCP 939",
+                "Drank the forbidden milk from under the sink",
+                "Exploded",
+                "Crushed by SCP 939's massive ass",
+                "Forced to code Yandere Simulator",
+                "Couldn't escape the van",
+                "Imploded",
+                "Tried to client mod Secret Lab",
+                "[DATA LOST]",
+                "Forced to install ARK:SE mods on Linux",
+                "Forced to code SL plugins"
+        };
+    }
+
+    public class GuardBodyConfig
+    {
+
+        [Description("Should corpses of guards spawn in HCZ and EZ? (Custom names and death reasons in other config files)")]
+        public bool ShouldGuardCorpsesSpawn { get; set; } = true;
+
+        [Description("Amount of corpses present in the facility maximum")]
+        public int GuardCorpseAmount { get; set; } = 5;
+
+        [Description("List of allowed rooms where guard corpses can spawn. Note that duplicate entries mean multiple corpses can spawn.")]
+        public List<RoomName> GuardCorpseSpawnableRooms { get; set; } = new List<RoomName>()
+        {
+            RoomName.HczServers,
+            RoomName.HczTestroom,
+            RoomName.Hcz939,
+            RoomName.HczWarhead,
+            RoomName.HczMicroHID,
+            RoomName.HczCheckpointA,
+            RoomName.HczCheckpointB,
+            RoomName.EzEvacShelter,
+            RoomName.EzOfficeSmall,
+            RoomName.EzOfficeLarge,
+            RoomName.EzOfficeStoried,
+            RoomName.EzOfficeStoried,
+            RoomName.EzCollapsedTunnel,
+        };
+
+        [Description("What should spawn on guards in HCZ? Note that the amount of things spawned works just as expected unless the item is a gun, at which point the amount counts as ammo.")]
+        public Dictionary<ItemType, int> HczGuardCorpseContents { get; set; } = new Dictionary<ItemType, int>()
+        {
+            [ItemType.KeycardGuard] = 1,
+            [ItemType.GunCOM15] = 0,
+            [ItemType.Ammo9x19] = 10,
+            [ItemType.ArmorLight] = 1
+        };
+
+        [Description("What should spawn on guards in EZ? Note that the amount of things spawned works just as expected unless the item is a gun, at which point the amount counts as ammo.")]
+        public Dictionary<ItemType, int> EzGuardCorpseContents { get; set; } = new Dictionary<ItemType, int>()
+        {
+            [ItemType.KeycardGuard] = 1,
+            [ItemType.GunFSP9] = 0,
+            [ItemType.Ammo9x19] = 15,
+            [ItemType.ArmorLight] = 1
+        };
     }
 
     public class ProximityChatConfig
@@ -333,6 +429,11 @@ namespace LurkBoisModded
         public float HumanNonTargetDamage { get; set; } = 45f;
         public float WindowDamage { get; set; } = 750f;
         public float DoorDamage { get; set; } = 750f;
+
+        [Description("Should the lights flicker when SCP 096 enrages?")]
+        public bool FlickerLightsOnEnrage { get; set; } = true;
+
+        public float FlickerLightTime { get; set; } = 0.1f;
     }
 
     public class FireConfig
@@ -368,6 +469,7 @@ namespace LurkBoisModded
             ["mtf_commander"] = 1,
             ["mtf_scout"] = 2,
             ["mtf_pyro"] = 3,
+            ["mtf_sniper"] = 1,
         };
 
         public Dictionary<string, int> CiSpawnSubclasses { get; set; } = new Dictionary<string, int>()
@@ -535,10 +637,10 @@ namespace LurkBoisModded
     public class Scp3114Config
     {
         [Description("Minimum amount of players required for SCP 3114 to spawn. (Note: this is counted by possible spawn players, meaning there must be a minimum of X alive, human players.)")]
-        public int MinimumPlayers { get; set; } = 10;
+        public int MinimumPlayers { get; set; } = 15;
 
         [Description("If no SCP 079 spawns, should SCP 3114 always spawn? (Note that the minimum players check must still pass.)")]
-        public bool NoScp079Means100PercentSpawn { get; set; } = true;
+        public bool NoScp079Means100PercentSpawn { get; set; } = false;
 
         [Description("SCP 3114 spawn chance. All other conditions must be met for this to be checked.")]
         public float Scp3114SpawnChance { get; set; } = 0.5f;
@@ -558,9 +660,26 @@ namespace LurkBoisModded
         [Description("How far should the light reach from the landmine?")]
         public float LightRange { get; set; } = 0.15f;
 
+        [Description("Time until the landmine explodes after it has been set off")]
+        public float TimeUntilExplosion { get; set; } = 1f;
+
         public float[] UnarmedColor { get; set; } = new float[4] { 0, 255, 0, 0.75f };
 
         public float[] ArmedColor { get; set; } = new float[4] { 255, 0, 0, 0.25f };
+    }
+
+    public class C4Config
+    {
+        public string DetonatorHeldMessage { get; set; } = "You are holding a C4 Detonator! Turn on the radio to detonate all active charges.";
+
+        public string DetonateSuccess { get; set; } = "Detonated {amount} C4 charge(s)";
+
+        public string DetonatorNoC4 { get; set; } = "You must set C4 to detonate it.";
+
+        public string DetonatorNoCharge { get; set; } = "This Detonator is out of charge.";
+
+        public string DetonatorTryUseMessage { get; set; } = "You can't use a C4 Detonator to speak like a radio!";
+        public string C4ChargeMessage { get; set; } = "You are holding a C4 Charge! Throw or Drop the item to set it! Note that the item can be picked up by other players to be disarmed.";
     }
 
     public class MolotovConfiguration
@@ -593,6 +712,10 @@ namespace LurkBoisModded
         public float CooldownTime { get; set; } = 10f;
 
         public float DamageMultiplier { get; set; } = 5f;
+
+        public float KnockbackMultiplier { get; set; } = 3f;
+
+        public float KnockbackAdditive { get; set; } = 10f;
     }
 
     public class KillCountConfig

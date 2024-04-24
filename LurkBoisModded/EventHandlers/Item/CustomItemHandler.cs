@@ -23,6 +23,7 @@ using LurkBoisModded.Managers;
 using System.Reflection;
 using System.Linq;
 using PluginAPI.Core.Items;
+using LurkBoisModded.Base;
 
 namespace LurkBoisModded.EventHandlers.Item
 {
@@ -117,6 +118,14 @@ namespace LurkBoisModded.EventHandlers.Item
             return true;
         }
 
+        public static void OnItemDropped(ItemPickupBase itemPickupBase, ReferenceHub hub)
+        {
+            if (CustomItemManager.SerialToItem.ContainsKey(itemPickupBase.Info.Serial))
+            {
+                CustomItemManager.SerialToItem[itemPickupBase.Info.Serial].OnItemDropped(hub, itemPickupBase);
+            }
+        }
+
         [PluginEvent(ServerEventType.RoundEnd)]
         public void OnRoundEnd(RoundEndEvent ev)
         {
@@ -148,6 +157,14 @@ namespace LurkBoisModded.EventHandlers.Item
             return true;
         }
 
+        public static void OnReloadFinish(IAmmoManagerModule module, Firearm firearm)
+        {
+            if (CustomItemManager.SerialToItem.TryGetValue(firearm.ItemSerial, out CustomItem item) && item is ICustomFirearmItem firearmItem)
+            {
+                firearmItem.OnReloadFinish(module, firearm);
+            }
+        }
+
         [PluginEvent(ServerEventType.PlayerDamage)]
         public bool OnPlayerShotByWeapon(PlayerDamageEvent ev)
         {
@@ -173,20 +190,34 @@ namespace LurkBoisModded.EventHandlers.Item
             return true;
         }
 
-        public static void OnReloadFinish(IAmmoManagerModule module, Firearm firearm)
+        [PluginEvent(ServerEventType.PlayerRadioToggle)]
+        public bool OnPlayerToggleRadio(PlayerRadioToggleEvent ev)
         {
-            if(CustomItemManager.SerialToItem.TryGetValue(firearm.ItemSerial, out CustomItem item) && item is ICustomFirearmItem firearmItem)
+            if(CustomItemManager.SerialToItem.TryGetValue(ev.Radio.ItemSerial, out CustomItem item) && item is ICustomRadioItem radioItem)
             {
-                firearmItem.OnReloadFinish(module, firearm);
+                return radioItem.OnToggled(ev.Player.ReferenceHub, ev.Radio, ev.NewState);
             }
+            return true;
         }
 
-        public static void OnItemDropped(ItemPickupBase itemPickupBase, ReferenceHub hub)
+        //[PluginEvent(ServerEventType.PlayerUsingRadio)]
+        public bool OnPlayerUseingRadio(PlayerUsingRadioEvent ev)
         {
-            if (CustomItemManager.SerialToItem.ContainsKey(itemPickupBase.Info.Serial))
+            if (CustomItemManager.SerialToItem.TryGetValue(ev.Radio.ItemSerial, out CustomItem item) && item is ICustomRadioItem radioItem)
             {
-                CustomItemManager.SerialToItem[itemPickupBase.Info.Serial].OnItemDropped(hub, itemPickupBase);
+                return radioItem.OnUse(ev.Player.ReferenceHub, ev.Radio, ev.Drain);
             }
+            return true;
+        }
+
+        [PluginEvent(ServerEventType.PlayerChangeRadioRange)]
+        public bool OnPlayerChangeRangeSetting(PlayerChangeRadioRangeEvent ev)
+        {
+            if (CustomItemManager.SerialToItem.TryGetValue(ev.Radio.ItemSerial, out CustomItem item) && item is ICustomRadioItem radioItem)
+            {
+                return radioItem.OnRangeChanged(ev.Player.ReferenceHub, ev.Radio, ev.Range);
+            }
+            return true;
         }
 
         public static void OnRoundRestart()

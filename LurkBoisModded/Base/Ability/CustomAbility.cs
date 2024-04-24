@@ -10,6 +10,16 @@ namespace LurkBoisModded.Base.Ability
 
         public abstract AbilityType AbilityType { get; }
 
+        public virtual void OnStartSpectating(ReferenceHub spectator)
+        {
+
+        }
+
+        public virtual void OnStopSpectating(ReferenceHub spectator)
+        {
+
+        }
+
         public virtual void OnTrigger()
         {
             if (!Ready)

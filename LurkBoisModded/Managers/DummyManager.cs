@@ -105,7 +105,7 @@ namespace LurkBoisModded.Managers
                 {
                     DummiesToDestroyOnDeath.Add(hubPlayer.authManager.UserId);
                 }
-                hubPlayer.nicknameSync.Network_myNickSync = name;
+                hubPlayer.nicknameSync.DisplayName = name;
                 hubPlayer.roleManager.ServerSetRole(role, RoleChangeReason.RemoteAdmin);
                 Timing.CallDelayed(0.3f, () =>
                 {

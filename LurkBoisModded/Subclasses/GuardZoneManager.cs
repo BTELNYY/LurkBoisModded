@@ -36,8 +36,9 @@ namespace LurkBoisModded.Subclasses
 
         public override List<RoomName> SpawnRooms => new List<RoomName>() 
         {
-            RoomName.LczCheckpointA, 
-            RoomName.LczCheckpointB
+            RoomName.LczToilets,
+            RoomName.LczAirlock,
+            RoomName.LczGreenhouse
         };
     }
 }

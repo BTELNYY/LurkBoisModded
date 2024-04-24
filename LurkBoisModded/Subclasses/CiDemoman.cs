@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LurkBoisModded.Base;
 using PlayerRoles;
 using LurkBoisModded.Managers;
+using LurkBoisModded.Base.CustomItems;
 
 namespace LurkBoisModded.Subclasses
 {
@@ -15,17 +16,16 @@ namespace LurkBoisModded.Subclasses
 
         public override string SubclassNiceName => "CI Demoman";
 
-        public override string SubclassDescription => "You can drop remote explosives (radios) and detonate them with your noclip key (left alt) while holding another radio!";
+        public override string SubclassDescription => "You can drop remote explosives (coins) and detonate them with the C4 Detonator (radio).";
 
         public override RoleTypeId Role => RoleTypeId.ChaosMarauder;
 
         public override string ClassColor => "green";
 
-        public override List<AbilityType> Abilities => new List<AbilityType>() { AbilityType.RemoteExplosive };
-
-        public override Dictionary<ItemType, short> SpawnItems => new Dictionary<ItemType, short>() 
+        public override Dictionary<CustomItemType, short> CustomItems => new Dictionary<CustomItemType, short>()
         {
-            [ItemType.Radio] = 2,
+            [CustomItemType.C4Detonator] = 1,
+            [CustomItemType.C4Charge] = 2,
         };
 
         public CiDemoman()

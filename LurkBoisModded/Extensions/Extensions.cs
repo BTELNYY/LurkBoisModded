@@ -35,6 +35,7 @@ using InventorySystem.Items.Firearms.Modules;
 using static UnityStandardAssets.Utility.TimedObjectActivator;
 using Iced.Intel;
 using static PlayerList;
+using System.Collections;
 
 namespace LurkBoisModded.Extensions
 {
@@ -48,6 +49,21 @@ namespace LurkBoisModded.Extensions
                 return false;
             }
             return (bool)field.GetValue(roundSummary);
+        }
+
+        public static T GetRandomItem<T>(this IEnumerable<T> items) 
+        {
+            if(items == null)
+            {
+                throw new ArgumentNullException(nameof(items));
+            }
+            if(items.IsEmpty())
+            {
+                throw new InvalidOperationException("Can't get a random item from an empty list.");
+            }
+            System.Random random = new System.Random();
+            int index = random.Next(items.Count());
+            return items.ElementAt(index);
         }
 
         public static T SetFlag<T>(this T flags, T flag, bool value) where T : Enum

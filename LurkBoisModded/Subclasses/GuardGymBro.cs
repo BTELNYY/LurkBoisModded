@@ -1,8 +1,11 @@
-﻿using LurkBoisModded.Base;
+﻿using CustomPlayerEffects;
+using LurkBoisModded.Base;
 using LurkBoisModded.Managers;
 using PlayerRoles;
+using PlayerRoles.Spectating;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,11 +22,16 @@ namespace LurkBoisModded.Subclasses
 
         public override string FileName => "guard_gym_bro";
 
-        public override string SubclassDescription => "As leader of the guards, press your Noclip Key (default left alt) to inspire those around you!";
+        public override string SubclassDescription => "You are one buff person, and it paid off! You can run slightly faster than everyone else, and you can take more of a beating.";
 
-        public override List<AbilityType> Abilities => new List<AbilityType>() 
+        public override List<EffectDefinition> SpawnEffects => new List<EffectDefinition>() 
         {
-            AbilityType.Inspire,
+            new EffectDefinition()
+            {
+                Name = nameof(MovementBoost),
+                Duration = 0,
+                Intensity = 5,
+            },
         };
 
         public override string ClassColor => "#5B6370";

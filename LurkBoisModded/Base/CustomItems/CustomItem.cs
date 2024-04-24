@@ -222,5 +222,7 @@ namespace LurkBoisModded.Base.CustomItems
         SniperE11,
         Landmine,
         MolotovCocktail,
+        C4Detonator,
+        C4Charge,
     }
 }

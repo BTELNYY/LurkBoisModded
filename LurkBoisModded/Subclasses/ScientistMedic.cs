@@ -19,7 +19,7 @@ namespace LurkBoisModded.Subclasses
 
         public override string SubclassNiceName => "Scientist Medic";
 
-        public override string SubclassDescription => "Press your noclip key (left alt by default) while looking at someone and holding a healing item to heal that player!";
+        public override string SubclassDescription => "Press your noclip key (left alt by default) while looking at someone to heal that player! Holding medical items will improve how much health you give.";
 
         public override List<AbilityType> Abilities => new List<AbilityType>() 
         {

@@ -84,11 +84,15 @@ namespace LurkBoisModded.Scripts
             {
                 return;
             }
-            Vector3 newPos = gameObject.transform.position;
-            newPos.y += 0.25f;
-            NetworkServer.Destroy(PrimitiveTarget);
-            ExplosionUtils.ServerExplode(newPos, _playerFootprint);
-            NetworkServer.Destroy(gameObject);
+            _adminToyBase.NetworkLightColor = Color.white;
+            Timing.CallDelayed(Config.CurrentConfig.LandmineConfiguration.TimeUntilExplosion, () => 
+            {
+                Vector3 newPos = gameObject.transform.position;
+                newPos.y += 0.25f;
+                NetworkServer.Destroy(PrimitiveTarget);
+                ExplosionUtils.ServerExplode(newPos, _playerFootprint);
+                NetworkServer.Destroy(gameObject);
+            });
         }
     }
 }

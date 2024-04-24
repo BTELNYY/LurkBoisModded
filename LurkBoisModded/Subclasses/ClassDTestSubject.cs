@@ -34,6 +34,6 @@ namespace LurkBoisModded.Subclasses
             [ItemType.ArmorLight] = 1,
         };
 
-        public override int NumberOfRandomItems => 1;
+        public override int NumberOfRandomItems => 2;
     }
 }

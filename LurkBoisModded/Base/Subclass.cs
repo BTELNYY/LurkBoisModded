@@ -49,6 +49,8 @@ namespace LurkBoisModded.Base
 
         public virtual int NumberOfCustomRandomItems { get; set; } = 0;
 
+        public virtual List<EffectDefinition> SpawnEffects { get; set; } = new List<EffectDefinition> { };
+
         public Subclass()
         {
 

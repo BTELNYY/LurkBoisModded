@@ -39,9 +39,9 @@ namespace LurkBoisModded.EventHandlers.General
         [PluginEvent(ServerEventType.RoundStart)]
         public void Handle3114(RoundStartEvent ev)
         {
-            Timing.CallDelayed(0.2f, () => 
+            Timing.CallDelayed(0.1f, () => 
             {
-                List<Player> alive = Player.GetPlayers().Where(x => !x.IsSCP && x.IsAlive).ToList();
+                List<Player> alive = Player.GetPlayers().Where(x => x.IsSCP).ToList();
                 HandleScp3114Spawn(alive);
             });
         }
@@ -49,7 +49,7 @@ namespace LurkBoisModded.EventHandlers.General
         [PluginEvent(ServerEventType.RoundStart)]
         public void HandleClassD(RoundStartEvent ev)
         {
-            Timing.CallDelayed(0.2f, () => 
+            Timing.CallDelayed(0.3f, () => 
             {
                 List<Player> dclass = Utility.GetPlayersByRole(RoleTypeId.ClassD);
                 HandleClassD(dclass);
@@ -59,7 +59,7 @@ namespace LurkBoisModded.EventHandlers.General
         [PluginEvent(ServerEventType.RoundStart)]
         public void HandleGuards(RoundStartEvent ev)
         {
-            Timing.CallDelayed(0.2f, () =>
+            Timing.CallDelayed(0.3f, () =>
             {
                 List<Player> guards = Utility.GetPlayersByRole(RoleTypeId.FacilityGuard);
                 HandleGuards(guards);
@@ -69,7 +69,7 @@ namespace LurkBoisModded.EventHandlers.General
         [PluginEvent(ServerEventType.RoundStart)]
         public void HandleScientists(RoundStartEvent ev)
         {
-            Timing.CallDelayed(0.2f, () =>
+            Timing.CallDelayed(0.3f, () =>
             {
                 List<Player> scientists = Utility.GetPlayersByRole(RoleTypeId.Scientist);
                 HandleScientists(scientists);
@@ -102,17 +102,12 @@ namespace LurkBoisModded.EventHandlers.General
         private void HandleScp3114Spawn(List<Player> selectablePlayers)
         {
             float currentSpawnChance = Plugin.GetConfig().Scp3114Config.Scp3114SpawnChance;
-            if(!(selectablePlayers.Count >= Plugin.GetConfig().Scp3114Config.MinimumPlayers))
+            if(!(Player.GetPlayers().Where(x => !x.IsSCP && x.IsAlive).Count() >= Plugin.GetConfig().Scp3114Config.MinimumPlayers))
             {
                 currentSpawnChance = 0f;
                 return;
             }
-            if(!(Utility.GetPlayersByRole(RoleTypeId.Scp079).Count == 0 && Plugin.GetConfig().Scp3114Config.NoScp079Means100PercentSpawn))
-            {
-                currentSpawnChance = 0f;
-                return;
-            }
-            else
+            if((Utility.GetPlayersByRole(RoleTypeId.Scp079).Count == 0 && Plugin.GetConfig().Scp3114Config.NoScp079Means100PercentSpawn))
             {
                 currentSpawnChance = 1f;
             }
@@ -122,7 +117,7 @@ namespace LurkBoisModded.EventHandlers.General
                 return;
             }
             Scp3114Spawned = true;
-            selectablePlayers.RandomItem().SetRole(RoleTypeId.Scp3114, RoleChangeReason.RoundStart);
+            selectablePlayers.GetRandomItem().SetRole(RoleTypeId.Scp3114, RoleChangeReason.RoundStart);
         }
 
         private void HandleMtfSpawn(List<Player> players)

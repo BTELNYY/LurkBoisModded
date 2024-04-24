@@ -12,6 +12,7 @@ using LurkBoisModded.Base;
 using System;
 using LurkBoisModded.Patches.Firearm;
 using PluginAPI.Core;
+using LurkBoisModded.CustomItems;
 
 namespace LurkBoisModded.EventHandlers.General
 {
@@ -98,6 +99,7 @@ namespace LurkBoisModded.EventHandlers.General
             CommandGas.CurrentRoom = null;
             SubclassManager.TempDisallowedRooms.Clear();
             ProximityChatAbility.ToggledPlayers.Clear();
+            C4Detonator.PlayersToExplosivesSet.Clear();
             MaxAmmoPatcher.Clear();
             OnRoundRestart?.Invoke();
         }
