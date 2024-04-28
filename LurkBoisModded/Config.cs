@@ -497,6 +497,7 @@ namespace LurkBoisModded
         {
             ["scientist_armed"] = 1,
             ["scientist_medic"] = 1,
+            ["scientist_containment_engineer"] = 1,
         };
     }
 

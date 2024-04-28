@@ -23,14 +23,14 @@ namespace LurkBoisModded.Abilities
         public override void OnTrigger()
         {
             base.OnTrigger();
-            if(!CooldownReady || CurrentHub.inventory.CurItem.TypeId != RequiredItemType)
+            if(!CooldownReady || CurrentOwner.inventory.CurItem.TypeId != RequiredItemType)
             {
                 return;
             }
-            RoomIdentifier targetRoom = RoomIdUtils.RoomAtPosition(CurrentHub.transform.position);
-            List<ReferenceHub> affectedPlayers = targetRoom.GetPlayersInRoom().Where(x => x.GetTeam() != CurrentHub.GetTeam()).ToList();
-            CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.AreaDenialAbilityConfig.WindupMessage.Replace("{windup}", ((int)Plugin.GetConfig().AbilityConfig.AreaDenialAbilityConfig.Windup).ToString()), 5f);
-            CurrentHub.RemoveItemFromHub(RequiredItemType);
+            RoomIdentifier targetRoom = RoomIdUtils.RoomAtPosition(CurrentOwner.transform.position);
+            List<ReferenceHub> affectedPlayers = targetRoom.GetPlayersInRoom().Where(x => x.GetTeam() != CurrentOwner.GetTeam()).ToList();
+            CurrentOwner.SendHint(Plugin.GetConfig().AbilityConfig.AreaDenialAbilityConfig.WindupMessage.Replace("{windup}", ((int)Plugin.GetConfig().AbilityConfig.AreaDenialAbilityConfig.Windup).ToString()), 5f);
+            CurrentOwner.RemoveItemFromHub(RequiredItemType);
             foreach (ReferenceHub hub in affectedPlayers)
             {
                 hub.SendHint(Plugin.GetConfig().AbilityConfig.AreaDenialAbilityConfig.WarningMessage.Replace("{windup}", ((int)Plugin.GetConfig().AbilityConfig.AreaDenialAbilityConfig.Windup).ToString()), 5f);
@@ -38,7 +38,7 @@ namespace LurkBoisModded.Abilities
             float timeLeft = Plugin.GetConfig().AbilityConfig.AreaDenialAbilityConfig.Windup;
             Timing.CallPeriodically(Plugin.GetConfig().AbilityConfig.AreaDenialAbilityConfig.Windup, 1f, () => 
             {
-                foreach(ReferenceHub hub in targetRoom.GetPlayersInRoom().Where(x => x.GetTeam() != CurrentHub.GetTeam()))
+                foreach(ReferenceHub hub in targetRoom.GetPlayersInRoom().Where(x => x.GetTeam() != CurrentOwner.GetTeam()))
                 {
                     hub.SendHint(Plugin.GetConfig().AbilityConfig.AreaDenialAbilityConfig.WarningMessage.Replace("{windup}", ((int)timeLeft).ToString()), timeLeft);
                 }
@@ -46,7 +46,7 @@ namespace LurkBoisModded.Abilities
             });
             Timing.CallDelayed(Plugin.GetConfig().AbilityConfig.AreaDenialAbilityConfig.Windup + 0.1f, () =>
             {
-                List<ReferenceHub> stillAffectedPlayers = targetRoom.GetPlayersInRoom().Where(x => x.GetTeam() != CurrentHub.GetTeam()).ToList();
+                List<ReferenceHub> stillAffectedPlayers = targetRoom.GetPlayersInRoom().Where(x => x.GetTeam() != CurrentOwner.GetTeam()).ToList();
                 foreach (ReferenceHub hub in stillAffectedPlayers)
                 {
                     foreach (EffectDefinition statusEffect in Plugin.GetConfig().AbilityConfig.AreaDenialAbilityConfig.Effects)
@@ -58,7 +58,7 @@ namespace LurkBoisModded.Abilities
                         }
                     }
                 }
-                CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.AreaDenialAbilityConfig.SuccessMessage.Replace("{count}", stillAffectedPlayers.Count.ToString()));
+                CurrentOwner.SendHint(Plugin.GetConfig().AbilityConfig.AreaDenialAbilityConfig.SuccessMessage.Replace("{count}", stillAffectedPlayers.Count.ToString()));
             });
         }
     }

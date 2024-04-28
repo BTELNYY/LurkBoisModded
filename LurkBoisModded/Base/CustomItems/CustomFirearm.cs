@@ -113,6 +113,8 @@ namespace LurkBoisModded.Base.CustomItems
             }
         }
 
+        public virtual bool OverrideMaxDetainAmount => false;
+
         public virtual bool OnPlayerShotByWeapon(FirearmDamageHandler damageHandlerBase, ReferenceHub target)
         {
             return true;
@@ -129,6 +131,16 @@ namespace LurkBoisModded.Base.CustomItems
         }
 
         public virtual bool OnShot()
+        {
+            return true;
+        }
+
+        public virtual bool OnPlayerStartDetaining(ReferenceHub other)
+        {
+            return true;
+        }
+
+        public virtual bool OnPlayerDetain(ReferenceHub other)
         {
             return true;
         }

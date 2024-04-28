@@ -13,6 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using CentralAuth;
+using static UnityEngine.GraphicsBuffer;
+using PluginAPI.Core;
 
 namespace LurkBoisModded.Managers
 {
@@ -27,8 +30,79 @@ namespace LurkBoisModded.Managers
             [AbilityType.WarCry] = typeof(WarCryAbility),
             [AbilityType.Scout] = typeof(ScoutAbility),
             [AbilityType.AreaDenialAbility] = typeof(AreaDenialAbility),
-            [AbilityType.MedicAbility] = typeof(MedicAbility)
+            [AbilityType.MedicAbility] = typeof(MedicAbility),
+            [AbilityType.Scp079GasAbility] = typeof(Scp079GasAbility),
         };
+
+        public static Dictionary<ReferenceHub, List<CustomAbility>> PlayerToAbility = new Dictionary<ReferenceHub, List<CustomAbility>>();
+
+        public static void RemoveAllAbilities(ReferenceHub target)
+        {
+            List<CustomAbility> abilities = target.gameObject.GetComponents<CustomAbility>().ToList();
+            foreach (CustomAbility ability in abilities)
+            {
+                ability.OnRemoved();
+                GameObject.Destroy(ability);
+            }
+            if (PlayerToAbility.ContainsKey(target))
+            {
+                PlayerToAbility[target].Clear();
+            }
+        }
+
+        public static void RemoveAbility<T>(ReferenceHub target) where T : CustomAbility
+        {
+            if (!PlayerToAbility.ContainsKey(target))
+            {
+                return;
+            }
+            List<CustomAbility> abilitiesToRemove = PlayerToAbility[target].Where(x => x.GetType() == typeof(T)).ToList();
+            foreach(CustomAbility ab in abilitiesToRemove)
+            {
+                ab.OnRemoved();
+                GameObject.Destroy(ab);
+                PlayerToAbility[target].Remove(ab);
+            }
+        }
+
+        public static T GetAbility<T>(ReferenceHub target) where T : CustomAbility
+        {
+            if (!PlayerToAbility.ContainsKey(target))
+            {
+                return null;
+            }
+            List<CustomAbility> matchedAbilities = PlayerToAbility[target].Where(x => x.GetType() == typeof(T)).ToList();
+            if (matchedAbilities.IsEmpty())
+            {
+                return null;
+            }
+            return matchedAbilities.First() as T;
+        }
+
+        public static void AddAbility(ReferenceHub target, AbilityType type)
+        {
+            if (target.authManager.InstanceMode != ClientInstanceMode.ReadyClient || target.nicknameSync.MyNick == "Dedicated Server")
+            {
+                Log.Error("Tried adding ability to Dedicated Server or Unready Client!");
+                return;
+            }
+            if (!AbilityManager.AbilityToType.ContainsKey(type))
+            {
+                Log.Error("Failed to find ability by AbilityType!");
+                return;
+            }
+            CustomAbility ability = (CustomAbility)target.gameObject.AddComponent(AbilityManager.AbilityToType[type]);
+            ability.CurrentOwner = target;
+            ability.OnFinishSetup();
+            if (PlayerToAbility.ContainsKey(target))
+            {
+                PlayerToAbility[target].Add(ability);
+            }
+            else
+            {
+                PlayerToAbility.Add(target, new List<CustomAbility> { ability });
+            }
+        }
 
         [PluginEvent(ServerEventType.PlayerSpawn)]
         public void OnSpawn(PlayerSpawnEvent ev)
@@ -51,10 +125,12 @@ namespace LurkBoisModded.Managers
         public void OnRoundRestart(RoundRestartEvent ev)
         {
             ProximityChatAbility.ToggledPlayers.Clear();
+            PlayerToAbility.Clear();
         }
 
         public static bool OnPlayerTogglingNoClip(ReferenceHub player)
         {
+            if(player == null) return false;
             if (FpcNoclip.IsPermitted(player))
             {
                 return true;
@@ -77,5 +153,6 @@ namespace LurkBoisModded.Managers
         Scout,
         AreaDenialAbility,
         MedicAbility,
+        Scp079GasAbility,
     }
 }

@@ -32,21 +32,21 @@ namespace LurkBoisModded.Abilities
             foreach(EffectDefinition statusEffect in Plugin.GetConfig().AbilityConfig.ScoutAbilityConfig.Effects)
             {
                 string effectName = statusEffect.Name;
-                if(!CurrentHub.playerEffectsController.TryGetEffect(effectName, out var effect))
+                if(!CurrentOwner.playerEffectsController.TryGetEffect(effectName, out var effect))
                 {
                     Log.Warning("Failed to find status effect by name. Name: " + effectName);
                     continue;
                 }
-                CurrentHub.playerEffectsController.ChangeState(effectName, statusEffect.Intensity, statusEffect.Duration);
+                CurrentOwner.playerEffectsController.ChangeState(effectName, statusEffect.Intensity, statusEffect.Duration);
                 if(effectName == nameof(MovementBoost))
                 {
                     speedBoost = statusEffect.Intensity;
                     duration = effect.Duration;
                 }
             }
-            CurrentHub.playerEffectsController.ChangeState<MaxHealthReduction>(Plugin.GetConfig().AbilityConfig.ScoutAbilityConfig.HealthReductionAmount, Plugin.GetConfig().AbilityConfig.ScoutAbilityConfig.HealthReductionDuration);
+            CurrentOwner.playerEffectsController.ChangeState<MaxHealthReduction>(Plugin.GetConfig().AbilityConfig.ScoutAbilityConfig.HealthReductionAmount, Plugin.GetConfig().AbilityConfig.ScoutAbilityConfig.HealthReductionDuration);
             healthReduction = Plugin.GetConfig().AbilityConfig.ScoutAbilityConfig.HealthReductionAmount;
-            CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.ScoutAbilityConfig.AbilityUsed.Replace("{intensity}", healthReduction.ToString()).Replace("{duration}", duration.ToString()).Replace("{speed}", speedBoost.ToString()));
+            CurrentOwner.SendHint(Plugin.GetConfig().AbilityConfig.ScoutAbilityConfig.AbilityUsed.Replace("{intensity}", healthReduction.ToString()).Replace("{duration}", duration.ToString()).Replace("{speed}", speedBoost.ToString()));
         }
     }
 }

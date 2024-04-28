@@ -59,6 +59,10 @@ namespace LurkBoisModded.Base.CustomItems
             {
                 if(ItemState == ItemState.Inventory)
                 {
+                    if(_itemBaseReference == null)
+                    {
+                        return CurrentOwner.inventory.UserInventory.Items[TrackedSerial];
+                    }
                     return _itemBaseReference;
                 }
                 return null;
@@ -224,5 +228,6 @@ namespace LurkBoisModded.Base.CustomItems
         MolotovCocktail,
         C4Detonator,
         C4Charge,
+        NotScaryCOM15,
     }
 }

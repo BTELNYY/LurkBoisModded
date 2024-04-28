@@ -95,8 +95,6 @@ namespace LurkBoisModded.EventHandlers.General
         public void OnRoundRestarted(RoundRestartEvent ev)
         {
             Server.FriendlyFire = OldValueOfFriendlyFire;
-            CommandGas.Cooldown = false;
-            CommandGas.CurrentRoom = null;
             SubclassManager.TempDisallowedRooms.Clear();
             ProximityChatAbility.ToggledPlayers.Clear();
             C4Detonator.PlayersToExplosivesSet.Clear();

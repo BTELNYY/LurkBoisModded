@@ -36,10 +36,9 @@ namespace LurkBoisModded.Subclasses
 
         public override string ClassColor => "#5B6370";
 
-        public override Dictionary<ItemType, short> SpawnItems => new Dictionary<ItemType, short>() 
+        public override Dictionary<ItemDefinition, short> SpawnItems => new Dictionary<ItemDefinition, short>() 
         {
-            [ItemType.Adrenaline] = 1,
-            [ItemType.Ammo556x45] = 20,
+            [new ItemDefinition(ItemType.Adrenaline)] = 1,
         };
     }
 }

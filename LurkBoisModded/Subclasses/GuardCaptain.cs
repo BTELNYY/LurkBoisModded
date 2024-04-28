@@ -22,14 +22,14 @@ namespace LurkBoisModded.Subclasses
 
         public override string ClassColor => "#5B6370";
 
-        public override Dictionary<ItemType, short> SpawnItems => new Dictionary<ItemType, short>() 
+        public override Dictionary<ItemDefinition, short> SpawnItems => new Dictionary<ItemDefinition, short>() 
         {
-            [ItemType.Ammo9x19] = 80,
-            [ItemType.KeycardMTFPrivate] = 1,
-            [ItemType.GunCrossvec] = 30,
-            [ItemType.Medkit] = 1,
-            [ItemType.Radio] = 1,
-            [ItemType.ArmorCombat] = 1,
+            [new ItemDefinition(ItemType.Ammo9x19)] = 60,
+            [new ItemDefinition(ItemType.KeycardMTFPrivate)] = 1,
+            [new ItemDefinition(ItemType.GunCrossvec)] = 1,
+            [new ItemDefinition(ItemType.Medkit)] = 1,
+            [new ItemDefinition(ItemType.Radio)] = 1,
+            [new ItemDefinition(ItemType.ArmorCombat)] = 1,
         };
     }
 }

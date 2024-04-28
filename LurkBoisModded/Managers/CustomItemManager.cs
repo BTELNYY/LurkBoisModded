@@ -18,9 +18,20 @@ namespace LurkBoisModded.Managers
 {
     public class CustomItemManager
     {
-        public static readonly Dictionary<CustomItemType, Type> CustomItemToType = new Dictionary<CustomItemType, Type>();
+        public static Dictionary<CustomItemType, Type> CustomItemToType = new Dictionary<CustomItemType, Type>();
 
         public static Dictionary<ushort, CustomItem> SerialToItem = new Dictionary<ushort, CustomItem>();
+
+        public static Dictionary<CustomItemType, CustomItem> TypeToItemDummy = new Dictionary<CustomItemType, CustomItem>();
+
+        public static CustomItem GetCustomItemByTypeDummy(CustomItemType type)
+        {
+            if (TypeToItemDummy.ContainsKey(type))
+            {
+                return TypeToItemDummy[type];
+            }
+            return null;
+        }
 
         public static GameObject CreatedGameObject { get; private set; }
 
@@ -29,7 +40,7 @@ namespace LurkBoisModded.Managers
             GameObject gameObject = new GameObject("CustomItems");
             GameObject.DontDestroyOnLoad(gameObject);
             CreatedGameObject = gameObject;
-            GameObject tempObj = new GameObject("ShouldBeDestroyed");
+            GameObject tempObj = new GameObject("CustomItemHolder");
             Type[] types = Assembly.GetExecutingAssembly().GetTypes().Where(x => x.IsSubclassOf(typeof(CustomItem))).ToArray();
             foreach (var item in types)
             {
@@ -52,6 +63,14 @@ namespace LurkBoisModded.Managers
                     }
                     CustomItemToType.Add(createdItem.CustomItemType, item);
                     Log.Info($"Added custom item, CustomItemType: {createdItem.CustomItemType}, Full Type: {item.FullName}");
+                    if (TypeToItemDummy.ContainsKey(createdItem.CustomItemType))
+                    {
+                        Log.Warning("Tried to register custom item type which is already registred!");
+                    }
+                    else
+                    {
+                        TypeToItemDummy.Add(createdItem.CustomItemType, createdItem);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -59,10 +78,14 @@ namespace LurkBoisModded.Managers
                     continue;
                 }
             }
-            GameObject.Destroy(tempObj);
         }
+
         public static CustomItem AddItem(ReferenceHub target, CustomItemType type)
         {
+            if(type == CustomItemType.None)
+            {
+                return null;
+            }
             if (!CustomItemManager.CustomItemToType.TryGetValue(type, out Type itemType))
             {
                 return null;

@@ -11,12 +11,26 @@ using PlayerRoles.PlayableScps.Scp079;
 using Interactables.Interobjects;
 using LurkBoisModded.Extensions;
 using Interactables.Interobjects.DoorUtils;
+using MEC;
 
 namespace LurkBoisModded.EventHandlers.Scp079
 {
     [EventHandler]
     public class Scp079Handler
     {
+        [PluginEvent(ServerEventType.PlayerChangeRole)]
+        public void OnSpawn(PlayerChangeRoleEvent ev) 
+        {
+            if(ev.NewRole == PlayerRoles.RoleTypeId.Scp079)
+            {
+                Timing.CallDelayed(0.2f, () => 
+                {
+                    ev.Player.ReferenceHub.AddAbility(Managers.AbilityType.Scp079GasAbility);
+                });
+            }
+        }
+
+
         [PluginEvent(ServerEventType.GeneratorActivated)]
         public void OnGeneratorActivated(GeneratorActivatedEvent ev)
         {

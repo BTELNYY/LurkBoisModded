@@ -181,6 +181,33 @@ namespace LurkBoisModded.EventHandlers.Item
             return true;
         }
 
+        [PluginEvent(ServerEventType.PlayerHandcuff)]
+        public bool OnPlayerDetained(PlayerHandcuffEvent ev)
+        {
+            ushort serial = ev.Player.CurrentItem.ItemSerial;
+            if(CustomItemManager.SerialToItem.TryGetValue(serial, out CustomItem item))
+            {
+                if(item is ICustomFirearmItem firearm)
+                {
+                    return firearm.OnPlayerDetain(ev.Target.ReferenceHub);
+                }
+            }
+            return true;
+        }
+
+        public static bool OnPlayerStartDetaining(ReferenceHub detainer, ReferenceHub target)
+        {
+            ushort currentItemSerial = detainer.inventory.CurItem.SerialNumber;
+            if (CustomItemManager.SerialToItem.TryGetValue(currentItemSerial, out var item))
+            {
+                if (item is ICustomFirearmItem firearmItem)
+                {
+                    return firearmItem.OnPlayerStartDetaining(target);
+                }
+            }
+            return true;
+        }
+
         public static bool OnGrenadeFuseEnd(EffectGrenade grenade)
         {
             if(CustomItemManager.SerialToItem.TryGetValue(grenade.Info.Serial, out CustomItem item) && item is ICustomGrenadeItem grenadeItem)

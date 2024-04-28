@@ -30,30 +30,30 @@ namespace LurkBoisModded.Abilities
         public override void OnTrigger()
         {
             base.OnTrigger();
-            if(CurrentHub.inventory.CurItem.TypeId != RequiredItemType)
+            if(CurrentOwner.inventory.CurItem.TypeId != RequiredItemType)
             {
                 return;
             }
             if(TrackedRadios.Count == 0)
             {
-                CurrentHub.SendHint("You must drop a radio to detonate your explosives!");
+                CurrentOwner.SendHint("You must drop a radio to detonate your explosives!");
                 return;
             }
-            RadioItem radio = CurrentHub.inventory.CurInstance as RadioItem;
+            RadioItem radio = CurrentOwner.inventory.CurInstance as RadioItem;
             if(radio.BatteryPercent == 0)
             {
-                CurrentHub.SendHint("You must use a charged radio!");
+                CurrentOwner.SendHint("You must use a charged radio!");
                 return;
             }
             if (Used && Plugin.GetConfig().AbilityConfig.RemoteExplosiveAbilityConfig.IsSingleUse)
             {
-                CurrentHub.SendHint("This is a one time use ability!");
+                CurrentOwner.SendHint("This is a one time use ability!");
                 return;
             }
             byte finalPenalty = (byte)Math.Max(0, radio.BatteryPercent - Plugin.GetConfig().AbilityConfig.RemoteExplosiveAbilityConfig.BatteryPercentPenaltyPerUse);
             radio.BatteryPercent = finalPenalty;
             AccessTools.Method(typeof(RadioItem), "SendStatusMessage").Invoke(radio, null);
-            Footprint footprint = new Footprint(CurrentHub);
+            Footprint footprint = new Footprint(CurrentOwner);
             int counter = 0;
             foreach(RadioPickup item in TrackedRadios)
             {
@@ -73,7 +73,7 @@ namespace LurkBoisModded.Abilities
                 NetworkServer.Destroy(item.gameObject);
                 ExplosionUtils.ServerExplode(newPos, footprint);
             }
-            CurrentHub.SendHint($"Detonated {counter} Explosive(s)");
+            CurrentOwner.SendHint($"Detonated {counter} Explosive(s)");
             TrackedRadios.Clear();
             Used = true;
         }
@@ -93,7 +93,7 @@ namespace LurkBoisModded.Abilities
             }
             if (TrackedRadios.Contains(ev.Item as RadioPickup))
             {
-                if(ev.Player.ReferenceHub.Network_playerId == CurrentHub.Network_playerId)
+                if(ev.Player.ReferenceHub.Network_playerId == CurrentOwner.Network_playerId)
                 {
                     ev.Player.SendHint("You disarmed your own explosive, drop the radio again to arm it.");
                     return;
@@ -104,7 +104,7 @@ namespace LurkBoisModded.Abilities
 
         public void OnItemDropped(ItemPickupBase pickup)
         {
-            if(pickup.PreviousOwner.Hub.Network_playerId != CurrentHub.Network_playerId)
+            if(pickup.PreviousOwner.Hub.Network_playerId != CurrentOwner.Network_playerId)
             {
                 return;
             }
@@ -116,7 +116,7 @@ namespace LurkBoisModded.Abilities
 
         public void OnItemPickup(ItemPickupBase pickup)
         {
-            if (pickup.PreviousOwner.Hub.Network_playerId != CurrentHub.Network_playerId)
+            if (pickup.PreviousOwner.Hub.Network_playerId != CurrentOwner.Network_playerId)
             {
                 return;
             }

@@ -23,20 +23,16 @@ namespace LurkBoisModded.Subclasses
 
         public override bool ClearInventoryOnSpawn => true;
 
-        public override Dictionary<ItemType, short> SpawnItems => new Dictionary<ItemType, short>() 
+        public override Dictionary<ItemDefinition, short> SpawnItems => new Dictionary<ItemDefinition, short>() 
         {
-            [ItemType.ArmorCombat] = 1,
-            [ItemType.GunCOM18] = 18,
-            [ItemType.Ammo556x45] = 80,
-            [ItemType.Medkit] = 1,
-            [ItemType.Radio] = 1,
-            [ItemType.Ammo9x19] = 50,
-            [ItemType.KeycardMTFOperative] = 1,
-        };
-
-        public override Dictionary<CustomItemType, short> CustomItems => new Dictionary<CustomItemType, short>() 
-        {
-            [CustomItemType.SniperE11] = 1,
+            [new ItemDefinition(ItemType.ArmorCombat)] = 1,
+            [new ItemDefinition(ItemType.GunCOM18)] = 1,
+            [new ItemDefinition(ItemType.Ammo556x45)] = 80,
+            [new ItemDefinition(ItemType.Medkit)] = 1,
+            [new ItemDefinition(ItemType.Radio)] = 1,
+            [new ItemDefinition(ItemType.Ammo9x19)] = 50,
+            [new ItemDefinition(ItemType.KeycardMTFOperative)] = 1,
+            [new ItemDefinition(CustomItemType.SniperE11, new FirearmDefinition(1, 0, InventorySystem.Items.Firearms.FirearmStatusFlags.None, true))] = 1,
         };
     }
 }

@@ -26,7 +26,7 @@ namespace LurkBoisModded.Abilities
             {
                 return;
             }
-            ReferenceHub player = CurrentHub;
+            ReferenceHub player = CurrentOwner;
             if (!Plugin.GetConfig().ProximityChatConfig.AllowedRoles.Contains(player.roleManager.CurrentRole.RoleTypeId))
             {
                 return;
@@ -54,7 +54,7 @@ namespace LurkBoisModded.Abilities
             //MySpeaker.roleManager.ServerSetRole(PlayerRoles.RoleTypeId.Tutorial, PlayerRoles.RoleChangeReason.RemoteAdmin);
             //MySpeaker.netIdentity.SetScale(Vector3.zero);
             //MySpeaker.nicknameSync.Network_displayName = "ProximityChatSpeaker (DO NOT KILL)";
-            CurrentHub.SendHint(Plugin.GetConfig().ProximityChatConfig.ProximityChatCanBeUsed, 5f);
+            CurrentOwner.SendHint(Plugin.GetConfig().ProximityChatConfig.ProximityChatCanBeUsed, 5f);
         }
 
         public static bool OnPlayerUsingVoiceChat(NetworkConnection connection, VoiceMessage message)

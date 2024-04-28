@@ -26,6 +26,9 @@ using PlayerRoles;
 using LurkBoisModded.EventHandlers.General;
 using PluginAPI.Core.Items;
 using MEC;
+using InventorySystem.Items.MicroHID;
+using Mirror.LiteNetLib4Mirror;
+using InventorySystem.Items.Radio;
 
 namespace LurkBoisModded.Extensions
 {
@@ -91,21 +94,33 @@ namespace LurkBoisModded.Extensions
             target.hints.Show(new TextHint(text, new HintParameter[] { new StringHintParameter(string.Empty) }, null, duration));
         }
 
-        public static void AddAbility(this ReferenceHub target, AbilityType type)
+        public static Dictionary<ReferenceHub, Subclass> RefHubToSubclassDict = new Dictionary<ReferenceHub, Subclass>();
+
+        public static void UnsetSubclass(this ReferenceHub target, bool keepCurrentRole = false, bool keepCurrentPosition = false, bool keepInventory = false, RoleTypeId newRole = RoleTypeId.Spectator)
         {
-            if (target.authManager.InstanceMode != ClientInstanceMode.ReadyClient || target.nicknameSync.MyNick == "Dedicated Server")
+            if (!RefHubToSubclassDict.ContainsKey(target))
             {
-                Log.Error("Tried adding ability to Dedicated Server or Unready Client!");
                 return;
             }
-            if (!AbilityManager.AbilityToType.ContainsKey(type))
+            RoleTypeId setRole = newRole;
+            if (keepCurrentRole)
             {
-                Log.Error("Failed to find ability by AbilityType!");
-                return;
+                setRole = target.roleManager.CurrentRole.RoleTypeId;
             }
-            CustomAbility ability = (CustomAbility)target.gameObject.AddComponent(AbilityManager.AbilityToType[type]);
-            ability.CurrentHub = target;
-            ability.OnFinishSetup();
+            RoleSpawnFlags spawnFlags = new RoleSpawnFlags();
+            spawnFlags.SetFlag(RoleSpawnFlags.UseSpawnpoint, !keepCurrentPosition);
+            spawnFlags.SetFlag(RoleSpawnFlags.AssignInventory, !keepInventory);
+            target.roleManager.ServerSetRole(setRole, RoleChangeReason.RemoteAdmin, spawnFlags);
+            RefHubToSubclassDict.Remove(target);
+        }
+
+        public static Subclass GetSubclass(this ReferenceHub target)
+        {
+            if (RefHubToSubclassDict.ContainsKey(target))
+            {
+                return RefHubToSubclassDict[target];
+            }
+            return null;
         }
 
         public static void SetSubclass(this ReferenceHub target, Subclass subclass)
@@ -195,34 +210,23 @@ namespace LurkBoisModded.Extensions
                     pos.y += 1f;
                     target.TryOverridePosition(pos, Vector3.forward);
                 }
-                foreach (ItemType item in subclass.SpawnItems.Keys)
+                foreach (KeyValuePair<ItemDefinition, short> pair in subclass.SpawnItems)
                 {
-                    short amount = subclass.SpawnItems[item];
-                    if (amount < 0)
+                    int spawnAmount = pair.Value;
+                    ItemDefinition item = pair.Key;
+                    if (spawnAmount < 0)
                     {
-                        player.RemoveItems(item, Math.Abs(amount));
+                        player.RemoveItems(item.VanillaItemType, Math.Abs(spawnAmount));
                         continue;
                     }
-                    if (item.ToString().Contains("Ammo"))
+                    if (item.IsAmmo)
                     {
-                        player.AddAmmo(item, (ushort)subclass.SpawnItems[item]);
-                        continue;
+                        spawnAmount = 1;
+                        item.AmmoAmount = (ushort)spawnAmount;
                     }
-                    if (item.ToString().Contains("Gun"))
+                    for (int i = 0; i < spawnAmount; i++)
                     {
-                        player.AddFirearm(item, (byte)subclass.SpawnItems[item]);
-                        continue;
-                    }
-                    for (int i = 0; i < subclass.SpawnItems[item]; i++)
-                    {
-                        player.AddItem(item);
-                    }
-                }
-                foreach (CustomItemType type in subclass.CustomItems.Keys)
-                {
-                    for (int i = 0; i < subclass.CustomItems[type]; i++)
-                    {
-                        player.ReferenceHub.AddCustomItem(type);
+                        target.AddItem(item);
                     }
                 }
                 for (int i = 0; i < subclass.NumberOfRandomItems; i++)
@@ -305,9 +309,25 @@ namespace LurkBoisModded.Extensions
                 {
                     target.playerEffectsController.ChangeState(effect.Name, effect.Intensity, effect.Duration);
                 }
+                if (RefHubToSubclassDict.ContainsKey(target))
+                {
+                    RefHubToSubclassDict[target] = subclass;
+                }
+                else
+                {
+                    RefHubToSubclassDict.Add(target, subclass);
+                }
             }
             catch(Exception ex) 
             {
+                if (RefHubToSubclassDict.ContainsKey(target))
+                {
+                    RefHubToSubclassDict[target] = subclass;
+                }
+                else
+                {
+                    RefHubToSubclassDict.Add(target, subclass);
+                }
                 Log.Error(ex.ToString(), nameof(SubclassManager));
             }
         }
@@ -320,6 +340,21 @@ namespace LurkBoisModded.Extensions
                 ability.OnRemoved();
                 GameObject.Destroy(ability);
             }
+        }
+
+        public static void AddAbility(this ReferenceHub target, AbilityType type)
+        {
+            AbilityManager.AddAbility(target, type);
+        }
+
+        public static void RemoveAbility<T>(this ReferenceHub target) where T : CustomAbility
+        {
+            AbilityManager.RemoveAbility<T>(target);
+        }
+
+        public static T GetAbility<T>(this ReferenceHub target) where T : CustomAbility
+        {
+            return AbilityManager.GetAbility<T>(target);
         }
 
         public static void SetMaxHealth(this ReferenceHub hub, float amount)
@@ -344,6 +379,73 @@ namespace LurkBoisModded.Extensions
             return hubs;
         }
 
+        public static void AddItem(this ReferenceHub target, ItemDefinition itemDefinition)
+        {
+            Firearm firearm = null;
+            ItemBase itemBase = null;
+            CustomItem customItem = null;
+            if (itemDefinition.IsAmmo)
+            {
+                ushort amount = itemDefinition.AmmoAmount;
+                if (itemDefinition.IsCustomItem)
+                {
+                    target.AddCustomItem(itemDefinition.CustomItemType, (short)amount);
+                }
+                else
+                {
+                    target.AddItem(itemDefinition.VanillaItemType, amount);
+                }
+                return;
+            }
+            if (itemDefinition.IsCustomItem)
+            {
+                customItem = target.AddCustomItem(itemDefinition.CustomItemType);
+                itemBase = customItem.ItemBase;
+            }
+            else
+            {
+                itemBase = target.AddItem(itemDefinition.VanillaItemType);
+            }
+            if(itemDefinition.VanillaItemType == ItemType.MicroHID)
+            {
+                MicroHIDItem micro = itemBase as MicroHIDItem;
+                if (micro == null) { return; }
+                micro.SetCharge(itemDefinition.Charge);
+            }
+            if(itemDefinition.VanillaItemType == ItemType.Radio)
+            {
+                RadioItem radio = itemBase as RadioItem;
+                if(radio == null) { return; }
+                radio.BatteryPercent = itemDefinition.Charge;
+            }
+            if (itemDefinition.IsFirearm)
+            {
+                firearm = itemBase as Firearm;
+                if (firearm == null)
+                {
+                    Log.Error("ItemBase given is not a firearm!");
+                    return;
+                }
+                if (itemDefinition.FirearmDefinition != null)
+                {
+                    if (itemDefinition.FirearmDefinition.Attachments == 0 && !itemDefinition.FirearmDefinition.NoAttachments)
+                    {
+                        firearm.ApplyAttachments();
+                    }
+                }
+                byte ammo = itemDefinition.FirearmDefinition.Ammo;
+                if (ammo == 0 && !itemDefinition.FirearmDefinition.NoAmmo)
+                {
+                    ammo = firearm.AmmoManagerModule.MaxAmmo;
+                }
+                if (itemDefinition.FirearmDefinition.ClampToMaxAmmo)
+                {
+                    ammo = Math.Min(ammo, firearm.AmmoManagerModule.MaxAmmo);
+                }
+                firearm.Status = new FirearmStatus(ammo, itemDefinition.FirearmDefinition.Flags, firearm.Status.Attachments);
+            }
+        }
+
         public static CustomItem AddCustomItem(this ReferenceHub target, CustomItemType type)
         {
             return CustomItemManager.AddItem(target, type);
@@ -365,17 +467,19 @@ namespace LurkBoisModded.Extensions
             return items.ToArray();
         }
 
-        public static void AddItem(this ReferenceHub target, ItemType type)
+        public static ItemBase AddItem(this ReferenceHub target, ItemType type)
         {
-            target.inventory.ServerAddItem(type);
+            return target.inventory.ServerAddItem(type);
         }
 
-        public static void AddItem(this ReferenceHub target, ItemType type, int amount)
+        public static ItemBase[] AddItem(this ReferenceHub target, ItemType type, int amount)
         {
+            ItemBase[] items = new ItemBase[amount];
             for (int i = 0; i < amount; i++)
             {
-                target.inventory.ServerAddItem(type);
+                items[i] = target.inventory.ServerAddItem(type);
             }
+            return items;
         }
 
         public static void RemoveItems(this ReferenceHub target, ItemType type, int amount)

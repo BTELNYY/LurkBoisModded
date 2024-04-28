@@ -7,6 +7,8 @@ using System.Linq;
 using UnityEngine;
 using System.Text;
 using System.Threading.Tasks;
+using LurkBoisModded.Base;
+using LurkBoisModded.Extensions;
 
 namespace LurkBoisModded.Patches
 {
@@ -29,6 +31,13 @@ namespace LurkBoisModded.Patches
             }
             if (humanRole.ActiveTime < 10f)
             {
+                __result = 0;
+                return false;
+            }
+            Subclass currentSubclass = hub.GetSubclass();
+            if (currentSubclass != null && !currentSubclass.AllowEscape)
+            {
+                hub.SendHint(currentSubclass.EscapeFailMessage);
                 __result = 0;
                 return false;
             }

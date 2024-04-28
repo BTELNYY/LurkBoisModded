@@ -4,6 +4,7 @@ using PlayerRoles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,9 +22,9 @@ namespace LurkBoisModded.Subclasses
 
         public override string SubclassDescription => "A little bit of insanity mixed with fire is what every team needs.";
 
-        public override Dictionary<CustomItemType, short> CustomItems => new Dictionary<CustomItemType, short>() 
+        public override Dictionary<ItemDefinition, short> SpawnItems => new Dictionary<ItemDefinition, short>() 
         {
-            [CustomItemType.MolotovCocktail] = 2
+            [new ItemDefinition(CustomItemType.MolotovCocktail)] = 2,
         };
 
         public MtfPyro() { }

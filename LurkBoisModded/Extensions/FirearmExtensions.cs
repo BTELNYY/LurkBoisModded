@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using PluginAPI.Core;
 using System.Threading.Tasks;
+using InventorySystem.Items.Firearms.Attachments;
 
 namespace LurkBoisModded.Extensions
 {
@@ -21,6 +22,17 @@ namespace LurkBoisModded.Extensions
                 Log.Warning("Firearm is null!");
             }
             return f;
+        }
+
+        public static void ApplyAttachments(this Firearm firearm)
+        {
+            if (AttachmentsServerHandler.PlayerPreferences.TryGetValue(firearm.Owner, out var value) && value.TryGetValue(firearm.ItemTypeId, out var value2))
+                firearm.ApplyAttachmentsCode(value2, reValidate: true);
+            var firearmStatusFlags = FirearmStatusFlags.MagazineInserted;
+            if (firearm.HasAdvantageFlag(AttachmentDescriptiveAdvantages.Flashlight))
+                firearmStatusFlags |= FirearmStatusFlags.FlashlightEnabled;
+
+            firearm.Status = new FirearmStatus(firearm.Status.Ammo, firearmStatusFlags, firearm.GetCurrentAttachmentsCode());
         }
 
         public static Firearm GetFirearm(this ClipLoadedInternalMagAmmoManager manager)

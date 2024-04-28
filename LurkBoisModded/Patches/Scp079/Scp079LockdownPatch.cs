@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
+using LurkBoisModded.Abilities;
 using LurkBoisModded.Commands.GameConsole;
+using LurkBoisModded.Extensions;
 using PlayerRoles.PlayableScps.Scp079;
 using System;
 using System.Collections.Generic;
@@ -14,7 +16,12 @@ namespace LurkBoisModded.Patches.Scp079
     {
         public static bool Prefix(Scp079LockdownRoomAbility __instance)
         {
-            if(CommandGas.CurrentRoom == __instance.CastRole.CurrentCamera)
+            Scp079GasAbility ability = __instance.Owner.GetAbility<Scp079GasAbility>();
+            if(ability == null)
+            {
+                return true;
+            }
+            if(ability.CurrentRoom == __instance.CastRole.CurrentCamera)
             {
                 return false;
             }

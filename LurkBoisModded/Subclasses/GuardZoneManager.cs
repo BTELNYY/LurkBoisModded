@@ -22,12 +22,12 @@ namespace LurkBoisModded.Subclasses
 
         public override string ClassColor => "#5B6370";
 
-        public override Dictionary<ItemType, short> SpawnItems => new Dictionary<ItemType, short>()
+        public override Dictionary<ItemDefinition, short> SpawnItems => new Dictionary<ItemDefinition, short>() 
         {
-            [ItemType.Radio] = 1,
-            [ItemType.KeycardZoneManager] = 1,
-            [ItemType.ArmorLight] = 1,
-            [ItemType.Medkit] = 1,
+            [new ItemDefinition(ItemType.Radio)] = 1,
+            [new ItemDefinition(ItemType.KeycardZoneManager)] = 1,
+            [new ItemDefinition(ItemType.ArmorLight)] = 1,
+            [new ItemDefinition(ItemType.Medkit)] = 1,
         };
 
         public override bool ClearInventoryOnSpawn => true;

@@ -104,7 +104,7 @@ namespace LurkBoisModded.Base.Ability
             CooldownReady = CheckCooldown();
             if (!CooldownReady)
             { 
-                CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.CooldownMessage.Replace("{time}", ((int)RemainingCooldownTime).ToString()));
+                CurrentOwner.SendHint(Plugin.GetConfig().AbilityConfig.CooldownMessage.Replace("{time}", ((int)RemainingCooldownTime).ToString()));
                 return;
             }
             else

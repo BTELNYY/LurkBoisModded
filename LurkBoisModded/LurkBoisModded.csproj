@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LurkBoisModded</RootNamespace>
     <AssemblyName>LurkBoisModded</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
@@ -148,6 +151,7 @@
     <Compile Include="Abilities\AreaDenialAbility.cs" />
     <Compile Include="Abilities\MedicAbility.cs" />
     <Compile Include="Abilities\ScoutAbility.cs" />
+    <Compile Include="Abilities\Scp079GasAbility.cs" />
     <Compile Include="Abilities\WarCryAbility.cs" />
     <Compile Include="Abilities\InspireAbility.cs" />
     <Compile Include="Abilities\ProximityChatAbility.cs" />
@@ -158,7 +162,9 @@
     <Compile Include="Base\CustomItems\ICustomGrenadeItem.cs" />
     <Compile Include="Base\FakeConnection.cs" />
     <Compile Include="Base\Ability\IRequiredItemAbility.cs" />
-    <Compile Include="Base\ICustomRadioItem.cs" />
+    <Compile Include="Base\FirearmDefinition.cs" />
+    <Compile Include="Base\CustomItems\ICustomRadioItem.cs" />
+    <Compile Include="Base\ItemDefinition.cs" />
     <Compile Include="Commands\RemoteAdmin\DeleteDummy.cs" />
     <Compile Include="Commands\RemoteAdmin\GiveCustomItem.cs" />
     <Compile Include="Commands\RemoteAdmin\ListCustomItems.cs" />
@@ -171,6 +177,7 @@
     <Compile Include="CustomItems\Landmine.cs" />
     <Compile Include="CustomItems\MolotovCocktail.cs" />
     <Compile Include="CustomItems\C4Detonator.cs" />
+    <Compile Include="CustomItems\NotScaryCOM15.cs" />
     <Compile Include="CustomItems\SniperE11.cs" />
     <Compile Include="Effects\Radiation.cs" />
     <Compile Include="Effects\Regeneration.cs" />
@@ -193,6 +200,7 @@
     <Compile Include="Extensions\DoorExtensions.cs" />
     <Compile Include="Extensions\FirearmDamageHandlerExtensions.cs" />
     <Compile Include="Extensions\FirearmExtensions.cs" />
+    <Compile Include="Extensions\MicroHIDExtensions.cs" />
     <Compile Include="Extensions\MirrorExtensions.cs" />
     <Compile Include="Extensions\PlayerExtensions.cs" />
     <Compile Include="Extensions\RadioitemExtensions.cs" />
@@ -269,6 +277,7 @@
     <Compile Include="Subclasses\GuardCaptain.cs" />
     <Compile Include="Subclasses\MtfPyro.cs" />
     <Compile Include="Subclasses\MtfSniper.cs" />
+    <Compile Include="Subclasses\ScientistContainmentEngineer.cs" />
     <Compile Include="Subclasses\ScientistMedic.cs" />
     <Compile Include="Subclasses\GuardZoneManager.cs" />
     <Compile Include="Subclasses\GuardGymBro.cs" />

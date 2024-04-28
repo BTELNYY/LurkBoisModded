@@ -21,9 +21,7 @@ namespace LurkBoisModded.Base
 
         public virtual RoleTypeId Role { get; set; } = RoleTypeId.ClassD;
 
-        public virtual Dictionary<ItemType, short> SpawnItems { get; set; } = new Dictionary<ItemType, short>();
-
-        public virtual Dictionary<CustomItemType, short> CustomItems { get; set; } = new Dictionary<CustomItemType, short>();
+        public virtual Dictionary<ItemDefinition, short> SpawnItems { get; set; } = new Dictionary<ItemDefinition, short>();
 
         public virtual bool ClearInventoryOnSpawn { get; set; } = false;
 
@@ -50,6 +48,10 @@ namespace LurkBoisModded.Base
         public virtual int NumberOfCustomRandomItems { get; set; } = 0;
 
         public virtual List<EffectDefinition> SpawnEffects { get; set; } = new List<EffectDefinition> { };
+
+        public virtual bool AllowEscape { get; set; } = true;
+
+        public virtual string EscapeFailMessage { get; set; } = "This subclass cannot escape!";
 
         public Subclass()
         {

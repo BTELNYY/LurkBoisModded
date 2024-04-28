@@ -21,9 +21,9 @@ namespace LurkBoisModded.Subclasses
 
         public override RoleTypeId Role => RoleTypeId.ClassD;
 
-        public override Dictionary<ItemType, short> SpawnItems => new Dictionary<ItemType, short>() 
+        public override Dictionary<ItemDefinition, short> SpawnItems => new Dictionary<ItemDefinition, short>() 
         {
-            [ItemType.KeycardJanitor] = 1
+            [new ItemDefinition(ItemType.KeycardJanitor)] = 1,
         };
 
         public override Dictionary<ItemType, short> RandomItems => new Dictionary<ItemType, short>() 

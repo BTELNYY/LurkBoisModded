@@ -15,5 +15,8 @@ namespace LurkBoisModded.Base.CustomItems
         bool OnReloadStart();
         void OnReloadFinish(IAmmoManagerModule module, Firearm firearm);
         bool OnPlayerShotByWeapon(FirearmDamageHandler damageHandlerBase, ReferenceHub target);
+        bool OnPlayerStartDetaining(ReferenceHub other);
+        bool OnPlayerDetain(ReferenceHub other);
+        bool OverrideMaxDetainAmount { get; }
     }
 }

@@ -22,10 +22,11 @@ namespace LurkBoisModded.Subclasses
 
         public override string ClassColor => "green";
 
-        public override Dictionary<CustomItemType, short> CustomItems => new Dictionary<CustomItemType, short>()
+        public override Dictionary<ItemDefinition, short> SpawnItems => new Dictionary<ItemDefinition, short>()
         {
-            [CustomItemType.C4Detonator] = 1,
-            [CustomItemType.C4Charge] = 2,
+            [new ItemDefinition(CustomItemType.C4Detonator)] = 1,
+            [new ItemDefinition(CustomItemType.C4Charge)] = 2,
+            [new ItemDefinition(ItemType.Painkillers)] = -1,
         };
 
         public CiDemoman()

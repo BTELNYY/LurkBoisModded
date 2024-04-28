@@ -25,12 +25,12 @@ namespace LurkBoisModded.Abilities
             {
                 return;
             }
-            List<ReferenceHub> sameTeamHubs = ReferenceHub.AllHubs.Where(x => x.GetTeam() == CurrentHub.GetTeam()).ToList();
-            List<ReferenceHub> affectedHubs = sameTeamHubs.Where(x => Vector3.Distance(x.transform.position, CurrentHub.transform.position) <= Plugin.GetConfig().AbilityConfig.InspireAbilityConfig.Range).ToList();
+            List<ReferenceHub> sameTeamHubs = ReferenceHub.AllHubs.Where(x => x.GetTeam() == CurrentOwner.GetTeam()).ToList();
+            List<ReferenceHub> affectedHubs = sameTeamHubs.Where(x => Vector3.Distance(x.transform.position, CurrentOwner.transform.position) <= Plugin.GetConfig().AbilityConfig.InspireAbilityConfig.Range).ToList();
             if (affectedHubs.Count <= 1)
             {
                 ResetCooldown();
-                CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.WarCryAbilityConfig.NoTargetsMessage);
+                CurrentOwner.SendHint(Plugin.GetConfig().AbilityConfig.WarCryAbilityConfig.NoTargetsMessage);
                 return;
             }
             foreach (ReferenceHub hub in affectedHubs)
@@ -46,9 +46,9 @@ namespace LurkBoisModded.Abilities
                         hub.playerEffectsController.ChangeState(def.Name, def.Intensity, def.Duration);
                     }
                 }
-                hub.SendHint(Plugin.GetConfig().AbilityConfig.WarCryAbilityConfig.WarCryEffectYou.Replace("{playername}", CurrentHub.nicknameSync.MyNick));
+                hub.SendHint(Plugin.GetConfig().AbilityConfig.WarCryAbilityConfig.WarCryEffectYou.Replace("{playername}", CurrentOwner.nicknameSync.MyNick));
             }
-            CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.WarCryAbilityConfig.WarCryHeard.Replace("{count}", affectedHubs.Count.ToString()));
+            CurrentOwner.SendHint(Plugin.GetConfig().AbilityConfig.WarCryAbilityConfig.WarCryHeard.Replace("{count}", affectedHubs.Count.ToString()));
         }
     }
 }

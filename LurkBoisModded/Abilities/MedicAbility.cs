@@ -29,42 +29,42 @@ namespace LurkBoisModded.Abilities
             }
             float healing = 0;
             bool remItem = false;
-            if (CurrentHub.inventory.CurItem == null || CurrentHub.inventory.CurInstance == null || CurrentHub.inventory.CurInstance.Category != ItemCategory.Medical)
+            if (CurrentOwner.inventory.CurItem == null || CurrentOwner.inventory.CurInstance == null || CurrentOwner.inventory.CurInstance.Category != ItemCategory.Medical)
             {
                 healing = 25;
             }
             else
             {
-                if (Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingDict.ContainsKey(CurrentHub.inventory.CurItem.TypeId))
+                if (Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingDict.ContainsKey(CurrentOwner.inventory.CurItem.TypeId))
                 {
                     remItem = true;
-                    healing = Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingDict[CurrentHub.inventory.CurItem.TypeId];
+                    healing = Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealingDict[CurrentOwner.inventory.CurItem.TypeId];
                 }
             }
-            Transform cam = CurrentHub.PlayerCameraReference;
+            Transform cam = CurrentOwner.PlayerCameraReference;
             Vector3 raycastFrom = cam.position;
             raycastFrom.x += 0.25f;
             if (!Physics.Raycast(raycastFrom, cam.forward, out RaycastHit hit, Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealMaxDistance, LayerMask.GetMask("Default", "Player", "Hitbox")))
             {
                 SetRemainingCooldown(1f);
-                CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.NotInRange);
+                CurrentOwner.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.NotInRange);
                 return;
             }
-            if (hit.transform.GetComponent<NetworkIdentity>() != null && hit.transform.GetComponent<NetworkIdentity>().netId == CurrentHub.netId)
+            if (hit.transform.GetComponent<NetworkIdentity>() != null && hit.transform.GetComponent<NetworkIdentity>().netId == CurrentOwner.netId)
             {
                 ResetCooldown();
                 return;
             }
             Player hitPlayer = Player.Get(hit.transform.GetComponentInParent<ReferenceHub>());
-            if(hitPlayer.ReferenceHub.Network_playerId == CurrentHub.Network_playerId)
+            if(hitPlayer.ReferenceHub.Network_playerId == CurrentOwner.Network_playerId)
             {
                 SetRemainingCooldown(1f);
                 return;
             }
-            if (!AllowHealing(CurrentHub.GetTeam(), hitPlayer.ReferenceHub.GetTeam(), out string response))
+            if (!AllowHealing(CurrentOwner.GetTeam(), hitPlayer.ReferenceHub.GetTeam(), out string response))
             {
                 ResetCooldown();
-                CurrentHub.SendHint(response);
+                CurrentOwner.SendHint(response);
                 return;
             }
             else
@@ -72,16 +72,16 @@ namespace LurkBoisModded.Abilities
                 if(hitPlayer.MaxHealth <= hitPlayer.Health)
                 {
                     SetRemainingCooldown(1f);
-                    CurrentHub.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.PlayerHealthFull);
+                    CurrentOwner.SendHint(Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.PlayerHealthFull);
                 }
                 string message = Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealSuccess.Replace("{username}", hitPlayer.Nickname).Replace("{health}", ((int)healing).ToString());
-                CurrentHub.SendHint(message);
-                string messageToOther = Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealSuccessOtherPlayer.Replace("{username}", CurrentHub.nicknameSync.MyNick).Replace("{health}", ((int)healing).ToString());
+                CurrentOwner.SendHint(message);
+                string messageToOther = Plugin.GetConfig().AbilityConfig.MedicAbilityConfig.HealSuccessOtherPlayer.Replace("{username}", CurrentOwner.nicknameSync.MyNick).Replace("{health}", ((int)healing).ToString());
                 hitPlayer.Heal(healing);
                 hitPlayer.SendHint(messageToOther);
                 if (remItem)
                 {
-                    CurrentHub.RemoveItemFromHub(CurrentHub.inventory.CurItem.TypeId);
+                    CurrentOwner.RemoveItemFromHub(CurrentOwner.inventory.CurItem.TypeId);
                 }
             }
         }
