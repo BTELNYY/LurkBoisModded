@@ -79,7 +79,15 @@ namespace LurkBoisModded.Scripts
             {
                 return;
             }
-            bool detonate = inRange.Any(x => x.GetTeam() != _placedTeam);
+            bool detonate = false;
+            if (Server.FriendlyFire)
+            {
+                detonate = true;
+            }
+            else
+            {
+                detonate = inRange.Any(x => x.GetTeam() != _placedTeam);
+            }
             if(!detonate)
             {
                 return;

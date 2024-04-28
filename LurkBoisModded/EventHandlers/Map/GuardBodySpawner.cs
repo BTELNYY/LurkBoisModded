@@ -19,6 +19,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using LurkBoisModded.Extensions;
+using Respawning;
 
 namespace LurkBoisModded.EventHandlers.Map
 {
@@ -172,8 +173,10 @@ namespace LurkBoisModded.EventHandlers.Map
                 {
                     Log.Error(ex.ToString());
                     RoundSummary.RoundLock = false;
+                    RespawnTokensManager.ResetTokens();
                 }
             }
+            RespawnTokensManager.ResetTokens();
             RoundSummary.RoundLock = false;
         }
     }

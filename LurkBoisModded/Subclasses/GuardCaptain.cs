@@ -1,4 +1,5 @@
 ﻿using LurkBoisModded.Base;
+using LurkBoisModded.Managers;
 using PlayerRoles;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,11 @@ namespace LurkBoisModded.Subclasses
         public override string SubclassDescription => "As the leader of the guards you are more equipped for combat then the others, you can also use your ability key (noclip key) to inspire your peers.";
 
         public override bool ClearInventoryOnSpawn => true;
+
+        public override List<AbilityType> Abilities => new List<AbilityType>()
+        {
+            AbilityType.Inspire,
+        };
 
         public override string ClassColor => "#5B6370";
 

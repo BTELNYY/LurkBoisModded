@@ -66,7 +66,7 @@ namespace LurkBoisModded.EnvriomentalHazards.Hazards.Fire
             List<ReferenceHub> inRange = ReferenceHub.AllHubs.Where(x => Vector3.Distance(x.gameObject.transform.position, gameObject.transform.position) <= Config.CurrentConfig.MolotovConfiguration.FireRadius).ToList();
             foreach(ReferenceHub hub in inRange)
             {
-                if(hub.GetTeam() == OwnerTeam && Owner.Hub != hub)
+                if((hub.GetTeam() == OwnerTeam) && !Server.FriendlyFire)
                 {
                     continue;
                 }

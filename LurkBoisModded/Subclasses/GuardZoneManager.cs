@@ -32,13 +32,13 @@ namespace LurkBoisModded.Subclasses
 
         public override bool ClearInventoryOnSpawn => true;
 
-        public override bool AllowKeycardDoors => true;
-
         public override List<RoomName> SpawnRooms => new List<RoomName>() 
         {
             RoomName.LczToilets,
             RoomName.LczAirlock,
-            RoomName.LczGreenhouse
+            RoomName.LczGreenhouse,
+            RoomName.LczGlassroom,
+            RoomName.LczComputerRoom
         };
     }
 }

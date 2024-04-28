@@ -31,7 +31,7 @@ namespace LurkBoisModded.Base
 
         public virtual bool AllowKeycardDoors { get; set; } = false;
 
-        public virtual float[] HeightVariety { get; set; } = new float[2] { 0.95f, 1.1f };
+        public virtual float[] HeightVariety { get; set; } = new float[2] { 1f, 1f };
 
         public virtual string ClassColor { get; set; } = "white";
 

@@ -135,22 +135,6 @@ namespace LurkBoisModded.Extensions
                 }
                 Player player = Player.Get(target);
                 player.SetRole(subclass.Role);
-                foreach (AbilityType ability in subclass.Abilities)
-                {
-                    if (AbilityManager.AbilityToType.ContainsKey(ability))
-                    {
-                        target.AddAbility(ability);
-                    }
-                    else
-                    {
-                        Log.Warning("Ability is missing! Ability: " + ability.ToString(), nameof(SubclassManager));
-                    }
-                }
-                if (subclass.MaxHealth != 0)
-                {
-                    target.SetMaxHealth(subclass.MaxHealth);
-                    player.Heal(subclass.MaxHealth);
-                }
                 if (subclass.ClearInventoryOnSpawn)
                 {
                     player.ClearInventory();
@@ -191,24 +175,7 @@ namespace LurkBoisModded.Extensions
                                 door = DoorVariant.DoorsByRoom[chosenRoom].Where(x => x.RequiredPermissions.CheckPermissions(null, target) && !(x is ElevatorDoor)).GetRandomItem();
                             }
                         }
-                        if (door != null)
-                        {
-                            door.SetDoorState(DoorState.Open);
-                            Vector3 pos = door.transform.position;
-                            pos.y += 1f;
-                            target.TryOverridePosition(pos, Vector3.forward);
-                        }
-                        else
-                        {
-                            Log.Warning($"Door chosen is null! Room: {chosenRoom.Name}, Subclass: {subclass.FileName}");
-                        }
                     }
-                }
-                if (door != null)
-                {
-                    Vector3 pos = door.transform.position;
-                    pos.y += 1f;
-                    target.TryOverridePosition(pos, Vector3.forward);
                 }
                 foreach (KeyValuePair<ItemDefinition, short> pair in subclass.SpawnItems)
                 {
@@ -258,6 +225,17 @@ namespace LurkBoisModded.Extensions
                         player.AddItem(item);
                     }
                 }
+                foreach (AbilityType ability in subclass.Abilities)
+                {
+                    if (AbilityManager.AbilityToType.ContainsKey(ability))
+                    {
+                        target.AddAbility(ability);
+                    }
+                    else
+                    {
+                        Log.Warning("Ability is missing! Ability: " + ability.ToString(), nameof(SubclassManager));
+                    }
+                }
                 for (int i = 0; i < subclass.NumberOfCustomRandomItems; i++)
                 {
                     if (subclass.RandomCustomItems.Keys.IsEmpty())
@@ -272,7 +250,6 @@ namespace LurkBoisModded.Extensions
                         player.ReferenceHub.AddCustomItem(item);
                     }
                 }
-                player.ApplyAttachments();
                 player.PlayerInfo.IsRoleHidden = true;
                 if (subclass.ApplyClassColorToCustomInfo)
                 {
@@ -283,19 +260,6 @@ namespace LurkBoisModded.Extensions
                     player.CustomInfo = subclass.SubclassNiceName + " (Custom Subclass)";
                 }
                 string hintFormatted = $"You are <color={subclass.ClassColor}><b>{subclass.SubclassNiceName}</b></color>! \n {subclass.SubclassDescription}";
-                target.SendHint(hintFormatted, 30f);
-                target.gameConsoleTransmission.SendToClient(hintFormatted, "green");
-                if (subclass.HeightVariety[0] == subclass.HeightVariety[1])
-                {
-                    Vector3 nonRandomHeight = new Vector3(1, subclass.HeightVariety[0], 1);
-                    player.SetScale(nonRandomHeight);
-                }
-                else
-                {
-                    float height = UnityEngine.Random.Range(subclass.HeightVariety[0], subclass.HeightVariety[1]);
-                    Vector3 heightVec = new Vector3(1, height, 1);
-                    player.SetScale(heightVec);
-                }
                 Timing.CallDelayed(0.15f, () => 
                 {
                     if (door != null)
@@ -303,6 +267,21 @@ namespace LurkBoisModded.Extensions
                         Vector3 pos = door.transform.position;
                         pos.y += 1f;
                         target.TryOverridePosition(pos, Vector3.forward);
+                    }
+                });
+                Timing.CallDelayed(1f, () => 
+                {
+                    return;
+                    if (subclass.HeightVariety[0] == subclass.HeightVariety[1])
+                    {
+                        Vector3 nonRandomHeight = new Vector3(1, subclass.HeightVariety[0], 1);
+                        player.SetScale(nonRandomHeight);
+                    }
+                    else
+                    {
+                        float height = UnityEngine.Random.Range(subclass.HeightVariety[0], subclass.HeightVariety[1]);
+                        Vector3 heightVec = new Vector3(1, height, 1);
+                        player.SetScale(heightVec);
                     }
                 });
                 foreach (EffectDefinition effect in subclass.SpawnEffects)
@@ -317,6 +296,13 @@ namespace LurkBoisModded.Extensions
                 {
                     RefHubToSubclassDict.Add(target, subclass);
                 }
+                if (subclass.MaxHealth != 0)
+                {
+                    target.SetMaxHealth(subclass.MaxHealth);
+                    player.Heal(subclass.MaxHealth);
+                }
+                target.SendHint(hintFormatted, 30f);
+                target.gameConsoleTransmission.SendToClient(hintFormatted, "green");
             }
             catch(Exception ex) 
             {
