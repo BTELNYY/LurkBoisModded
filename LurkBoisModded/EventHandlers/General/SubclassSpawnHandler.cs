@@ -59,7 +59,7 @@ namespace LurkBoisModded.EventHandlers.General
         [PluginEvent(ServerEventType.RoundStart)]
         public void HandleGuards(RoundStartEvent ev)
         {
-            Timing.CallDelayed(0.3f, () =>
+            Timing.CallDelayed(0.5f, () =>
             {
                 List<Player> guards = Utility.GetPlayersByRole(RoleTypeId.FacilityGuard);
                 HandleGuards(guards);

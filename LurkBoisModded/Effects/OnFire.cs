@@ -28,7 +28,7 @@ namespace LurkBoisModded.Effects
                 CurrentBase.NetworkLightIntensity = Plugin.GetConfig().FireConfig.ColorIntensity;
                 CurrentBase.OnSpawned(Hub, new ArraySegment<string>());
             }
-            Hub.playerEffectsController.ChangeState<Burned>(Intensity, Duration);
+            Hub.playerEffectsController.ChangeState<Burned>(Intensity, Duration, false);
             Hub.SendHint(Plugin.GetConfig().FireConfig.FireTip);
         }
 
@@ -51,6 +51,7 @@ namespace LurkBoisModded.Effects
                 return;
             }
             NetworkServer.Destroy(CurrentBase.gameObject);
+            Hub.playerEffectsController.ChangeState<Burned>(1, 15f, false);
         }
 
         protected override void OnTick()

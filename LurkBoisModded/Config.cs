@@ -48,6 +48,10 @@ namespace LurkBoisModded
 
         public string KillMessage { get; set; } = "Killed <color={color}>{playername}</color>";
 
+        public RoleSwapConfig RoleSwapConfig { get; set; } = new RoleSwapConfig();
+
+        public HCZDecontaminationConfig HCZDecontaminationConfig { get; set; } = new HCZDecontaminationConfig();
+
         public NPCConfig NPCConfig { get; set; } = new NPCConfig();
 
         [Description("SCP 330 (Candy) Config")]
@@ -152,6 +156,13 @@ namespace LurkBoisModded
         public RadiationConfig RadiationConfig { get; set; } = new RadiationConfig();
     }
 
+    public class HCZDecontaminationConfig
+    {
+        public float SequenceStartTime { get; set; } = 900f;
+
+        public float Length { get; set; } = 120f;
+    }
+
     public class Scp330Config
     {
         [Description("Should SCP 330 give pink candy?")]
@@ -159,6 +170,13 @@ namespace LurkBoisModded
 
         [Description("Chance of a player getting pink candy from SCP 330?")]
         public float PinkCandyChance { get; set; } = 0.2f;
+    }
+
+    public class RoleSwapConfig
+    {
+        public float SwapTime { get; set; } = 15f;
+
+        public string ScpHumanSwapRequestMessage { get; set; } = "SCP {scp} wants to become a human. Type .scp {scp} in the console to swap with them.";
     }
 
     public class Scp914Config
@@ -489,7 +507,7 @@ namespace LurkBoisModded
         public Dictionary<string, int> GuardSubclasses { get; set; } = new Dictionary<string, int>()
         {
             ["guard_gym_bro"] = 1,
-            ["guard_zone_manager"] = 2,
+            ["guard_zone_manager"] = 0,
             ["guard_captain"] = 1,
         };
 
@@ -638,7 +656,7 @@ namespace LurkBoisModded
     public class Scp3114Config
     {
         [Description("Minimum amount of players required for SCP 3114 to spawn. (Note: this is counted by possible spawn players, meaning there must be a minimum of X alive, human players.)")]
-        public int MinimumPlayers { get; set; } = 15;
+        public int MinimumPlayers { get; set; } = 6;
 
         [Description("If no SCP 079 spawns, should SCP 3114 always spawn? (Note that the minimum players check must still pass.)")]
         public bool NoScp079Means100PercentSpawn { get; set; } = false;

@@ -16,6 +16,7 @@ using CentralAuth;
 using PlayerRoles.Ragdolls;
 using LurkBoisModded.Extensions;
 using MapGeneration;
+using PlayerRoles.PlayableScps.Scp3114;
 
 namespace LurkBoisModded
 {
@@ -59,6 +60,19 @@ namespace LurkBoisModded
                 Debug.LogError(ex);
                 return null;
             }
+        }
+
+        public static BasicRagdoll SpawnRagdoll(RoleTypeId role, Vector3 pos, Quaternion rot, string nickname)
+        {
+            HumanRole humanRole;
+            if (!PlayerRoleLoader.TryGetRoleTemplate<HumanRole>(role, out humanRole))
+            {
+                return null;
+            }
+            BasicRagdoll basicRagdoll = global::UnityEngine.Object.Instantiate<BasicRagdoll>(humanRole.Ragdoll);
+            basicRagdoll.NetworkInfo = new RagdollData(null, new Scp3114DamageHandler(basicRagdoll, true), role, pos, rot, nickname, NetworkTime.time);
+            NetworkServer.Spawn(basicRagdoll.gameObject);
+            return basicRagdoll;
         }
 
         public static DoorVariant CreateDoor(Vector3 position, Vector3 rotation, Vector3 scale, DoorType doorType = DoorType.LCZ, KeycardPermissions[] keycardPermissions = null)

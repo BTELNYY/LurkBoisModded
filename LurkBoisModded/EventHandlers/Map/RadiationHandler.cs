@@ -11,16 +11,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LurkBoisModded.Effects;
+using UnityEngine;
 
 namespace LurkBoisModded.EventHandlers.Map
 {
     [EventHandler]
-    public class WarheadEventHandler
+    public class RadiationHandler
     {
         //Controls the intensity of the effect.
         public static byte CurrentMode = 0;
-        //Controls how long before the player begins gaining the raidation effect
-        public static Dictionary<ReferenceHub, float> Exposure = new Dictionary<ReferenceHub, float>();
         //Used to find if the player is still within the HCZ_Warhead room
         public static DoorVariant NukeDoor = null;
 
@@ -54,7 +53,6 @@ namespace LurkBoisModded.EventHandlers.Map
         {
             //Reset vars
             CurrentMode = 0;
-            Exposure.Clear();
             //Find the door
             List<RoomIdentifier> searchResults = RoomIdUtils.FindRooms(RoomName.HczWarhead, FacilityZone.HeavyContainment, RoomShape.Undefined).ToList();
             RoomIdentifier warheadRoom = searchResults.First();
@@ -75,22 +73,6 @@ namespace LurkBoisModded.EventHandlers.Map
             });
         }
 
-        [PluginEvent(ServerEventType.PlayerUsedItem)]
-        public void OnUseItem(PlayerUsedItemEvent ev)
-        {
-            if (ev.Item.ItemTypeId == ItemType.SCP500)
-            {
-                Exposure[ev.Player.ReferenceHub] = 0f;
-            }
-        }
-
-
-        [PluginEvent(ServerEventType.PlayerSpawn)]
-        public void OnPlayerRoleChange(PlayerSpawnEvent ev)
-        {
-            Exposure[ev.Player.ReferenceHub] = 0f;
-        }
-
         private void CheckPlayers()
         {
             //Log.Debug("Updating Players!");
@@ -107,32 +89,17 @@ namespace LurkBoisModded.EventHandlers.Map
                     continue;
                 }
                 Player target = Player.Get(hub);
+                if (!target.ReferenceHub.playerEffectsController.TryGetEffect<Radiation>(out Radiation playerEffect))
+                {
+                    continue;   
+                }
                 if (hub.transform.position.y > -999f && target.Zone == FacilityZone.HeavyContainment)
                 {
-                    //Log.Debug("Player near door: " + hub.nicknameSync.DisplayName);
-                    affectedPlayers.Add(hub);
-                    if (!Exposure.ContainsKey(hub))
-                    {
-                        Exposure.Add(hub, 0f);
-                    }
+                    playerEffect.CurrentExposure += 1;
                 }
                 else
                 {
-                    continue;
-                }
-            }
-            foreach (ReferenceHub player in affectedPlayers)
-            {
-                float targetExposure = Exposure[player];
-                if (targetExposure >= Plugin.GetConfig().RadiationConfig.MaxExposure)
-                {
-                    float effectDuration = Plugin.GetConfig().RadiationConfig.CheckInterval + Plugin.GetConfig().RadiationConfig.EffectDurationBuffer;
-                    byte intensity = Plugin.GetConfig().RadiationConfig.IntensityPerTime[CurrentMode];
-                    player.playerEffectsController.ChangeState<Radiation>(intensity, effectDuration, false);
-                }
-                if (CurrentMode != 0)
-                {
-                    Exposure[player] += Plugin.GetConfig().RadiationConfig.CheckInterval;
+                    playerEffect.CurrentExposure -= 1;
                 }
             }
         }

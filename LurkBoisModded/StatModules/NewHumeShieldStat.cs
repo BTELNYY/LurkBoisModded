@@ -15,7 +15,7 @@ namespace LurkBoisModded.StatModules
 
         public override float MaxValue => NewMaxValue;
 
-        public float NewMaxValue 
+        public float NewMaxValue
         {
             get 
             {
@@ -37,7 +37,7 @@ namespace LurkBoisModded.StatModules
             set 
             {
                 SetMaxValueField = value;
-            } 
+            }
         }
 
         private float SetMaxValueField = -1f;
@@ -58,7 +58,6 @@ namespace LurkBoisModded.StatModules
             {
                 return;
             }
-
             float hsCurrent = controller.HsCurrent;
             float num = controller.HsRegeneration * Time.deltaTime;
             if (num > 0f)
@@ -67,10 +66,6 @@ namespace LurkBoisModded.StatModules
                 {
                     CurValue = Mathf.MoveTowards(hsCurrent, controller.HsMax, num);
                 }
-            }
-            else if (!(hsCurrent <= 0f))
-            {
-                CurValue = hsCurrent + num;
             }
         }
 

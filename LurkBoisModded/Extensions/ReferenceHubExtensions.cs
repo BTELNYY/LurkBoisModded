@@ -29,6 +29,8 @@ using MEC;
 using InventorySystem.Items.MicroHID;
 using Mirror.LiteNetLib4Mirror;
 using InventorySystem.Items.Radio;
+using PlayerRoles.FirstPersonControl.NetworkMessages;
+using System.Runtime.CompilerServices;
 
 namespace LurkBoisModded.Extensions
 {
@@ -303,6 +305,7 @@ namespace LurkBoisModded.Extensions
                 }
                 target.SendHint(hintFormatted, 30f);
                 target.gameConsoleTransmission.SendToClient(hintFormatted, "green");
+                target.SetHubRotation(target.gameObject.transform.forward);
             }
             catch(Exception ex) 
             {
@@ -484,6 +487,33 @@ namespace LurkBoisModded.Extensions
             {
                 return null;
             }
+        }
+
+        public static void SetHubRotation(this ReferenceHub hub, Vector3 forward)
+        {
+            ValueTuple<ushort, ushort> valueTuple = Quaternion.LookRotation(forward, Vector3.up).ToClientUShorts();
+            ushort item = valueTuple.Item1;
+            ushort item2 = valueTuple.Item2;
+            hub.SetHubRotation(item, item2);
+        }
+
+        public static void SetHubRotation(this ReferenceHub hub, Quaternion rotation)
+        {
+            ValueTuple<ushort, ushort> valueTuple = rotation.ToClientUShorts();
+            ushort item = valueTuple.Item1;
+            ushort item2 = valueTuple.Item2;
+            hub.SetHubRotation(item, item2);
+        }
+
+        public static void SetHubRotation(this ReferenceHub hub, ushort horizontal, ushort vertical)
+        {
+            if (!(hub.roleManager.CurrentRole is IFpcRole))
+            {
+                return;
+            }
+            FpcPositionMessageWriter.appliedMouseLook = new ValueTuple<ushort, ushort>(horizontal, vertical);
+            FpcPositionMessageWriter.valuesToApply |= FpcPositionMessageWriter.AppliedValues.ApplyMouseLook;
+            hub.connectionToClient.Send<FpcPositionMessage>(new FpcPositionMessage(hub), 0);
         }
     }
 }

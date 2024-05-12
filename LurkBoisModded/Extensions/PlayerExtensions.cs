@@ -13,6 +13,8 @@ using InventorySystem.Items.Firearms.Attachments;
 using MEC;
 using Mirror;
 using PlayerRoles;
+using PlayerRoles.FirstPersonControl.NetworkMessages;
+using PlayerRoles.FirstPersonControl;
 using PluginAPI.Core;
 using UnityEngine;
 
@@ -126,7 +128,7 @@ namespace LurkBoisModded.Extensions
             {
                 target.ReferenceHub.transform.localScale = scale;
 
-                foreach (ReferenceHub hub in ReferenceHub.AllHubs)
+                foreach (ReferenceHub hub in ReferenceHub.AllHubs.Where(x => x.authManager.InstanceMode == ClientInstanceMode.ReadyClient))
                 {
                     SendSpawnMessage?.Invoke(null, new object[] { target.ReferenceHub.networkIdentity, hub.connectionToClient });
                 }
@@ -142,13 +144,44 @@ namespace LurkBoisModded.Extensions
             try
             {
                 target.ReferenceHub.transform.localScale = new Vector3(scale, scale, scale);
-                foreach (ReferenceHub hub in ReferenceHub.AllHubs)
+                foreach (ReferenceHub hub in ReferenceHub.AllHubs.Where(x => x.authManager.InstanceMode == ClientInstanceMode.ReadyClient))
                     SendSpawnMessage?.Invoke(null, new object[] { target.ReferenceHub.networkIdentity, hub.connectionToClient });
             }
             catch (Exception exception)
             {
                 Log.Error($"Error: {exception}");
             }
+        }
+
+        public static ValueTuple<ushort, ushort> ToClientUShorts(this Quaternion rotation)
+        {
+            float num = -rotation.eulerAngles.x;
+            if (num < -90f)
+            {
+                num += 360f;
+            }
+            else if (num > 270f)
+            {
+                num -= 360f;
+            }
+            double num2 = (double)Mathf.Clamp(rotation.eulerAngles.y, 0f, 360f);
+            float num3 = Mathf.Clamp(num, -88f, 88f) + 88f;
+            return new ValueTuple<ushort, ushort>((ushort)Math.Round(num2 * (double)182.04167f), (ushort)Math.Round((double)(num3 * 372.35794f)));
+        }
+
+        public static void SetRotation(this Player player, Vector3 forward)
+        {
+            player.ReferenceHub.SetHubRotation(forward);
+        }
+
+        public static void SetHubRotation(this Player player, Quaternion rotation)
+        {
+            player.ReferenceHub.SetHubRotation(rotation);
+        }
+
+        public static void SetRotation(this Player player, ushort horizontal, ushort vertical)
+        {
+            player.ReferenceHub.SetHubRotation(horizontal, vertical);
         }
     }
 }

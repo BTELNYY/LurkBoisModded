@@ -31,7 +31,7 @@ namespace LurkBoisModded.Subclasses
         public override Dictionary<ItemDefinition, short> SpawnItems => new Dictionary<ItemDefinition, short>() 
         {
             [new ItemDefinition(ItemType.Ammo9x19)] = 60,
-            [new ItemDefinition(ItemType.KeycardMTFPrivate)] = 1,
+            [new ItemDefinition(ItemType.KeycardGuard)] = 1,
             [new ItemDefinition(ItemType.GunCrossvec)] = 1,
             [new ItemDefinition(ItemType.Medkit)] = 1,
             [new ItemDefinition(ItemType.Radio)] = 1,

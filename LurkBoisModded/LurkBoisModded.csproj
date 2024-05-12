@@ -75,9 +75,6 @@
     <Reference Include="MonoMod, Version=22.7.31.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\MonoMod.22.7.31.1\lib\net452\MonoMod.exe</HintPath>
     </Reference>
-    <Reference Include="MonoMod.Backports, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MonoMod.Backports.1.0.1\lib\net452\MonoMod.Backports.dll</HintPath>
-    </Reference>
     <Reference Include="MonoMod.Core, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\MonoMod.Core.1.0.1\lib\net452\MonoMod.Core.dll</HintPath>
     </Reference>
@@ -165,6 +162,8 @@
     <Compile Include="Base\FirearmDefinition.cs" />
     <Compile Include="Base\CustomItems\ICustomRadioItem.cs" />
     <Compile Include="Base\ItemDefinition.cs" />
+    <Compile Include="Commands\GameConsole\CommandHuman.cs" />
+    <Compile Include="Commands\GameConsole\CommandScpClaim.cs" />
     <Compile Include="Commands\RemoteAdmin\DeleteDummy.cs" />
     <Compile Include="Commands\RemoteAdmin\GiveCustomItem.cs" />
     <Compile Include="Commands\RemoteAdmin\ListCustomItems.cs" />
@@ -179,6 +178,7 @@
     <Compile Include="CustomItems\C4Detonator.cs" />
     <Compile Include="CustomItems\NotScaryCOM15.cs" />
     <Compile Include="CustomItems\SniperE11.cs" />
+    <Compile Include="Effects\BetterScp207.cs" />
     <Compile Include="Effects\Radiation.cs" />
     <Compile Include="Effects\Regeneration.cs" />
     <Compile Include="Effects\MaxHealthReduction.cs" />
@@ -193,13 +193,15 @@
     <Compile Include="EventHandlers\Item\CustomItemHandler.cs" />
     <Compile Include="EventHandlers\General\SubclassSpawnHandler.cs" />
     <Compile Include="EventHandlers\Map\GuardBodySpawner.cs" />
-    <Compile Include="EventHandlers\Map\WarheadEventHandler.cs" />
+    <Compile Include="EventHandlers\Map\HCZDeconHandler.cs" />
+    <Compile Include="EventHandlers\Map\RadiationHandler.cs" />
     <Compile Include="EventHandlers\Scp079\Scp079Handler.cs" />
     <Compile Include="EventHandlers\Scp096\Scp096EnrageHandler.cs" />
     <Compile Include="Extensions\DamageHandlerExtensions.cs" />
     <Compile Include="Extensions\DoorExtensions.cs" />
     <Compile Include="Extensions\FirearmDamageHandlerExtensions.cs" />
     <Compile Include="Extensions\FirearmExtensions.cs" />
+    <Compile Include="Extensions\FpcPositionMessageWriter.cs" />
     <Compile Include="Extensions\MicroHIDExtensions.cs" />
     <Compile Include="Extensions\MirrorExtensions.cs" />
     <Compile Include="Extensions\PlayerExtensions.cs" />
@@ -212,12 +214,14 @@
     <Compile Include="Gamemodes\GamemodeManager.cs" />
     <Compile Include="Managers\CustomEffectManager.cs" />
     <Compile Include="Managers\CustomItemManager.cs" />
+    <Compile Include="Managers\RoleSwapManager.cs" />
     <Compile Include="Patches\DamageHandler\FirearmDamageHandlerProccessRagdollPatch.cs" />
     <Compile Include="Patches\EscapePatch.cs" />
     <Compile Include="Patches\Firearm\MaxAmmoPatcher.cs" />
     <Compile Include="Patches\Grenade\FlashGrenadePatch.cs" />
     <Compile Include="Patches\Grenade\HEGrenadePatch.cs" />
     <Compile Include="Patches\LczDeconPatch.cs" />
+    <Compile Include="Patches\Scp207\Scp207EffectModifier.cs" />
     <Compile Include="Patches\Scp2176\Scp2176Patch.cs" />
     <Compile Include="Patches\Scp2176\ShatterPatch.cs" />
     <Compile Include="Patches\SearchItemCompletorPatch.cs" />

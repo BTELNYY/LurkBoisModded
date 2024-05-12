@@ -23,6 +23,12 @@ namespace LurkBoisModded.EventHandlers.General
             Instance = this;
         }
 
+        [PluginEvent(ServerEventType.RoundRestart)]
+        public void OnRoundRestart(RoundRestartEvent ev)
+        {
+            deadToOldRoles.Clear();
+        }
+
         [PluginEvent(ServerEventType.PlayerChangeRole)]
         public void OnPlayerChangeRole(PlayerChangeRoleEvent @event)
         {
@@ -30,8 +36,14 @@ namespace LurkBoisModded.EventHandlers.General
             {
                 return;
             }
-            deadToOldRoles.Remove(@event.Player.NetworkId);
-            deadToOldRoles.Add(@event.Player.NetworkId, @event.OldRole);
+            if (deadToOldRoles.ContainsKey(@event.Player.NetworkId))
+            {
+                deadToOldRoles[@event.Player.NetworkId] = @event.OldRole;
+            }
+            else
+            {
+                deadToOldRoles.Add(@event.Player.NetworkId, @event.OldRole);
+            }
         }
 
         [PluginEvent(ServerEventType.PlayerDeath)]
@@ -45,7 +57,7 @@ namespace LurkBoisModded.EventHandlers.General
             {
                 return;
             }
-            if(Config.CurrentConfig.DoKillMessages)
+            if (Config.CurrentConfig.DoKillMessages)
             {
                 string proc = Config.CurrentConfig.KillMessage.Replace("{playername}", @event.Player.Nickname).Replace("{color}", deadToOldRoles[@event.Player.NetworkId].RoleColor.ToHex());
                 @event.Attacker.SendHint(proc);

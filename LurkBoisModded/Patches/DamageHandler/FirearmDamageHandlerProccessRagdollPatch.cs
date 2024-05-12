@@ -21,7 +21,6 @@ namespace LurkBoisModded.Patches.DamageHandler
 
         public static bool Prefix(FirearmDamageHandler __instance, BasicRagdoll ragdoll)
         {
-            __instance.ProcessRagdoll(ragdoll);
             float num;
             sbyte hitDirX = (sbyte)AccessTools.Field(typeof(FirearmDamageHandler), "_hitDirectionX").GetValue(__instance);
             sbyte hitDirZ = (sbyte)AccessTools.Field(typeof(FirearmDamageHandler), "_hitDirectionZ").GetValue(__instance);

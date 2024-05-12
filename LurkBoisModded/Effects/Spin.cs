@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using System.Runtime.InteropServices;
 using PlayerRoles.FirstPersonControl;
+using LurkBoisModded.Extensions;
 
 namespace LurkBoisModded.Effects
 {
@@ -19,7 +20,7 @@ namespace LurkBoisModded.Effects
             vec.x = Random.Range(-100f * Intensity, 100f * Intensity);
             vec.y = Random.Range(-100f * Intensity, 100f * Intensity);
             vec.z = Random.Range(-100f * Intensity, 100f * Intensity);
-            Hub.TryOverridePosition(Hub.transform.position, vec);
+            Hub.SetHubRotation(vec);
         }
     }
 }

@@ -67,12 +67,13 @@ namespace LurkBoisModded.Extensions
 
         public static Dictionary<HitboxType, float> GetHitboxForce(this FirearmDamageHandler handler)
         {
-            return AccessTools.FieldRefAccess<FirearmDamageHandler, Dictionary<HitboxType, float>>("HitboxToForce").Invoke(handler);
+            return AccessTools.FieldRefAccess<FirearmDamageHandler, Dictionary<HitboxType, float>>("HitboxToForce").Invoke(null);
         }
+
 
         public static Dictionary<ItemType, float> GetForceByAmmoType(this FirearmDamageHandler handler)
         {
-            return AccessTools.FieldRefAccess<FirearmDamageHandler, Dictionary<ItemType, float>>("AmmoToForce").Invoke(handler);
+            return AccessTools.FieldRefAccess<FirearmDamageHandler, Dictionary<ItemType, float>>("AmmoToForce").Invoke(null);
         }
     }
 }
