@@ -15,7 +15,7 @@ namespace LurkBoisModded.CustomItems
     {
         public override CustomItemType CustomItemType => CustomItemType.C4Charge;
 
-        public override ItemType BaseItemType => ItemType.Coin;
+        public override ItemType BaseItemType => ItemType.KeycardJanitor;
 
         public ReferenceHub LastOwner = null;
 

@@ -183,6 +183,7 @@
     <Compile Include="CustomItems\NotScaryCOM15.cs" />
     <Compile Include="CustomItems\SniperE11.cs" />
     <Compile Include="Effects\BetterScp207.cs" />
+    <Compile Include="Effects\FakeDecontaminating.cs" />
     <Compile Include="Effects\Radiation.cs" />
     <Compile Include="Effects\Regeneration.cs" />
     <Compile Include="Effects\MaxHealthReduction.cs" />

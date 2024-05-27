@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CustomPlayerEffects;
 using System.Collections.ObjectModel;
+using LurkBoisModded.Effects;
 
 namespace LurkBoisModded.Scripts
 {
@@ -73,11 +74,11 @@ namespace LurkBoisModded.Scripts
                     }
                     if(p.Zone == MapGeneration.FacilityZone.HeavyContainment)
                     {
-                        p.EffectsManager.EnableEffect<Decontaminating>(0, true);
+                        p.EffectsManager.EnableEffect<FakeDecontaminating>(0, false);
                     }
                     else
                     {
-                        p.EffectsManager.DisableEffect<Decontaminating>();
+                        p.EffectsManager.DisableEffect<FakeDecontaminating>();
                     }
                 }
             }),
