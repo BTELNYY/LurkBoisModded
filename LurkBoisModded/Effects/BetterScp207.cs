@@ -59,7 +59,7 @@ namespace LurkBoisModded.Effects
 
         private float explosiveTimer = 0f;
 
-        protected override void Enabled()
+        public override void Enabled()
         {
             base.Enabled();
             goingToExplode = false;
@@ -73,7 +73,7 @@ namespace LurkBoisModded.Effects
             effect.ServerSetState((byte)(15 * Intensity), 0, false);
         }
 
-        protected override void Disabled()
+        public override void Disabled()
         {
             base.Disabled();
             MovementBoost effect = Hub.playerEffectsController.GetEffect<MovementBoost>();
@@ -85,7 +85,7 @@ namespace LurkBoisModded.Effects
             goingToExplode = false;
         }
 
-        protected override void IntensityChanged(byte prevState, byte newState)
+        public override void IntensityChanged(byte prevState, byte newState)
         {
             base.IntensityChanged(prevState, newState);
             byte newPercent = (byte)(15 * Intensity);
@@ -97,7 +97,7 @@ namespace LurkBoisModded.Effects
             effect.ServerSetState(newPercent, 0, false);
         }
 
-        protected override void OnEffectUpdate()
+        public override void OnEffectUpdate()
         {
             base.OnEffectUpdate();
             if (!NetworkServer.active)
@@ -117,7 +117,7 @@ namespace LurkBoisModded.Effects
             goingToExplode = false;
         }
 
-        protected override void OnTick()
+        public override void OnTick()
         {
             StaminaStat stamina = Hub.playerStats.GetModule<StaminaStat>();
             if(stamina.CurValue < 0.075f)

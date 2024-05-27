@@ -17,6 +17,7 @@ using PlayerRoles.FirstPersonControl.NetworkMessages;
 using PlayerRoles.FirstPersonControl;
 using PluginAPI.Core;
 using UnityEngine;
+using RemoteAdmin;
 
 namespace LurkBoisModded.Extensions
 {
@@ -127,7 +128,8 @@ namespace LurkBoisModded.Extensions
             try
             {
                 target.ReferenceHub.transform.localScale = scale;
-
+                CharacterController controller = target.GameObject.GetComponent<CharacterController>();
+                controller.stepOffset = scale.y + controller.radius * 2;
                 foreach (ReferenceHub hub in ReferenceHub.AllHubs.Where(x => x.authManager.InstanceMode == ClientInstanceMode.ReadyClient))
                 {
                     SendSpawnMessage?.Invoke(null, new object[] { target.ReferenceHub.networkIdentity, hub.connectionToClient });
@@ -144,6 +146,8 @@ namespace LurkBoisModded.Extensions
             try
             {
                 target.ReferenceHub.transform.localScale = new Vector3(scale, scale, scale);
+                CharacterController controller = target.GameObject.GetComponent<CharacterController>();
+                controller.stepOffset = scale + controller.radius * 2;
                 foreach (ReferenceHub hub in ReferenceHub.AllHubs.Where(x => x.authManager.InstanceMode == ClientInstanceMode.ReadyClient))
                     SendSpawnMessage?.Invoke(null, new object[] { target.ReferenceHub.networkIdentity, hub.connectionToClient });
             }

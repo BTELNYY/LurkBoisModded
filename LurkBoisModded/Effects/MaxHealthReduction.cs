@@ -10,7 +10,7 @@ namespace LurkBoisModded.Effects
     {
         private byte SavedIntensity = 0;
 
-        protected override void Enabled()
+        public override void Enabled()
         {
             base.Enabled();
             float newMaxHealth = Hub.playerStats.StatModules[0].MaxValue - Intensity;
@@ -22,7 +22,7 @@ namespace LurkBoisModded.Effects
             }
         }
 
-        protected override void Disabled()
+        public override void Disabled()
         {
             base.Disabled();
             float newMaxHealth = Hub.playerStats.StatModules[0].MaxValue + SavedIntensity;

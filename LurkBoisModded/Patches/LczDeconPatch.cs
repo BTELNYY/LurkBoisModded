@@ -17,11 +17,15 @@ namespace LurkBoisModded.Patches
     {
         public static void Prefix(DecontaminationController __instance)
         {
-            int nextPhase = (int)AccessTools.Field(typeof(DecontaminationController), "_nextPhase").GetValue(__instance);
+            int nextPhase = __instance._nextPhase;
             if (NetworkServer.active && __instance.DecontaminationPhases[nextPhase].Function == DecontaminationController.DecontaminationPhase.PhaseFunction.OpenCheckpoints)
             {
                 Timing.CallDelayed(10f, () =>
                 {
+                    if(__instance._curFunction != DecontaminationController.DecontaminationPhase.PhaseFunction.OpenCheckpoints)
+                    {
+                        return;
+                    }
                     List<DoorVariant> lczDoors = Utility.GetDoorsByZone(MapGeneration.FacilityZone.LightContainment);
                     foreach (DoorVariant door in lczDoors)
                     {

@@ -13,7 +13,7 @@ namespace LurkBoisModded.Effects
 {
     public class Spin : TickingEffectBase
     {
-        protected override void OnTick()
+        public override void OnTick()
         {
             Player p = Player.Get(Hub);
             Vector3 vec = Vector3.zero;

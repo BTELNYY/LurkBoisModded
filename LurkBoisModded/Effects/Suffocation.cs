@@ -51,7 +51,7 @@ namespace LurkBoisModded.Effects
 
         public bool SprintingDisabled => false;
 
-        protected override void Enabled()
+        public override void Enabled()
         {
             base.Enabled();
             StaminaStat staminaStat = Hub.playerStats.StatModules[2] as StaminaStat;
@@ -62,7 +62,7 @@ namespace LurkBoisModded.Effects
             staminaStat.CurValue = 0.25f;
         }
 
-        protected override void OnTick()
+        public override void OnTick()
         {
             float damage = 1 * Intensity;
             CustomReasonDamageHandler customReason = new CustomReasonDamageHandler(Plugin.GetConfig().Scp079Config.SuffocationDeathMessage, damage);
