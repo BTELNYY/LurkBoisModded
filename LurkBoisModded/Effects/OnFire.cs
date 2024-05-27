@@ -12,7 +12,7 @@ namespace LurkBoisModded.Effects
     {
         public LightSourceToy CurrentBase;
 
-        public override void Enabled()
+        protected override void Enabled()
         {
             base.Enabled();
             if(!Utility.TryGetAdminToyByName("LightSource", out AdminToyBase abase))
@@ -32,7 +32,7 @@ namespace LurkBoisModded.Effects
             Hub.SendHint(Plugin.GetConfig().FireConfig.FireTip);
         }
 
-        public override void Update()
+        protected override void Update()
         {
             base.Update();
             if(CurrentBase == null)
@@ -43,7 +43,7 @@ namespace LurkBoisModded.Effects
             CurrentBase.transform.position = Hub.transform.position;
         }
 
-        public override void Disabled()
+        protected override void Disabled()
         {
             base.Disabled();
             if (CurrentBase == null)
@@ -54,7 +54,7 @@ namespace LurkBoisModded.Effects
             Hub.playerEffectsController.ChangeState<Burned>(1, 15f, false);
         }
 
-        public override void OnTick()
+        protected override void OnTick()
         {
             float multiplier = 1f;
             if (Config.CurrentConfig.FireConfig.DamageMultipliers.ContainsKey(Hub.roleManager.CurrentRole.RoleTypeId))

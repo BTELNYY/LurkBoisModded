@@ -17,12 +17,13 @@ namespace LurkBoisModded.Patches
     {
         public static void Prefix(DecontaminationController __instance)
         {
-            int nextPhase = __instance._nextPhase;
+            int nextPhase = (int)AccessTools.Field(typeof(DecontaminationController), "_nextPhase").GetValue(__instance);
             if (NetworkServer.active && __instance.DecontaminationPhases[nextPhase].Function == DecontaminationController.DecontaminationPhase.PhaseFunction.OpenCheckpoints)
             {
                 Timing.CallDelayed(10f, () =>
                 {
-                    if(__instance._curFunction != DecontaminationController.DecontaminationPhase.PhaseFunction.OpenCheckpoints)
+                    DecontaminationController.DecontaminationPhase.PhaseFunction curFunc = (DecontaminationController.DecontaminationPhase.PhaseFunction)AccessTools.Field(typeof(DecontaminationController), "_curFunction").GetValue(__instance);
+                    if(curFunc != DecontaminationController.DecontaminationPhase.PhaseFunction.OpenCheckpoints)
                     {
                         return;
                     }

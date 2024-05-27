@@ -12,7 +12,7 @@ namespace LurkBoisModded.Effects
 {
     public class BlueAsh : TickingEffectBase
     {
-        public override void Enabled()
+        protected override void Enabled()
         {
             base.Enabled();
             if (Hub.authManager.InstanceMode != ClientInstanceMode.ReadyClient)
@@ -24,14 +24,14 @@ namespace LurkBoisModded.Effects
             p.SendHint(Plugin.GetConfig().Scp914Config.Scp914BlueAshReminder.Replace("{time}", ((int)TimeLeft).ToString()));
         }
 
-        public override void IntensityChanged(byte prevState, byte newState)
+        protected override void IntensityChanged(byte prevState, byte newState)
         {
             base.IntensityChanged(prevState, newState);
             Player p = Player.Get(Hub);
             p.EffectsManager.ChangeState<MovementBoost>(newState, TimeLeft, false);
         }
 
-        public override void Disabled()
+        protected override void Disabled()
         {
             base.Disabled();
             if(TimeLeft <= 1f && Hub.authManager.InstanceMode == ClientInstanceMode.ReadyClient)
@@ -41,7 +41,7 @@ namespace LurkBoisModded.Effects
             }
         }
 
-        public override void OnTick()
+        protected override void OnTick()
         {
             
         }

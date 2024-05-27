@@ -14,7 +14,7 @@ namespace LurkBoisModded.Effects
 
         public override EffectClassification Classification => EffectClassification.Positive;
 
-        public override void OnTick()
+        protected override void OnTick()
         {
             float amount = DefaultRegenTick * Intensity;
             Player.Get(Hub).Heal(amount);

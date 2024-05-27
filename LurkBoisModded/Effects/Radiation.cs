@@ -49,13 +49,13 @@ namespace LurkBoisModded.Effects
 
         public bool SprintingDisabled => _currentTicks > 80;
 
-        public override void Disabled()
+        protected override void Disabled()
         {
             base.Disabled();
             _currentTicks = 0;
         }
 
-        public override void Enabled()
+        protected override void Enabled()
         {
             base.Enabled();
             _currentTicks = 0;
@@ -63,7 +63,7 @@ namespace LurkBoisModded.Effects
             CurrentDamage = MinDamage * Intensity;
         }
 
-        public override void OnTick()
+        protected override void OnTick()
         {
             if(CurrentExposure < Config.CurrentConfig.RadiationConfig.MaxExposure)
             {

@@ -46,9 +46,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp-Publicized">
-      <HintPath>..\..\..\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Assembly-CSharp-Publicized.dll</HintPath>
-    </Reference>
     <Reference Include="CommandSystem.Core">
       <HintPath>..\depend\CommandSystem.Core.dll</HintPath>
     </Reference>
@@ -168,6 +165,7 @@
     <Compile Include="Base\FirearmDefinition.cs" />
     <Compile Include="Base\CustomItems\ICustomRadioItem.cs" />
     <Compile Include="Base\ItemDefinition.cs" />
+    <Compile Include="Base\TimedEvent.cs" />
     <Compile Include="Commands\GameConsole\CommandHuman.cs" />
     <Compile Include="Commands\GameConsole\CommandScpClaim.cs" />
     <Compile Include="Commands\RemoteAdmin\DeleteDummy.cs" />
@@ -240,7 +238,9 @@
     <Compile Include="Patches\DisarmPatch.cs" />
     <Compile Include="Patches\ServerFix\DelayConnectionsPatch.cs" />
     <Compile Include="Patches\StatModulePatch.cs" />
+    <Compile Include="Scripts\HCZDeconTimedEventHandler.cs" />
     <Compile Include="Scripts\LandmineScript.cs" />
+    <Compile Include="Scripts\TimedEventHandler.cs" />
     <Compile Include="StatModules\IUpdatingStat.cs" />
     <Compile Include="StatModules\NewAhpStat.cs" />
     <Compile Include="StatModules\NewHealthStat.cs" />

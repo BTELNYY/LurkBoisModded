@@ -19,7 +19,7 @@ namespace LurkBoisModded.Effects
             return false;
         }
 
-        public override void OnTick()
+        protected override void OnTick()
         {
             float damage = 2 * Intensity;
             UniversalDamageHandler handler = new UniversalDamageHandler(damage, DeathTranslations.Bleeding);
