@@ -17,6 +17,10 @@ namespace LurkBoisModded.Subclasses
 
         public override string SubclassDescription => "Use your noclip key (left alt by default) to provide a buff to nearby teammates!";
 
+        public override RoleTypeId TargetRole => RoleTypeId.NtfSergeant;
+
+        public override bool TargetRoleUsed => true;
+
         public override string ClassColor => "blue";
 
         public override RoleTypeId Role => RoleTypeId.NtfCaptain;

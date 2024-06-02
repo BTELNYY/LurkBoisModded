@@ -20,6 +20,10 @@ namespace LurkBoisModded.Subclasses
 
         public override RoleTypeId Role => RoleTypeId.NtfPrivate;
 
+        public override RoleTypeId TargetRole => RoleTypeId.NtfPrivate;
+
+        public override bool TargetRoleUsed => true;
+
         public override List<AbilityType> Abilities => new List<AbilityType>() 
         {
             AbilityType.Scout    

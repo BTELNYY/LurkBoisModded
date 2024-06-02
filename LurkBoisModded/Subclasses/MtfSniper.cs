@@ -15,6 +15,10 @@ namespace LurkBoisModded.Subclasses
 
         public override RoleTypeId Role => RoleTypeId.NtfSergeant;
 
+        public override RoleTypeId TargetRole => RoleTypeId.NtfSergeant;
+
+        public override bool TargetRoleUsed => true;
+
         public override string ClassColor => "blue";
 
         public override string SubclassNiceName => "MTF Sniper";

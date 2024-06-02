@@ -21,6 +21,10 @@ namespace LurkBoisModded.Base
 
         public virtual RoleTypeId Role { get; set; } = RoleTypeId.ClassD;
 
+        public virtual RoleTypeId TargetRole { get; set; } = RoleTypeId.None;
+
+        public virtual bool TargetRoleUsed { get; set; } = false;
+
         public virtual Dictionary<ItemDefinition, short> SpawnItems { get; set; } = new Dictionary<ItemDefinition, short>();
 
         public virtual bool ClearInventoryOnSpawn { get; set; } = false;

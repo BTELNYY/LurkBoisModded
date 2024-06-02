@@ -92,6 +92,11 @@ namespace LurkBoisModded.EventHandlers.General
                     {
                         continue;
                     }
+                    if(subclassbase.TargetRoleUsed && players.Where(x => x.Role == subclassbase.TargetRole).Count() == 0)
+                    {
+                        Log.Info($"Unable to find any player to be assigned TargetRole subclass {subclassbase.FileName}. Target Role: {subclassbase.TargetRole}");
+                        break;
+                    }
                     Player selectedPlayer = players.ToArray().RandomItem();
                     selectedPlayer.ReferenceHub.SetSubclass(subclassbase);
                     players.Remove(selectedPlayer);

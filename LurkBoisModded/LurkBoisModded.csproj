@@ -235,6 +235,7 @@
     <Compile Include="Patches\Firearm\Reload\TubeMagReloadFinishPatch.cs" />
     <Compile Include="Patches\Firearm\Reload\SemiAutoFirearmFinishPatch.cs" />
     <Compile Include="Patches\OnItemRemovedViaCommand.cs" />
+    <Compile Include="Patches\ServerFix\FpcMotorPatch.cs" />
     <Compile Include="Patches\ServerFix\ItemDestroyPatch.cs" />
     <Compile Include="Patches\DisarmPatch.cs" />
     <Compile Include="Patches\ServerFix\DelayConnectionsPatch.cs" />
