@@ -15,7 +15,6 @@ using LurkBoisModded.Patches;
 using PlayerStatsSystem;
 using InventorySystem.Items.Firearms.Modules;
 using InventorySystem.Items.Firearms;
-using LurkBoisModded.Patches.Firearm.Reload;
 using InventorySystem.Items.Pickups;
 using InventorySystem.Items.ThrowableProjectiles;
 using InventorySystem.Items.Usables;
@@ -32,9 +31,6 @@ namespace LurkBoisModded.EventHandlers.Item
     {
         public static void Init()
         {
-            AutoFirearmReloadFinishPath.OnReloadFinish += OnReloadFinish;
-            SemiAutoFirearmFinishPatch.OnReloadFinish += OnReloadFinish;
-            TubeMagReloadFinishPatch.OnReloadFinish += OnReloadFinish;
             GenericHandler.OnRoundRestart += OnRoundRestart;
             DropItemPatch.OnItemDropped += OnItemDropped;
             SearchItemCompletorPatch.OnItemPickedUp += OnPlayerPickupItem;
@@ -155,14 +151,6 @@ namespace LurkBoisModded.EventHandlers.Item
                 return firearm.OnShot();
             }
             return true;
-        }
-
-        public static void OnReloadFinish(IAmmoManagerModule module, Firearm firearm)
-        {
-            if (CustomItemManager.SerialToItem.TryGetValue(firearm.ItemSerial, out CustomItem item) && item is ICustomFirearmItem firearmItem)
-            {
-                firearmItem.OnReloadFinish(module, firearm);
-            }
         }
 
         [PluginEvent(ServerEventType.PlayerDamage)]

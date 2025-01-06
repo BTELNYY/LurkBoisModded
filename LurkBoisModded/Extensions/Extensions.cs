@@ -31,11 +31,6 @@ using System.Reflection;
 using UnityEngine;
 using VoiceChat;
 using VoiceChat.Networking;
-using InventorySystem.Items.Firearms.Modules;
-using static UnityStandardAssets.Utility.TimedObjectActivator;
-using Iced.Intel;
-using static PlayerList;
-using System.Collections;
 
 namespace LurkBoisModded.Extensions
 {

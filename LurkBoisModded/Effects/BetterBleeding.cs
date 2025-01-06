@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LurkBoisModded.Effects
 {
-    public class BetterBleeding : TickingEffectBase, IHealablePlayerEffect
+    public class BetterBleeding : TickingEffectBase, IHealableEffect
     {
         public bool IsHealable(ItemType item)
         {

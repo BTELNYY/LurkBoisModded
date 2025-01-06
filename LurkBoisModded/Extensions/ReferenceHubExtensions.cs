@@ -415,23 +415,23 @@ namespace LurkBoisModded.Extensions
                     Log.Error("ItemBase given is not a firearm!");
                     return;
                 }
-                if (itemDefinition.FirearmDefinition != null)
-                {
-                    if (itemDefinition.FirearmDefinition.Attachments == 0 && !itemDefinition.FirearmDefinition.NoAttachments)
-                    {
-                        firearm.ApplyAttachments();
-                    }
-                }
-                byte ammo = itemDefinition.FirearmDefinition.Ammo;
-                if (ammo == 0 && !itemDefinition.FirearmDefinition.NoAmmo)
-                {
-                    ammo = firearm.AmmoManagerModule.MaxAmmo;
-                }
-                if (itemDefinition.FirearmDefinition.ClampToMaxAmmo)
-                {
-                    ammo = Math.Min(ammo, firearm.AmmoManagerModule.MaxAmmo);
-                }
-                firearm.Status = new FirearmStatus(ammo, itemDefinition.FirearmDefinition.Flags, firearm.Status.Attachments);
+                //if (itemDefinition.FirearmDefinition != null)
+                //{
+                //    if (itemDefinition.FirearmDefinition.Attachments == 0 && !itemDefinition.FirearmDefinition.NoAttachments)
+                //    {
+                //        firearm.ApplyAttachments();
+                //    }
+                //}
+                //byte ammo = itemDefinition.FirearmDefinition.Ammo;
+                //if (ammo == 0 && !itemDefinition.FirearmDefinition.NoAmmo)
+                //{
+                //    ammo = firearm.AmmoManagerModule.MaxAmmo;
+                //}
+                //if (itemDefinition.FirearmDefinition.ClampToMaxAmmo)
+                //{
+                //    ammo = Math.Min(ammo, firearm.AmmoManagerModule.MaxAmmo);
+                //}
+                //firearm.Status = new FirearmStatus(ammo, itemDefinition.FirearmDefinition.Flags, firearm.Status.Attachments);
             }
         }
 
@@ -458,7 +458,7 @@ namespace LurkBoisModded.Extensions
 
         public static ItemBase AddItem(this ReferenceHub target, ItemType type)
         {
-            return target.inventory.ServerAddItem(type);
+            return target.inventory.ServerAddItem(type, ItemAddReason.AdminCommand);
         }
 
         public static ItemBase[] AddItem(this ReferenceHub target, ItemType type, int amount)
@@ -466,7 +466,7 @@ namespace LurkBoisModded.Extensions
             ItemBase[] items = new ItemBase[amount];
             for (int i = 0; i < amount; i++)
             {
-                items[i] = target.inventory.ServerAddItem(type);
+                items[i] = target.inventory.ServerAddItem(type, ItemAddReason.AdminCommand);
             }
             return items;
         }

@@ -1,6 +1,5 @@
 ﻿using LurkBoisModded.Base.CustomItems;
 using LurkBoisModded.EventHandlers.General;
-using LurkBoisModded.Patches.Firearm.Reload;
 using LurkBoisModded.Patches;
 using RoundRestarting;
 using System;
@@ -98,7 +97,7 @@ namespace LurkBoisModded.Managers
                 Log.Error("Custom item could not be created!");
                 return null;
             }
-            ItemBase givenItem = target.inventory.ServerAddItem(item.BaseItemType);
+            ItemBase givenItem = target.inventory.ServerAddItem(item.BaseItemType, ItemAddReason.AdminCommand);
             if (givenItem == null)
             {
                 GameObject.Destroy(item);

@@ -9,11 +9,10 @@ namespace LurkBoisModded.Base
 {
     public class FirearmDefinition
     {
-        public FirearmDefinition(byte ammo, uint attachments, FirearmStatusFlags flags, bool clampToMaxAmmo)
+        public FirearmDefinition(byte ammo, uint attachments, bool clampToMaxAmmo)
         {
             Ammo = ammo;
             Attachments = attachments;
-            Flags = flags;
             ClampToMaxAmmo = clampToMaxAmmo;
         }
 
@@ -27,8 +26,6 @@ namespace LurkBoisModded.Base
         public byte Ammo { get; set; } = 0;
 
         public uint Attachments { get; set; } = 0;
-
-        public FirearmStatusFlags Flags { get; set; } = FirearmStatusFlags.None;
 
         public bool ClampToMaxAmmo { get; set; } = true;
 

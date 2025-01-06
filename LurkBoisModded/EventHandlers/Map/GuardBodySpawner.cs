@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using LurkBoisModded.Extensions;
 using Respawning;
+using HarmonyLib;
 
 namespace LurkBoisModded.EventHandlers.Map
 {
@@ -93,10 +94,7 @@ namespace LurkBoisModded.EventHandlers.Map
                                 int Amount = Config.CurrentConfig.FacilityConfig.GuardBodyConfig.HczGuardCorpseContents[item];
                                 if (item.ToString().Contains("Gun"))
                                 {
-                                    ItemBase itemBase = dummyHub.inventory.ServerAddItem(item);
-                                    Firearm firearm = (Firearm)itemBase;
-                                    FirearmStatus status = new FirearmStatus((byte)Amount, firearm.Status.Flags, firearm.Status.Attachments);
-                                    firearm.Status = status;
+                                    ItemBase itemBase = dummyHub.inventory.ServerAddItem(item, ItemAddReason.PickedUp);
                                     continue;
                                 }
                                 if (item.ToString().Contains("Ammo"))
@@ -106,7 +104,7 @@ namespace LurkBoisModded.EventHandlers.Map
                                 }
                                 for (int y = 0; y < Amount; y++)
                                 {
-                                    dummyHub.inventory.ServerAddItem(item);
+                                    dummyHub.inventory.ServerAddItem(item, ItemAddReason.PickedUp);
                                 }
                             }
                         }
@@ -118,10 +116,8 @@ namespace LurkBoisModded.EventHandlers.Map
                                 int Amount = Config.CurrentConfig.FacilityConfig.GuardBodyConfig.EzGuardCorpseContents[item];
                                 if (item.ToString().Contains("Gun"))
                                 {
-                                    ItemBase itemBase = dummyHub.inventory.ServerAddItem(item);
+                                    ItemBase itemBase = dummyHub.inventory.ServerAddItem(item, ItemAddReason.PickedUp);
                                     Firearm firearm = (Firearm)itemBase;
-                                    FirearmStatus status = new FirearmStatus((byte)Amount, firearm.Status.Flags, firearm.Status.Attachments);
-                                    firearm.Status = status;
                                     //Log.Debug("Added firearm");
                                     continue;
                                 }
@@ -134,7 +130,7 @@ namespace LurkBoisModded.EventHandlers.Map
                                 for (int y = 0; y < Amount; y++)
                                 {
                                     //Log.Debug("Added item");
-                                    dummyHub.inventory.ServerAddItem(item);
+                                    dummyHub.inventory.ServerAddItem(item, ItemAddReason.PickedUp);
                                 }
                             }
                         }
@@ -173,10 +169,10 @@ namespace LurkBoisModded.EventHandlers.Map
                 {
                     Log.Error(ex.ToString());
                     RoundSummary.RoundLock = false;
-                    RespawnTokensManager.ResetTokens();
+                    AccessTools.Method(typeof(RespawnTokensManager), "ResetMilestones").Invoke(null, null);
                 }
             }
-            RespawnTokensManager.ResetTokens();
+            AccessTools.Method(typeof(RespawnTokensManager), "ResetMilestones").Invoke(null, null);
             RoundSummary.RoundLock = false;
         }
     }

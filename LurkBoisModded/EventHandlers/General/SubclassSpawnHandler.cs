@@ -26,10 +26,10 @@ namespace LurkBoisModded.EventHandlers.General
             {
                 switch (ev.Team)
                 {
-                    case SpawnableTeamType.NineTailedFox:
+                    case Faction.FoundationStaff:
                         HandleMtfSpawn(ev.Players);
                         break;
-                    case SpawnableTeamType.ChaosInsurgency:
+                    case Faction.FoundationEnemy:
                         HandleCiSpawn(ev.Players);
                         break;
                 }

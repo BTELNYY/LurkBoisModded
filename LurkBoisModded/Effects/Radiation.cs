@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LurkBoisModded.Effects
 {
-    public class Radiation : TickingEffectBase, IHealablePlayerEffect, IStaminaModifier
+    public class Radiation : TickingEffectBase, IHealableEffect, IStaminaModifier
     {
         public int CurrentExposure = 0;
         private int _currentTicks = 0;

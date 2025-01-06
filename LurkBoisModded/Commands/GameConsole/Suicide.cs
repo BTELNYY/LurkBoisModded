@@ -35,24 +35,6 @@ namespace LurkBoisModded.Commands.GameConsole
                 response = "You must hold a firearm to use this command!";
                 return false;
             }
-            if(firearm.Status.Ammo < 1)
-            {
-                response = "Your firearm must be loaded to use this command!";
-                return false;
-            }
-            FirearmStatus status = new FirearmStatus((byte)(firearm.Status.Ammo - 1), firearm.Status.Flags, firearm.Status.Attachments);
-            firearm.Status = status;
-            int counter = 0;
-            byte selectedClip = 0;
-            foreach(FirearmAudioClip clip in firearm.AudioClips)
-            {
-                if (clip.HasFlag(FirearmAudioFlags.IsGunshot))
-                {
-                    selectedClip = (byte)counter;
-                }
-                counter++;
-            }
-            firearm.ServerSendAudioMessage(selectedClip);
             response = "Done.";
             target.Kill(Plugin.GetConfig().SuicideDeathReason);
             return true;

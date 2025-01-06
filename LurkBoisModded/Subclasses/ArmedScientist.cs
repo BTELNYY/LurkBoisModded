@@ -23,7 +23,7 @@ namespace LurkBoisModded.Subclasses
 
         public override Dictionary<ItemDefinition, short> SpawnItems => new Dictionary<ItemDefinition, short>() 
         {
-            [new ItemDefinition(Base.CustomItems.CustomItemType.NotScaryCOM15, new FirearmDefinition(3, 0, InventorySystem.Items.Firearms.FirearmStatusFlags.None, true))] = 1,
+            [new ItemDefinition(Base.CustomItems.CustomItemType.NotScaryCOM15, new FirearmDefinition(3, 0, true))] = 1,
         };
     }
 }

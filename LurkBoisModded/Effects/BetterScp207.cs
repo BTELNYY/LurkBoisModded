@@ -13,7 +13,7 @@ using Utils;
 
 namespace LurkBoisModded.Effects
 {
-    public class BetterScp207 : TickingEffectBase, IStaminaModifier, IMovementSpeedModifier, IConflictableEffect, IHealablePlayerEffect
+    public class BetterScp207 : TickingEffectBase, IStaminaModifier, IMovementSpeedModifier, IConflictableEffect, IHealableEffect
     {
         public bool StaminaModifierActive => Intensity > 0;
 
@@ -113,7 +113,7 @@ namespace LurkBoisModded.Effects
             {
                 return;
             }
-            ExplosionUtils.ServerExplode(base.Hub);
+            ExplosionUtils.ServerExplode(base.Hub, ExplosionType.Custom);
             goingToExplode = false;
         }
 

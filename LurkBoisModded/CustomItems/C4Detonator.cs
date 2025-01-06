@@ -79,7 +79,7 @@ namespace LurkBoisModded.CustomItems
                 Vector3 newPos = pickup.Position;
                 newPos.y += 1f;
                 NetworkServer.Destroy(pickup.gameObject);
-                ExplosionUtils.ServerExplode(newPos, new Footprint(CurrentOwner));
+                ExplosionUtils.ServerExplode(newPos, new Footprint(CurrentOwner), ExplosionType.Grenade);
             }
             PlayersToExplosivesSet[hub.PlayerId].Clear();
             hub.SendHint(Config.CurrentConfig.C4Config.DetonateSuccess.Replace("{counter}", counter.ToString()));

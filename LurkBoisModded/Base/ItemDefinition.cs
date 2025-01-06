@@ -21,7 +21,7 @@ namespace LurkBoisModded.Base
             CustomItemType = type;
             if (IsFirearm)
             {
-                FirearmDefinition = new FirearmDefinition(0, 0, FirearmStatusFlags.None, true);
+                FirearmDefinition = new FirearmDefinition(0, 0, true);
             }
         }
 

@@ -49,7 +49,7 @@ namespace LurkBoisModded.Extensions
             {
                 if (item is Firearm firearm)
                 {
-                    firearm.Status = new FirearmStatus(ammo, firearm.Status.Flags, firearm.Status.Attachments);
+                    
                 }
             });
             return true;
@@ -64,11 +64,6 @@ namespace LurkBoisModded.Extensions
                 {
                     if (AttachmentsServerHandler.PlayerPreferences.TryGetValue(ply.ReferenceHub, out var value) && value.TryGetValue(fireArm.ItemTypeId, out var value2))
                         fireArm.ApplyAttachmentsCode(value2, reValidate: true);
-                    var firearmStatusFlags = FirearmStatusFlags.MagazineInserted;
-                    if (fireArm.HasAdvantageFlag(AttachmentDescriptiveAdvantages.Flashlight))
-                        firearmStatusFlags |= FirearmStatusFlags.FlashlightEnabled;
-
-                    fireArm.Status = new FirearmStatus(fireArm.AmmoManagerModule.MaxAmmo, firearmStatusFlags, fireArm.GetCurrentAttachmentsCode());
                 }
             }
         }

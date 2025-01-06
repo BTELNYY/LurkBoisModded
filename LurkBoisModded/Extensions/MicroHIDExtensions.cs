@@ -14,18 +14,13 @@ namespace LurkBoisModded.Extensions
         public static void SetCharge(this MicroHIDItem item, byte percent)
         {
             percent = Math.Min((byte)100, percent);
-            item.RemainingEnergy = 1f;
-            item.SendMessage(HidStatusMessageType.EnergySync, item.EnergyToByte());
+            float energy = (float)Convert.ToDouble(percent) / 100;
+            item.EnergyManager.ServerSetEnergy(item.ItemSerial, energy);
         }
 
         public static byte EnergyToByte(this MicroHIDItem item)
         {
-            return (byte)Mathf.RoundToInt(Mathf.Clamp01(item.RemainingEnergy) * 255f);
-        }
-
-        public static void SendMessage(this MicroHIDItem item, HidStatusMessageType msgType, byte code) 
-        {
-            AccessTools.Method(typeof(MicroHIDItem), "ServerSendStatus").Invoke(item, new object[] { msgType, code });
+            return (byte)Mathf.RoundToInt(Mathf.Clamp01(item.EnergyManager.Energy) * 255f);
         }
     }
 }

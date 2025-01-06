@@ -609,7 +609,7 @@ namespace LurkBoisModded
         public List<EffectDefinition> Effects = new List<EffectDefinition>()
         {
             new EffectDefinition(nameof(Flashed), 1, 3f),
-            new EffectDefinition(nameof(Blinded), 1, 4f),
+            new EffectDefinition(nameof(Blurred), 1, 4f),
             new EffectDefinition(nameof(Deafened), 1, 5f),
         };
     }

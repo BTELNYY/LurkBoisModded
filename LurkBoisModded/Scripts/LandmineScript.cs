@@ -98,7 +98,7 @@ namespace LurkBoisModded.Scripts
                 Vector3 newPos = gameObject.transform.position;
                 newPos.y += 0.25f;
                 NetworkServer.Destroy(PrimitiveTarget);
-                ExplosionUtils.ServerExplode(newPos, _playerFootprint);
+                ExplosionUtils.ServerExplode(newPos, _playerFootprint, ExplosionType.Grenade);
                 NetworkServer.Destroy(gameObject);
             });
         }
